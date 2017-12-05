@@ -14,10 +14,11 @@ Currently Froog supports:
 * Backpropagation Algorithm
 * Stochastic Gradient Descent
 * Momentum
+* Weight Initialization (Default (Xavier), Pitfall, PositiveRandom, SmallRandom)
 * Weight Normalization
-* Loss Functions: RMSE, MSE, CrossEntropy
-* Transfer Functions: Logsig, Tansig, Softmax, Purelim
-* Transfer Functions (experimental): Softplus, ReLU
+* Loss Functions (RMSE, MSE, CrossEntropy)
+* Transfer Functions (Logsig, Tansig, Softmax, Purelim)
+* Transfer Functions (not well tested): Softplus, ReLU
 * Confusion Matrix
 
 
