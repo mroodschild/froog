@@ -20,7 +20,7 @@ Currently Froog supports:
 * Transfer Functions (Logsig, Tansig, Softmax, Purelim)
 * Transfer Functions (not well tested): Softplus, ReLU
 * Confusion Matrix
-
+* Early Stop (Max Iteration Only)
 
 ## Documentation
 
