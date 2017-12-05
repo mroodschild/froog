@@ -1,37 +1,33 @@
-## Welcome to GitHub Pages
+# Froog
+                    Author: Roodschild Matías / mroodschild@gmail.com
+                            Jorge Gotay Sardiñas / jgotay57@gmail.com
+                            Adrián Will / adrian.will.01@gmail.com
+                            
 
-You can use the [editor on GitHub](https://github.com/mroodschild/froog/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+## Introduction
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+This project was created with academic propuose for my PhD Tesis. Its design goals are; 1) to be accessible to both novices and experts, and 2) facilitate neural networks manipulations. Froog is free, written in 100% Java and has been released under M.I.T. license.
 
-### Markdown
+Currently Froog supports:
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+* Backpropagation Algorithm
+* Stochastic Gradient Descent
+* Momentum
+* Weight Normalization
 
-```markdown
-Syntax highlighted code block
+## Documentation
 
-# Header 1
-## Header 2
-### Header 3
+Not yet available
 
-- Bulleted
-- List
 
-1. Numbered
-2. List
+## Dependencies
+-----------------------------------------
 
-**Bold** and _Italic_ and `Code` text
+The main Froog modules depends on the following libraries
 
-[Link](url) and ![Image](src)
-```
+- [ EJML          ]  ( http://code.google.com/p/efficient-java-matrix-library )
+- [ Apache Commons-csv          ]  ( https://commons.apache.org/proper/commons-csv/ )
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+The following is required for unit tests
 
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/mroodschild/froog/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+- [ JUnit   ]       ( http://junit.sourceforge.net/                           )
