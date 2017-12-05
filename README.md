@@ -57,7 +57,7 @@ Froog is in Maven jitpack.io and can easily be added to Maven, and similar proje
 The main Froog modules depends on the following libraries
 
 - [ EJML 0.30         ]  ( http://code.google.com/p/efficient-java-matrix-library )
-- [ Apache Commons-csv          ]  ( https://commons.apache.org/proper/commons-csv/ )
+- [ Apache Commons-lang3          ]  ( https://commons.apache.org/proper/commons-lang/ )
 
 The following is required for unit tests
 
