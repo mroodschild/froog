@@ -33,13 +33,14 @@ import org.ejml.simple.SimpleMatrix;
  *
  * @author Matías Roodschild <mroodschild@gmail.com>
  */
-public class Relu implements TransferFunction {
+public class PreRelu implements TransferFunction {
 
     @Override
     public SimpleMatrix output(SimpleMatrix z) {
+        double parm = 3;
         SimpleMatrix p = new SimpleMatrix(z.numRows(), z.numCols());
         for (int i = 0; i < p.getNumElements(); i++) {
-            p.set(i, Math.max(0, z.get(i)));
+            p.set(i, Math.max(z.get(i), z.get(i) * parm));
         }
         return p;
     }
@@ -56,9 +57,10 @@ public class Relu implements TransferFunction {
 
     @Override
     public SimpleMatrix derivative(SimpleMatrix a) {
+        double parm = 3;
         SimpleMatrix p = new SimpleMatrix(a.numRows(), a.numCols());
         for (int i = 0; i < p.getNumElements(); i++) {
-            p.set(i, (a.get(i) >= 0) ? 1 : 0);
+            p.set(i, (a.get(i) >= 0) ? parm : -1);
         }
         return p;
     }

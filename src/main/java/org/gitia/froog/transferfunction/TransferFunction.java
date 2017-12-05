@@ -41,6 +41,7 @@ public interface TransferFunction {
     public static String LOGSIG = "logsig";
     public static String TANSIG = "tansig";
     public static String RELU = "relu";
+    public static String PRERELU = "prerelu";
 
     /**
      * El parámetro z = W * X + B

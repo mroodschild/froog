@@ -71,5 +71,10 @@
             <artifactId>junit</artifactId>
             <version>4.12</version>
         </dependency>
+        <dependency>
+            <groupId>org.gitia</groupId>
+            <artifactId>JDataAnalysis</artifactId>
+            <version>0.1</version>
+        </dependency>
     </dependencies>
 </project>
