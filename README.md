@@ -24,15 +24,44 @@ Currently Froog supports:
 
 Not yet available
 
+## Maven Central
+
+Froog is in Maven jitpack.io and can easily be added to Maven, and similar project managers.
+
+```
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories> 
+    <dependencies>
+        <dependency>
+            <groupId>com.github.mroodschild</groupId>
+            <artifactId>froog</artifactId>
+            <version>v0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.ejml</groupId>
+            <artifactId>all</artifactId>
+            <version>0.30</version>
+        </dependency>
+    </dependencies>
+```
+
 
 ## Dependencies
 -----------------------------------------
 
 The main Froog modules depends on the following libraries
 
-- [ EJML          ]  ( http://code.google.com/p/efficient-java-matrix-library )
+- [ EJML 0.30         ]  ( http://code.google.com/p/efficient-java-matrix-library )
 - [ Apache Commons-csv          ]  ( https://commons.apache.org/proper/commons-csv/ )
 
 The following is required for unit tests
 
 - [ JUnit   ]       ( http://junit.sourceforge.net/                           )
+
+## License
+
+Froog is released under the M.I.T. open source license, but some libraries used in Froog are under Apache v2.0 License.
