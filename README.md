@@ -1,7 +1,8 @@
 # Froog
-                    Author: Roodschild Matías / mroodschild@gmail.com
-                            Jorge Gotay Sardiñas / jgotay57@gmail.com
-                            Adrián Will / adrian.will.01@gmail.com
+                    Authors:  Roodschild Matías     / mroodschild@gmail.com
+                              Jorge Gotay Sardiñas  / jgotay57@gmail.com
+                              Adrián Will           / adrian.will.01@gmail.com
+                              Sebastián Rodriguez   / sebastian.rodriguez@gitia.org
                             
 
 ## Introduction
