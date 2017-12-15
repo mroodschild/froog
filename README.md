@@ -26,7 +26,7 @@ Currently Froog supports:
 
 Not yet available
 
-## Maven Central
+## Maven - jitpack.io
 
 Froog is in Maven jitpack.io and can easily be added to Maven, and similar project managers.
 
