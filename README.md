@@ -22,9 +22,34 @@ Currently Froog supports:
 * Confusion Matrix
 * Early Stop (Max Iteration Only)
 
-## Documentation
+## Documentation - Clasification Problem
 
-Not yet available
+```
+        //Load data into X and T with JDataAnalysis
+        SimpleMatrix X = CSV.open("src/main/resources/iris/iris-in.csv");
+        SimpleMatrix T = CSV.open("src/main/resources/iris/iris-out.csv");
+
+        //Create the neural network
+        Feedforward net = new Feedforward();
+        net.addLayer(new Layer(4, 10, TransferFunction.TANSIG));
+        net.addLayer(new Layer(10, 3, TransferFunction.LOGSIG));
+
+        //Configure training algorithm
+        Backpropagation bp = new Backpropagation();
+        bp.setEpoch(1000);
+        bp.setMomentum(0.9);
+        bp.setLossFunction(LossFunction.MSE);
+
+        //train your neural network
+        bp.entrenar(net, X, T);
+        
+        //Evaluating outputs of your data
+        SimpleMatrix salidaNet = Compite.eval(net.outputAll(X));
+        ConfusionMatrix cmatrix = new ConfusionMatrix();
+        
+        //print your Confusion Matrix
+        cmatrix.eval(salidaNet, T);
+```
 
 ## Maven - jitpack.io
 
