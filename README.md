@@ -18,7 +18,7 @@ Currently Froog supports:
 * Weight Normalization
 * Loss Functions (RMSE, MSE, CrossEntropy)
 * Transfer Functions (Logsig, Tansig, Softmax, Purelim)
-* Transfer Functions (not well tested): Softplus, ReLU
+* Transfer Functions: Softplus, ReLU
 * Confusion Matrix
 * Early Stop (Max Iteration Only)
 
