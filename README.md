@@ -22,7 +22,7 @@ Currently Froog supports:
 * Confusion Matrix
 * Early Stop (Max Iteration Only)
 
-## Documentation - Clasification Problem
+## Documentation - Example
 
 ```
         //Load data into X and T with JDataAnalysis
