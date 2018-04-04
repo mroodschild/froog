@@ -74,7 +74,7 @@
         <dependency>
             <groupId>org.gitia</groupId>
             <artifactId>JDataAnalysis</artifactId>
-            <version>0.1</version>
+            <version>0.2</version>
         </dependency>
     </dependencies>
 </project>
