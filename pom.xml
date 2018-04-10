@@ -55,6 +55,12 @@
             </plugin>
         </plugins>
     </build>
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories> 
     <dependencies>
         <dependency>
             <groupId>org.ejml</groupId>
@@ -72,7 +78,7 @@
             <version>4.12</version>
         </dependency>
         <dependency>
-            <groupId>org.gitia</groupId>
+            <groupId>com.github.mroodschild</groupId>
             <artifactId>JDataAnalysis</artifactId>
             <version>0.2</version>
         </dependency>
