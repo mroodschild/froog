@@ -46,20 +46,20 @@ public class RMSE implements LossFunction {
      */
     @Override
     public double cost(SimpleMatrix Ycalc, SimpleMatrix Yobs) {
-        SimpleMatrix dif = Yobs.minus(Ycalc);//resta elemento a elemento
-        return Math.sqrt(dif.transpose().mult(dif).scale(0.5).get(0));
+        return Math.sqrt(Yobs.minus(Ycalc).normF() / 2);
     }
 
     /**
-     * Ingresan matrices donde cada columna representa una característica de salida
-     * y cada fila representa un nuevo registro, luego se implementa el mse
-     * entre las "y<sub>observadas</sub>"  y las "y<sub>calculadas</sub>" <br>
+     * Ingresan matrices donde cada columna representa un registro y cada fila
+     * representa una característica, luego se implementa el CrossEntropy entre
+     * las "y<sub>observadas</sub>" y las "y<sub>calculadas</sub>".<br>
+     *
      * <br>
-     * [Y<sub>11</sub>, Y<sub>12</sub>, Y<sub>13</sub>]<br>
-     * [Y<sub>21</sub>, Y<sub>22</sub>, Y<sub>23</sub>]<br>
-     * [Y<sub>31</sub>, Y<sub>32</sub>, Y<sub>33</sub>]<br>
-     * [..., ..., ...]<br>
-     * [Y<sub>n1</sub>, Y<sub>n2</sub>, Y<sub>n3</sub>]<br>
+     * [Y<sub>11</sub>, Y<sub>12</sub>, ..., Y<sub>1m</sub>]<br>
+     * [Y<sub>21</sub>, Y<sub>22</sub>, ..., Y<sub>2m</sub>]<br>
+     * .
+     * ..<br>
+     * [Y<sub>n1</sub>, Y<sub>n2</sub>, ..., Y<sub>nm</sub>]<br>
      *
      * @param Ycalc
      * @param Yobs
@@ -67,10 +67,8 @@ public class RMSE implements LossFunction {
      */
     @Override
     public double costAll(SimpleMatrix Ycalc, SimpleMatrix Yobs) {
-        SimpleMatrix y = Yobs.minus(Ycalc);
-        //elementos al cuadrado, sumamos y realizamos la media
-        double sum2 = y.elementMult(y).elementSum();
-        return Math.sqrt(sum2 / (2 * y.numRows()));
+        double m = Ycalc.numCols();
+        return Math.sqrt(Yobs.minus(Ycalc).normF()/ (2 * m));
     }
 
     @Override
