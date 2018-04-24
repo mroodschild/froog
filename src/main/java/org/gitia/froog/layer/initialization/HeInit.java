@@ -1,11 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2017 
- *   Matías Roodschild <mroodschild@gmail.com>.
- *   Jorge Gotay Sardiñas <jgotay57@gmail.com>.
- *   Adrian Will <adrian.will.01@gmail.com>.
- *   Sebastián Rodriguez <sebastian.rodriguez@gitia.org>.
+ * Copyright 2018 Matías Roodschild <mroodschild@gmail.com>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,37 +23,37 @@
  */
 package org.gitia.froog.layer.initialization;
 
+import java.util.Random;
+import org.ejml.simple.SimpleMatrix;
+
 /**
  *
  * @author Matías Roodschild <mroodschild@gmail.com>
  */
-public class WeightFactory {
+public class HeInit implements WeightInit {
+
+    Random random = new Random();
 
     /**
-     * Implemented Functions:<br>
-     * "default","smallrandom","positiverandom","he", "pitfall"
      *
-     * @param init
-     * @return
+     * @param matrix inicializada random matrix * sqrt(2/ inputs.size )
      */
-    public static WeightInit getFunction(String init) {
-
-        switch (init) {
-            case WeightInit.DEFAULT:
-                return new DefaultInit();
-            case WeightInit.SMALLRANDOM:
-                return new SmallRandomInit();
-            case WeightInit.POSITIVERANDOM:
-                return new PositiveRandomInit();
-            case WeightInit.PITFALL:
-                return new PitfallInit();
-            case WeightInit.HE:
-                return new HeInit();
-            default:
-                System.err.println("The init: '" + init + "' no exist, "
-                        + "please probe with other init.");
-                System.exit(0);
+    @Override
+    public void init(SimpleMatrix matrix) {
+        double c = Math.sqrt(2 / matrix.numCols());
+        for (int i = 0; i < matrix.getNumElements(); i++) {
+            matrix.set(i, random.nextGaussian() * c);
         }
-        return null;
     }
+
+    @Override
+    public void setRandom(Random random) {
+        this.random = random;
+    }
+
+    @Override
+    public String toString() {
+        return "he";
+    }
+
 }

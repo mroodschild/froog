@@ -58,6 +58,13 @@ public interface WeightInit {
      * val = 2 * rand * r - r
      */
     public static String DEFAULT = "default";
+    
+    /**
+     *
+     * for ReLU layers
+     * random matrix * sqrt(2/ inputs.size)
+     */
+    public static String HE = "he";
     /**
      * <b>Small random numbers</b>: we still want the weights to be very close
      * to zero, but as we have argued above, not identically zero. As a
