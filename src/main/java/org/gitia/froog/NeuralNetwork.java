@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2017 
+ * Copyright 2017 - 2018 
  *   Matías Roodschild <mroodschild@gmail.com>.
  *   Jorge Gotay Sardiñas <jgotay57@gmail.com>.
  *   Adrian Will <adrian.will.01@gmail.com>.
@@ -36,9 +36,7 @@ import org.ejml.simple.SimpleMatrix;
 public interface NeuralNetwork {
 
     public SimpleMatrix output(double[] input);
-    
+
     public SimpleMatrix output(SimpleMatrix input);
-    
-    public SimpleMatrix outputAll(SimpleMatrix input);
 
 }
