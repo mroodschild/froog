@@ -49,6 +49,8 @@ public class LossFunctionFactory {
                 return new RMSE();
             case LossFunction.CROSSENTROPY:
                 return new CrossEntropyLoss();
+            case LossFunction.LOGISTIC:
+                return new Logistic();
             default:
                 System.err.println(CostFunction + " no es una función de costo válida.");
                 System.exit(0);
