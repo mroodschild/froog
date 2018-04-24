@@ -30,6 +30,8 @@ package org.gitia.froog.layer;
 import org.gitia.froog.transferfunction.FunctionFactory;
 import org.gitia.froog.transferfunction.TransferFunction;
 import java.util.Random;
+import org.ejml.data.BMatrixRMaj;
+import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.simple.SimpleMatrix;
 import org.gitia.froog.layer.initialization.WeightFactory;
 import org.gitia.froog.layer.initialization.WeightInit;
@@ -44,6 +46,8 @@ public class Layer {
     SimpleMatrix B;//B[neuronas x 1]
     TransferFunction function;
     WeightInit initWeight = WeightFactory.getFunction(WeightInit.DEFAULT);
+    double keepProb = 0;
+    SimpleMatrix Drop;
 
     protected Random random = new Random();
 
@@ -51,33 +55,52 @@ public class Layer {
     }
 
     /**
-     * Inicializamos la capa para recibir una entrada y obtener una salida. <br>
+     * Init Layer. <br>
      *
-     * Las funciones de transferencia son:<br>
+     * to select a transfer function set TransferFunction.LOGSIG<br>
      * logsig, tansig, purelim, softplus <br>
      * <br>
      *
-     * @param input cantidad de entradas
-     * @param output cantidad de neuronas
-     * @param funcion función usadas en las neuronas
+     * @param input number of inputs
+     * @param output number of neurons
+     * @param funcion transfer function
      * @param WeightInit
-     * @param random heredado
+     * @param random
      */
     public Layer(int input, int output, String funcion, String WeightInit, Random random) {
-        initWeight = WeightFactory.getFunction(WeightInit);
-        initWeight.setRandom(random);
-        this.W = new SimpleMatrix(output, input);
-        this.B = new SimpleMatrix(output, 1);
-        initWeight.init(W);
-        initWeight.init(B);
-        this.function = FunctionFactory.getFunction(funcion);
-        System.out.println("Layer\tinput:\t" + input + "\tneurons:\t" + output + "\tfunction:\t" + funcion + "\tinit:\t" + initWeight.toString());
+        this(input, output, funcion, WeightInit, 0, random);
     }
 
     /**
-     * Inicializamos la capa para recibir una entrada y obtener una salida. <br>
+     * Init Layer. <br>
      *
-     * Las funciones de transferencia son:<br>
+     * to select a transfer function set TransferFunction.LOGSIG<br>
+     * logsig, tansig, purelim, softplus <br>
+     * <br>
+     *
+     * @param input number of inputs
+     * @param output number of neurons
+     * @param funcion transfer function
+     * @param WeightInit
+     * @param keepProb for dropout
+     * @param random
+     */
+    public Layer(int input, int output, String funcion, String WeightInit, double keepProb, Random random) {
+        this.random = random;
+        initWeight = WeightFactory.getFunction(WeightInit);
+        initWeight.setRandom(this.random);
+        this.W = new SimpleMatrix(output, input);
+        this.B = new SimpleMatrix(output, 1);
+        initWeight.init(W);
+        this.keepProb = keepProb;
+        this.function = FunctionFactory.getFunction(funcion);
+        System.out.println("Layer\tinput:\t" + input + "\tneurons:\t" + output + "\tfunction:\t" + funcion + "\tinit:\t" + initWeight.toString() + "\tkeepProb:\t" + this.keepProb);
+    }
+
+    /**
+     * Init Layer. <br>
+     *
+     * to select a transfer function set TransferFunction.LOGSIG<br>
      * logsig, tansig, purelim, softplus <br>
      * <br>
      *
@@ -91,12 +114,11 @@ public class Layer {
     }
 
     /**
-     * Inicializamos la capa para recibir una entrada y obtener una salida. <br>
+     * Init Layer. <br>
      *
-     * Las funciones de transferencia son:<br>
-     * logsig, tansig, purelim, softplus
-     *
-     *
+     * to select a transfer function set TransferFunction.LOGSIG<br>
+     * logsig, tansig, purelim, softplus <br>
+     * <br>
      *
      * @param input
      * @param output
@@ -125,18 +147,33 @@ public class Layer {
     }
 
     /**
-     * Ingresamos la entrada en formato vertical <br>
-     * <br>
      *
-     * a<sub>L(i)</sub> = -f(W * a<sub>L(i-1)</sub> + B)<br><br>
-     * where:<br><br>
-     * z = W * a<sub>L(i-1)</sub> + B
-     *
-     * @param a
-     * @return
+     * @param a [out prev layer - m] where m is the amount of data
+     * @return a<sub>L(i)</sub> = f(a<sub>L(i)-1</sub>)
      */
     public SimpleMatrix output(SimpleMatrix a) {
         return function.output(outputZ(a));
+    }
+
+    /**
+     * This function implements the Droupout regularization
+     *
+     * @param a input to the layer
+     * @return return outputs after doing dropuot
+     */
+    public SimpleMatrix outputDropout(SimpleMatrix a) {
+        if (this.keepProb > 0 && this.keepProb < 1) {
+            //A = neurons x m
+            Drop = SimpleMatrix.random_DDRM(W.numRows(), a.numCols(), 0, 1, this.random);
+            BMatrixRMaj keepMatrix = new BMatrixRMaj(Drop.numRows(), Drop.numCols());
+            CommonOps_DDRM.elementLessThan(Drop.getDDRM(), keepProb, keepMatrix);
+            for (int i = 0; i < Drop.getNumElements(); i++) {
+                Drop.set(i, (keepMatrix.get(i)) ? 1 : 0);
+            }
+            return output(a).elementMult(Drop).divide(keepProb);
+        } else {
+            return output(a);
+        }
     }
 
     /**
@@ -160,14 +197,7 @@ public class Layer {
         debería ser function.outputZ(w, a, b), tiene que ser interno porque la
         función softmax, no utiliza el bías.
          */
-//        System.out.println("W");
-//        W.printDimensions();
-//        System.out.println("a");
-//        a.printDimensions();
-//        System.out.println("B");
-//        B.printDimensions();
         return function.outputZ(W, a, B);
-        //return W.mult(a).plus(B);
     }
 
     /**
@@ -216,6 +246,22 @@ public class Layer {
 
     public void setFunction(TransferFunction function) {
         this.function = function;
+    }
+
+    public void setKeepProb(double keepProb) {
+        this.keepProb = keepProb;
+    }
+
+    public double getKeepProb() {
+        return keepProb;
+    }
+
+    public void setDrop(SimpleMatrix Drop) {
+        this.Drop = Drop;
+    }
+
+    public SimpleMatrix getDrop() {
+        return Drop;
     }
 
     @Override
