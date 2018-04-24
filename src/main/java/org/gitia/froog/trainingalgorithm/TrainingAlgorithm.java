@@ -29,8 +29,14 @@ package org.gitia.froog.trainingalgorithm;
 
 import org.gitia.froog.lossfunction.LossFunctionFactory;
 import java.util.ArrayList;
+import java.util.List;
+import org.apache.commons.lang3.ArrayUtils;
 import org.ejml.simple.SimpleMatrix;
+import org.gitia.froog.Feedforward;
 import org.gitia.froog.lossfunction.LossFunction;
+import org.gitia.froog.trainingalgorithm.updaterule.Momentum;
+import org.gitia.froog.trainingalgorithm.updaterule.Update;
+import org.gitia.froog.trainingalgorithm.updaterule.UpdateRule;
 
 /**
  *
@@ -38,42 +44,27 @@ import org.gitia.froog.lossfunction.LossFunction;
  */
 public class TrainingAlgorithm {
 
+    Feedforward net;//red a train
+    SimpleMatrix input;//datos de entrada original a la red (cada fila es un dato, y cada columna una entrada)
+    SimpleMatrix output;//salida original de la red correspondiente a la entrada
+    SimpleMatrix inputTest;// = new SimpleMatrix();
+    SimpleMatrix outputTest;// = new SimpleMatrix();
     double learningRate = 0.01;
-    double regularization = 0;
-    double momentum = 0;
+    double L2_Lambda = 0;
+    UpdateRule updateRule = new Update();
+    List<SimpleMatrix> gradW_prev = new ArrayList<>();//deltas de los W calculados para cada capa
+    List<SimpleMatrix> gradB_prev = new ArrayList<>();//deltas de los B calculados para cada capa
+    List<SimpleMatrix> gradW = new ArrayList<>();//gradientes para cada capa
+    List<SimpleMatrix> gradB = new ArrayList<>();//gradientes para cada capa
     int epoch = 0;
+    int cantidadBach;
+    int testFrecuency = 1;
+    boolean classification = false;
 
     LossFunction lossFunction = LossFunctionFactory.getLossFunction(LossFunction.MSE);
 
     ArrayList<Double> cost = new ArrayList<>();
     ArrayList<Double> costTest = new ArrayList<>();
-
-    //Funciones de Costo
-    /**
-     * Calculamos el costo
-     *
-     * La entrada y la salida deben estar en formato vertical<br>
-     *
-     * @param Ycalc
-     * @param Yobs
-     * @return (||(Yobs - Ycalc)||^2)/2
-     */
-    public double cost(SimpleMatrix Ycalc, SimpleMatrix Yobs) {
-        return lossFunction.cost(Ycalc, Yobs);
-    }
-
-    /**
-     * Calculamos el costo para una entrada
-     *
-     * @param Ycalc entradas X[X1, X2, ... ,Xn]
-     * @param Yobs salida Yobs[Y1, Y2, ... , Ym]
-     * @return (||(Yobs - Ycalc)||^2)/2
-     */
-    public double cost(double[] Ycalc, double[] Yobs) {
-        SimpleMatrix Yob = new SimpleMatrix(Yobs.length, 1, true, Yobs);
-        SimpleMatrix Ycal = new SimpleMatrix(Ycalc.length, 1, true, Ycalc);
-        return cost(Ycal, Yob);
-    }
 
     public double getLearningRate() {
         return learningRate;
@@ -89,7 +80,7 @@ public class TrainingAlgorithm {
     }
 
     public double getRegularization() {
-        return regularization;
+        return L2_Lambda;
     }
 
     /**
@@ -97,8 +88,8 @@ public class TrainingAlgorithm {
      * @param regularization default = 0
      */
     public void setRegularization(double regularization) {
-        this.regularization = regularization;
-        System.out.println("Regularization:\t" + this.regularization);
+        this.L2_Lambda = regularization;
+        System.out.println("Regularization:\t" + this.L2_Lambda);
     }
 
     public ArrayList<Double> getCost() {
@@ -109,13 +100,44 @@ public class TrainingAlgorithm {
         this.cost = cost;
     }
 
-    public double getMomentum() {
-        return momentum;
-    }
-
     public void setMomentum(double momentum) {
-        this.momentum = momentum;
-        System.out.println("Momentum:\t" + this.momentum);
+        if (momentum > 0) {
+            updateRule = new Momentum();
+            this.updateRule.setMomentum(momentum);
+            System.out.println("Momentum:\t" + momentum);
+        }
+    }
+    
+    
+    /**
+     *
+     * @return a matrix with all the gradients of dimensions [n x 1] GW1,GW2...
+     * GB1, GB2...
+     */
+    public SimpleMatrix getGradients() {
+        if (net.getLayers().isEmpty()) {
+            System.err.println("Inicialice los gradientes primero");
+            return null;
+        }
+        return getGradients(gradW, gradB);
+    }
+    
+    /**
+     *
+     * @param gradW
+     * @param gradB
+     * @return a matrix with all the gradients of dimensions [n x 1] GW1,GW2...
+     * GB1, GB2...
+     */
+    public SimpleMatrix getGradients(List<SimpleMatrix> gradW, List<SimpleMatrix> gradB) {
+        double[] aux = new double[0];
+        for (int i = 0; i < gradW.size(); i++) {
+            aux = ArrayUtils.addAll(aux, gradW.get(i).getDDRM().getData());
+        }
+        for (int i = 0; i < gradB.size(); i++) {
+            aux = ArrayUtils.addAll(aux, gradB.get(i).getDDRM().getData());
+        }
+        return new SimpleMatrix(aux.length, 1, true, aux);
     }
 
     public LossFunction getLossFunction() {
@@ -147,5 +169,32 @@ public class TrainingAlgorithm {
 
     public void setCostTest(ArrayList<Double> costTest) {
         this.costTest = costTest;
+    }
+
+    public void setNet(Feedforward net) {
+        this.net = net;
+    }
+
+    public Feedforward getNet() {
+        return net;
+    }
+
+    public void setInputTest(SimpleMatrix inputTest) {
+        this.inputTest = inputTest;
+        System.out.println("Input Test:\t" + inputTest.numRows() + "\tx\t" + inputTest.numCols());
+    }
+
+    public void setOutputTest(SimpleMatrix outputTest) {
+        this.outputTest = outputTest;
+    }
+
+    public void setTestFrecuency(int testFrecuency) {
+        this.testFrecuency = testFrecuency;
+        System.out.println("Test Frecuency:\t" + this.testFrecuency);
+    }
+
+    public void setClassification(boolean classification) {
+        this.classification = classification;
+        System.out.println("Classification:\t" + this.classification);
     }
 }
