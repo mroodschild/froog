@@ -44,6 +44,7 @@ public interface LossFunction {
      * Cross Entropy es utilizada para entrenar la Softmax
      */
     public static String CROSSENTROPY = "crossEntropy";
+    public static String LOGISTIC = "logistic";
 
     public double cost(SimpleMatrix Ycalc, SimpleMatrix Yobs);
     
