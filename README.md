@@ -9,16 +9,21 @@
 
 This project was created with academic purpose for my PhD Tesis. Its design goals are; 1) to be accessible to both novices and experts, and 2) facilitate neural networks manipulations. Froog is free, written in 100% Java and has been released under M.I.T. license.
 
+=============
+Currently Updating v0.2 to 0.3
+=============
+
 Currently Froog supports:
 
 * Backpropagation Algorithm
 * Stochastic Gradient Descent
-* Momentum
-* Weight Initialization (Default (Xavier), Pitfall, PositiveRandom, SmallRandom)
+* Conjugate Gradient
+* Scaled Conjugate Gradient 
+* Accelerate methods (Momentum)
+* Weight Initialization (Default (Xavier), He, Pitfall, PositiveRandom, SmallRandom)
 * Weight Normalization
-* Loss Functions (RMSE, MSE, CrossEntropy)
-* Transfer Functions (Logsig, Tansig, Softmax, Purelim)
-* Transfer Functions: Softplus, ReLU
+* Loss Functions (RMSE, MSE, CrossEntropy, Logistic)
+* Transfer Functions (Logsig, Tansig, Softmax, Purelim, Softplus, ReLU)
 * Confusion Matrix
 * Early Stop (Max Iteration Only)
 
