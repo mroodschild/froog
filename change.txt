@@ -1,0 +1,69 @@
+24/04/2018
+
+====== Version 0.3 =======
+
+*********************************
+Performance Improvements
+time execution reduced by 75%
+
+Internal Architecture Vectorized
+
+EJML Updated 0.30 -> 0.34
+*********************************
+
+Neural Network
+- removed outputAll
+
+Feedforward
+    * outputLayers -> activations
+    + activationsDropout
+    + fixed getParameters
+
+Layers
+    + outputDropout
+
+Initializations
+    + HeInit
+
+LossFunctions
+    + Improvement CrossEntropy
+    + Added Logistic Loss Function
+    + MSE vectorized
+    + RMSE vectorized
+
+Backpropagation
+    + removed gradient
+    + removed minibatch
+    + fixed L2 regularization
+    + Performance incresed
+
+Training Algorithms
+    + Conjugate Gradient Added
+    + Scaled Conjugate Gradient Added
+    + Scaled Conjugate Gradient with minibatch added
+    - Clean SGD
+    + SGD Numeric Added
+    - TrainingALgorithm Reorganized
+
+Beta Rules Added for Conjugate Gradient
+	+Fletcher Reeves
+	+PolakRebiere
+
+Gradients
+	+ DropoutGradient
+	+ NoiseGradient
+	+ NumericGradient
+	+ StandardGradient
+	+ Gradient
+	+ GradientFactory
+
+Update Rules
+	+ Momentum
+	+ SGC
+	+ Update
+	+ UpdateRule
+	
+TransferFunctions
+	update EJML 0.30 -> 0.34
+	
+Test Added
