@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2017 
+ * Copyright 2017 - 2018
  *   Matías Roodschild <mroodschild@gmail.com>.
  *   Jorge Gotay Sardiñas <jgotay57@gmail.com>.
  *   Adrian Will <adrian.will.01@gmail.com>.
@@ -65,7 +65,7 @@ public class ConfusionMatrix {
         for (int i = 0; i < elements; i++) {
             addValue(getIndex(obs.extractVector(true, i)), getIndex(calc.extractVector(true, i)));
         }
-        aciertos = confusionMatrix.extractDiag().elementSum();
+        aciertos = confusionMatrix.diag().elementSum();
         aciertosPorc = aciertos / ((double) elements);
     }
 
@@ -79,7 +79,7 @@ public class ConfusionMatrix {
      * @return
      */
     private int getIndex(SimpleMatrix a) {
-        return ArrayUtils.indexOf(a.getMatrix().getData(), 1);
+        return ArrayUtils.indexOf(a.getDDRM().getData(), 1);
     }
 
     /**
@@ -109,19 +109,21 @@ public class ConfusionMatrix {
      * @param args
      */
     public static void main(String[] args) {
-        SimpleMatrix obs = new SimpleMatrix(5, 3, true,
-                1, 0, 0,
-                0, 1, 0,
-                0, 0, 1,
-                1, 0, 0,
-                0, 1, 0);
+        double[] yo = {
+            1, 0, 0,
+            0, 1, 0,
+            0, 0, 1,
+            1, 0, 0,
+            0, 1, 0};
+        SimpleMatrix obs = new SimpleMatrix(5, 3, true, yo);
 
-        SimpleMatrix calc = new SimpleMatrix(5, 3, true,
-                1, 0, 0,
-                0, 1, 0,
-                0, 1, 0,
-                1, 0, 0,
-                0, 0, 1);
+        double[] yc = {
+            1, 0, 0,
+            0, 1, 0,
+            0, 1, 0,
+            1, 0, 0,
+            0, 0, 1};
+        SimpleMatrix calc = new SimpleMatrix(5, 3, true, yc);
 
         System.out.println("Obs");
         obs.print();
