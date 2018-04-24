@@ -110,9 +110,9 @@ public class Save {
             formatter.format("\n\t<transferFunction>%s</transferFunction>",
                     layer.getFunction().toString());
             formatter.format("\n\t<w>%s</w>",
-                    Arrays.toString(layer.getW().getMatrix().data).replace("[", "").replace("]", ""));
+                    Arrays.toString(layer.getW().getDDRM().data).replace("[", "").replace("]", ""));
             formatter.format("\n\t<bias>%s</bias>",
-                    Arrays.toString(layer.getB().getMatrix().data).replace("[", "").replace("]", ""));
+                    Arrays.toString(layer.getB().getDDRM().data).replace("[", "").replace("]", ""));
             formatter.format("\n</layer>");
         }
     }
