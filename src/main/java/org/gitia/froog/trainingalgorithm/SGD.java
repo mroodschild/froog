@@ -29,6 +29,10 @@ package org.gitia.froog.trainingalgorithm;
 
 import java.util.List;
 import org.ejml.simple.SimpleMatrix;
+import org.gitia.froog.Feedforward;
+import org.gitia.froog.statistics.Clock;
+import org.gitia.froog.trainingalgorithm.gradient.Gradient;
+import org.gitia.froog.trainingalgorithm.gradient.GradientFactory;
 
 /**
  *
@@ -36,51 +40,99 @@ import org.ejml.simple.SimpleMatrix;
  */
 public class SGD extends Backpropagation {
 
+    int batchSize = 0; //tamaño del batch declarado por el usuario
+    List<SimpleMatrix> Drop;
+    boolean isDropOut = false;
+
     public SGD() {
     }
 
     /**
      *
-     * calculamos la derivadas calculamos los gradientes retornamos el costo
-     *
+     * @param net neural network to train
+     * @param input every row is a feature and every column is a register
+     * @param output every row is a feature and every column is a register
      */
     @Override
-    public void calcularGradientes() {
-        deltasZero();
-        ND = inputBach.numRows();
-        SimpleMatrix in;
-        SimpleMatrix yObs;
-        for (int i = 0; i < ND; i++) {//Aquí debemos paralelizar
-            //extraemos la fila y la ponemos vertical
-            in = inputBach.extractVector(true, i).transpose();
-            yObs = outputBach.extractVector(true, i).transpose();
-            
-            //obtenemos la salida de todas las capas para ganar tiempo
-            List<SimpleMatrix> outputs = net.outputLayers(in);
-            //calculamos los delta
-            SimpleMatrix yCalc = outputs.get(outputs.size() - 1);
-            derivadaOutputLayers(yCalc, yObs);
-            derivadaHiddenLayers(outputs);
-            
-
-            //calculamos los gradientes
-            SimpleMatrix a_t = in.transpose();
-            for (int j = 0; j < gradW.size(); j++) {
-                SimpleMatrix d = deriv.get(j);
-                //calculamos el gradiente
-                gradW.set(j, d.mult(a_t));
-                gradB.set(j, d);
-                //preparamos la entrada para la siguiente 
-                a_t = outputs.get(j).transpose();
+    public void train(Feedforward net, SimpleMatrix input, SimpleMatrix output) {
+        this.net = net;
+        this.input = new SimpleMatrix(input);
+        this.output = new SimpleMatrix(output);
+        init();
+        initBatch();
+        Clock clock = new Clock();
+        for (int i = 0; i < this.epoch; i++) {
+            for (int j = 0; j < cantidadBach; j++) {
+                clock.start();
+                SimpleMatrix bach_in = bachData(j, input);
+                SimpleMatrix bach_out = bachData(j, output);
+                Activations = (isDropOut) ? net.activationsDropout(bach_in) : net.activations(bach_in);
+                costOverall = loss(Activations.get(Activations.size() - 1), bach_out);
+                this.cost.add(costOverall);
+                gradient.compute(net, Activations, gradW, gradB, bach_in, bach_out);
+                updateRule.updateParameters(net, (double) bach_in.numCols(), L2_Lambda, learningRate, gradW, gradB);
+                if (iteracion % printFrecuency == 0) {
+                    printScreen(clock);
+                }
+                iteracion++;
             }
-
-            for (int j = 0; j < gradW.size(); j++) {
-                //agregamos el delta
-                deltasW.set(j, deltasW.get(j).plus(gradW.get(j)));
-                deltasB.set(j, deltasB.get(j).plus(gradB.get(j)));
-            }
-
         }
+    }
+
+    /**
+     * by default dropout is false
+     * @param drop 
+     */
+    public void setDropOut(boolean drop) {
+        isDropOut = drop;
+        if (drop) {
+            gradient = GradientFactory.getGradient(Gradient.DROPOUT);
+            System.out.println("Dropout:\t" + isDropOut);
+        } else {
+            gradient = GradientFactory.getGradient(Gradient.STANDARD);
+            System.out.println("Dropout:\t" + isDropOut);
+        }
+    }
+
+    /**
+     * Aquí inicializamos el bach, indicamos cuantas partes serán formadas,
+     * según el bachSize, esto será guardado en cantidadBach, que luego será
+     * utilizado en la selección de los datos.<br>
+     *
+     * Si bachSize menor o igual a 0, se tomarán todos los datos como tamaño de
+     * bachSize.
+     *
+     */
+    protected void initBatch() {
+        if (batchSize <= 0) {
+            batchSize = this.input.numCols();
+            cantidadBach = 1;
+        } else {
+            cantidadBach = this.input.numCols() / batchSize;
+        }
+    }
+
+    protected SimpleMatrix bachData(int part, SimpleMatrix data) {
+        SimpleMatrix bach;
+        if (part < (cantidadBach - 1)) {
+            bach = data.extractMatrix(0, SimpleMatrix.END, batchSize * part, batchSize * part + batchSize);
+        } else {//como es la última parte tomamos los datos restantes.
+            bach = data.extractMatrix(0, SimpleMatrix.END, batchSize * part, SimpleMatrix.END);
+        }
+        return bach;
+    }
+
+    /**
+     *
+     * @param bachSize por defecto = 0 (sin bach)
+     */
+    public void setBatchSize(int bachSize) {
+        this.batchSize = bachSize;
+        System.out.println("Batch Size:\t" + this.batchSize);
+    }
+
+    public int getBatchSize() {
+        return batchSize;
     }
 
 }
