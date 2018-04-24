@@ -28,7 +28,7 @@
 package org.gitia.froog.lossfunction;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.ejml.ops.CommonOps;
+import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.simple.SimpleMatrix;
 
 /**
@@ -50,7 +50,7 @@ public class CrossEntropyLoss implements LossFunction {
         //averiguamos q salida correspondia para calcular el ajuste
         //(el resto se hace cero ya que -1 * {y = k} * ln(ak), en las 
         // otras salidas {y != k} => 0
-        int Yk = ArrayUtils.indexOf(Yobs.getMatrix().getData(), 1);
+        int Yk = ArrayUtils.indexOf(Yobs.getDDRM().getData(), 1);
         //obtenemso la salida
         double aCalc = Ycalc.get(Yk);
         //realizamos los calculos
@@ -58,36 +58,42 @@ public class CrossEntropyLoss implements LossFunction {
     }
 
     /**
-     * Ingresan matrices donde cada columna representa una característica de
-     * salida y cada fila representa un nuevo registro, luego se implementa el
-     * CrossEntropy entre las "y<sub>observadas</sub>" y las
-     * "y<sub>calculadas</sub>".<br>
+     * Ingresan matrices donde cada columna representa un registro y cada fila
+     * representa una característica, luego se implementa el CrossEntropy entre
+     * las "y<sub>observadas</sub>" y las "y<sub>calculadas</sub>".<br>
      *
      * <br>
-     * [Y<sub>11</sub>, Y<sub>12</sub>, Y<sub>13</sub>]<br>
-     * [Y<sub>21</sub>, Y<sub>22</sub>, Y<sub>23</sub>]<br>
-     * [Y<sub>31</sub>, Y<sub>32</sub>, Y<sub>33</sub>]<br>
-     * [..., ..., ...]<br>
-     * [Y<sub>n1</sub>, Y<sub>n2</sub>, Y<sub>n3</sub>]<br>
+     * [Y<sub>11</sub>, Y<sub>12</sub>, ..., Y<sub>1m</sub>]<br>
+     * [Y<sub>21</sub>, Y<sub>22</sub>, ..., Y<sub>2m</sub>]<br>
+     * .
+     * ..<br>
+     * [Y<sub>n1</sub>, Y<sub>n2</sub>, ..., Y<sub>nm</sub>]<br>
      *
      * @param Ycalc
      * @param Yobs
-     * @return J(Ɵ) = -[∑<sup>m</sup><sub>i = 1</sub> ∑<sup>1</sup><sub>K =
+     * @return J(Ɵ) = - (1/m) [∑<sup>m</sup><sub>i = 1</sub> ∑<sup>1</sup><sub>K =
      * 0</sub>
      * (1.{y<sup>(i)</sup> = k} log P(y<sup>(i)</sup> = k | x<sup>(i)</sup>; Ɵ
      * )]
      */
     @Override
     public double costAll(SimpleMatrix Ycalc, SimpleMatrix Yobs) {
+        double m = Ycalc.getNumElements();
         SimpleMatrix y = Ycalc.elementMult(Yobs);
-        SimpleMatrix sumCols = new SimpleMatrix(y.numRows(), 1);
-        CommonOps.sumRows(y.getMatrix(), sumCols.getMatrix());
-        return sumCols.elementLog().elementSum() * -1;
-
-        //SimpleMatrix y = Ycalc.elementMult(Yobs);
-//        double[] array = ArrayUtils.removeAllOccurences(y.getMatrix().getData(), 0);
-//        y = new SimpleMatrix(1, array.length, true, array);
-//        return y.elementLog().elementSum() * -1;
+        SimpleMatrix sumRow = new SimpleMatrix(1, y.numCols());
+        CommonOps_DDRM.sumCols(y.getDDRM(), sumRow.getDDRM());
+        return sumRow.elementLog().elementSum() * -1/m;
+        
+//        SimpleMatrix y = Ycalc.elementMult(Yobs);
+//        SimpleMatrix sumCols = new SimpleMatrix(y.numRows(), 1);
+//        CommonOps_DDRM.sumRows(y.getMatrix(), sumCols.getMatrix());
+//        return sumCols.elementLog().elementSum() * -1;
+        
+//        SimpleMatrix y = Ycalc.elementMult(Yobs);
+//        double m = Ycalc.numCols();
+//        SimpleMatrix sumRows = new SimpleMatrix(y.numCols(), 1);
+//        CommonOps_DDRM.sumCols(y.getMatrix(), sumRows.getMatrix());
+//        return (sumRows.elementLog().elementSum() * -1) / m;
     }
 
     @Override
