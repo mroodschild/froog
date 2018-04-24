@@ -1,11 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2017 
- *   Matías Roodschild <mroodschild@gmail.com>.
- *   Jorge Gotay Sardiñas <jgotay57@gmail.com>.
- *   Adrian Will <adrian.will.01@gmail.com>.
- *   Sebastián Rodriguez <sebastian.rodriguez@gitia.org>.
+ * Copyright 2018 Matías Rodschild <mroodschild@gmail.com>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,36 +21,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.gitia.froog.transferfunction;
+package org.gitia.froog.trainingalgorithm.testfunction;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
+import org.ejml.simple.SimpleMatrix;
 
 /**
  *
- * @author matias
+ * @author Matías Rodschild <mroodschild@gmail.com>
  */
-public class TransferFunctionTest {
+public class CuadraticFunction implements TestFunction{
 
-    public TransferFunctionTest() {
+    /**
+     * sum(x<sup>2</sup>)
+     * @param x
+     * @return 
+     */
+    @Override
+    public double compute(SimpleMatrix x) {
+        return x.elementPower(2).elementSum();
     }
 
-    @BeforeClass
-    public static void setUpClass() {
+    /**
+     * 
+     * 2 * (x)
+     * @param x
+     * @return 
+     */
+    @Override
+    public SimpleMatrix gradient(SimpleMatrix x) {
+        return x.scale(2);
     }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
-
 }

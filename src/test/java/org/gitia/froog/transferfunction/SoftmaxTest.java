@@ -27,8 +27,6 @@
  */
 package org.gitia.froog.transferfunction;
 
-import org.gitia.froog.transferfunction.TransferFunction;
-import org.gitia.froog.transferfunction.FunctionFactory;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -45,10 +43,9 @@ public class SoftmaxTest {
     @Test
     public void testOutput() {
         TransferFunction softmax = FunctionFactory.getFunction("softmax");
-        SimpleMatrix z = new SimpleMatrix(5, 1, true,
-                -3, -1, 0, 1, 3
-        );
-        double[] salida = softmax.output(z).getMatrix().getData();
+        double[] data = {-3, -1, 0, 1.0, 3};
+        SimpleMatrix z = new SimpleMatrix(5, 1, true, data);
+        double[] salida = softmax.output(z).getDDRM().getData();
         double[] esperado = {
             0.002055492,
             0.015188145,
@@ -64,13 +61,17 @@ public class SoftmaxTest {
      */
     @Test
     public void testOutput2() {
-        TransferFunction softmax = FunctionFactory.getFunction("softmax");
-        SimpleMatrix z = new SimpleMatrix(3, 1, true,
-                1, 2, 3
-        );
-        double[] expResult = {0.090030573, 0.244728471, 0.665240956};
-        double[] result = softmax.output(z).getMatrix().getData();
-        //softmax.output(z).print();
+        TransferFunction softmax = new Softmax();
+        double[] data = {1, 1,
+            2, 3.0,
+            3, 2};
+        SimpleMatrix z = new SimpleMatrix(3, 2, true, data);
+        double[] expResult = {
+            0.090030573, 0.090030573,
+            0.244728471, 0.665240956,
+            0.665240956, 0.244728471};
+        softmax.output(z).getDDRM().print();
+        double[] result = softmax.output(z).getDDRM().getData();
         assertArrayEquals(expResult, result, 0.000000001);
     }
 

@@ -1,11 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2017 
- *   Matías Roodschild <mroodschild@gmail.com>.
- *   Jorge Gotay Sardiñas <jgotay57@gmail.com>.
- *   Adrian Will <adrian.will.01@gmail.com>.
- *   Sebastián Rodriguez <sebastian.rodriguez@gitia.org>.
+ * Copyright 2018 Matías Rodschild <mroodschild@gmail.com>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,36 +21,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.gitia.froog.transferfunction;
+package org.gitia.froog.trainingalgorithm.testfunction;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
+import org.ejml.simple.SimpleMatrix;
 
 /**
  *
- * @author matias
+ * @author Matías Rodschild <mroodschild@gmail.com>
  */
-public class TransferFunctionTest {
-
-    public TransferFunctionTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
-
+public interface TestFunction {
+    
+    /**
+     * function output
+     * @param X [n x 1]
+     * @return 
+     */
+    public double compute(SimpleMatrix X);
+    
+    /**
+     * function gradient
+     * @param X [n x 1]
+     * @return
+     */
+    public SimpleMatrix gradient(SimpleMatrix X);
 }

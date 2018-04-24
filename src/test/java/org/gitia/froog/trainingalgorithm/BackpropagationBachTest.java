@@ -27,9 +27,7 @@
  */
 package org.gitia.froog.trainingalgorithm;
 
-import org.gitia.froog.trainingalgorithm.Backpropagation;
 import org.gitia.froog.Feedforward;
-import org.ejml.simple.SimpleMatrix;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -64,7 +62,7 @@ public class BackpropagationBachTest {
     }
 
     /**
-     * Test of entrenar method, of class BackpropagationBach.
+     * Test of train method, of class BackpropagationBach.
      */
     @Ignore
     @Test
@@ -76,21 +74,69 @@ public class BackpropagationBachTest {
         int iteraciones = 0;
         Backpropagation instance = new Backpropagation();
         instance.setEpoch(iteraciones);
-        instance.entrenar(net, input, output);
+        instance.train(net, input, output);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
 
 //    /**
-//     * Test of calcularGradientes method, of class BackpropagationBach.
+//     * Test of computeGradient method, of class BackpropagationBach.
 //     */
 //    @Ignore
 //    @Test
 //    public void testCalcularGradientes() {
-//        System.out.println("calcularGradientes");
+//        System.out.println("computeGradient");
 //        Backpropagation instance = new Backpropagation();
 //        double expResult = 0.0;
-//        double result = instance.calcularGradientes();
+//        double result = instance.computeGradient();
+//        assertEquals(expResult, result, 0.0);
+//        // TODO review the generated test code and remove the default call to fail.
+//        fail("The test case is a prototype.");
+//    }
+
+    /**
+     * Test of updateParameters method, of class BackpropagationBach.
+     */
+    @Ignore
+    @Test
+    public void testActualizarParametros() {
+//        System.out.println("actualizarParametros");
+//        double m = 0.0;
+//        Backpropagation instance = new Backpropagation();
+//        instance.updateParameters(m);
+//        // TODO review the generated test code and remove the default call to fail.
+//        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of computeCost method, of class BackpropagationBach.
+     */
+//    @Ignore
+//    @Test
+//    public void testComputeCost_SimpleMatrix_SimpleMatrix() {
+//        System.out.println("computeCost");
+//        SimpleMatrix input = null;
+//        SimpleMatrix Yobs = null;
+//        Backpropagation instance = new Backpropagation();
+//        double expResult = 0.0;
+//        double result = instance.cost(input, Yobs);
+//        assertEquals(expResult, result, 0.0);
+//        // TODO review the generated test code and remove the default call to fail.
+//        fail("The test case is a prototype.");
+//    }
+
+//    /**
+//     * Test of computeCost method, of class BackpropagationBach.
+//     */
+//    @Ignore
+//    @Test
+//    public void testComputeCost_doubleArr_doubleArr() {
+//        System.out.println("computeCost");
+//        double[] input = null;
+//        double[] output = null;
+//        Backpropagation instance = new Backpropagation();
+//        double expResult = 0.0;
+//        double result = instance.cost(input, output);
 //        assertEquals(expResult, result, 0.0);
 //        // TODO review the generated test code and remove the default call to fail.
 //        fail("The test case is a prototype.");
@@ -99,35 +145,32 @@ public class BackpropagationBachTest {
     /**
      * Test of computeCost method, of class BackpropagationBach.
      */
-    @Ignore
-    @Test
-    public void testComputeCost_SimpleMatrix_SimpleMatrix() {
-        System.out.println("computeCost");
-        SimpleMatrix input = null;
-        SimpleMatrix Yobs = null;
-        Backpropagation instance = new Backpropagation();
-        double expResult = 0.0;
-        double result = instance.cost(input, Yobs);
-        assertEquals(expResult, result, 0.0);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of computeCost method, of class BackpropagationBach.
-     */
-    @Ignore
-    @Test
-    public void testComputeCost_doubleArr_doubleArr() {
-        System.out.println("computeCost");
-        double[] input = null;
-        double[] output = null;
-        Backpropagation instance = new Backpropagation();
-        double expResult = 0.0;
-        double result = instance.cost(input, output);
-        assertEquals(expResult, result, 0.0);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
+//    @Test
+//    @Ignore
+//    public void testDeltasZero() {
+//        Backpropagation bach = new Backpropagation();
+//
+//        List<SimpleMatrix> deltaW = new ArrayList<>();
+//        List<SimpleMatrix> deltaB = new ArrayList<>();
+//
+//        SimpleMatrix a = new SimpleMatrix(2, 2, true, 1.0, 1.1, 1.2, 1.3);
+//        SimpleMatrix b = new SimpleMatrix(2, 2, true, 2.0, 2.1, 2.2, 2.3);
+//
+//        deltaW.add(a);
+//        deltaW.add(new SimpleMatrix(a));
+//        deltaB.add(b);
+//        deltaB.add(new SimpleMatrix(b));
+//
+//        bach.deltasW = deltaW;
+//        bach.deltasB = deltaB;
+//
+//        bach.deltasZero();
+//
+//        double[] expected = {0.0, 0.0, 0.0, 0.0};
+//        assertArrayEquals(expected, bach.deltasB.get(0).getDDRM().getData(), 0);
+//        assertArrayEquals(expected, bach.deltasB.get(1).getDDRM().getData(), 0);
+//        assertArrayEquals(expected, bach.deltasW.get(0).getDDRM().getData(), 0);
+//        assertArrayEquals(expected, bach.deltasW.get(1).getDDRM().getData(), 0);
+//    }
 
 }

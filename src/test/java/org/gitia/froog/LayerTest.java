@@ -66,14 +66,17 @@ public class LayerTest {
      */
     @Test
     public void testOutputZ() {
-        SimpleMatrix w1 = new SimpleMatrix(2, 2, true, 0.1, 0.2, 0.3, 0.4);
-        SimpleMatrix b1 = new SimpleMatrix(2, 1, true, 0.5, 0.1);
+        double[] data = {0.1, 0.2, 0.3, 0.4};
+        double[] data1 = {0.5, 0.1};
+        SimpleMatrix w1 = new SimpleMatrix(2, 2, true, data);
+        SimpleMatrix b1 = new SimpleMatrix(2, 1, true, data1);
 
         Layer layer = new Layer(w1, b1, "tansig");
 
-        SimpleMatrix entrada = new SimpleMatrix(2, 1, true, 0.2, 0.6);
+        double[] data2 = {0.2, 0.6};
+        SimpleMatrix entrada = new SimpleMatrix(2, 1, true, data2);
         double[] esperado = {0.64, 0.4};
-        assertArrayEquals(esperado, layer.outputZ(entrada).getMatrix().getData(), 0.0001);
+        assertArrayEquals(esperado, layer.outputZ(entrada).getDDRM().getData(), 0.0001);
     }
 
     /**
@@ -81,14 +84,17 @@ public class LayerTest {
      */
     @Test
     public void testOutput_SimpleMatrix() {
-        SimpleMatrix w1 = new SimpleMatrix(2, 2, true, 0.1, 0.2, 0.3, 0.4);
-        SimpleMatrix b1 = new SimpleMatrix(2, 1, true, 0.5, 0.1);
-        SimpleMatrix a = new SimpleMatrix(2, 1, true, 0.2, 0.6);
+        double[] data = {0.1, 0.2, 0.3, 0.4};
+        double[] data1 = {0.5, 0.1};
+        double[] data2 = {0.2, 0.6};
+        SimpleMatrix w1 = new SimpleMatrix(2, 2, true, data);
+        SimpleMatrix b1 = new SimpleMatrix(2, 1, true, data1);
+        SimpleMatrix a = new SimpleMatrix(2, 1, true, data2);
 
         Layer instance = new Layer(w1, b1, "tansig");
 
         double[] esperado = {0.5648995528462, 0.3799489622552};
-        assertArrayEquals(esperado, instance.output(a).getMatrix().getData(), 0.0000001);
+        assertArrayEquals(esperado, instance.output(a).getDDRM().getData(), 0.0000001);
     }
 
     /**
@@ -96,14 +102,16 @@ public class LayerTest {
      */
     @Test
     public void testOutput_doubleArr() {
-        SimpleMatrix w1 = new SimpleMatrix(2, 2, true, 0.1, 0.2, 0.3, 0.4);
-        SimpleMatrix b1 = new SimpleMatrix(2, 1, true, 0.5, 0.1);
+        double[] data = {0.1, 0.2, 0.3, 0.4};
+        double[] data1 = {0.5, 0.1};
+        SimpleMatrix w1 = new SimpleMatrix(2, 2, true, data);
+        SimpleMatrix b1 = new SimpleMatrix(2, 1, true, data1);
         double[] a = {0.2, 0.6};
         
         Layer instance = new Layer(w1, b1, "tansig");
 
         double[] esperado = {0.5648995528462, 0.3799489622552};
-        assertArrayEquals(esperado, instance.output(a).getMatrix().getData(), 0.0000001);
+        assertArrayEquals(esperado, instance.output(a).getDDRM().getData(), 0.0000001);
     }
 
 }

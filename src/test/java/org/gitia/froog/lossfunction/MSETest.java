@@ -1,11 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2017 
- *   Matías Roodschild <mroodschild@gmail.com>.
- *   Jorge Gotay Sardiñas <jgotay57@gmail.com>.
- *   Adrian Will <adrian.will.01@gmail.com>.
- *   Sebastián Rodriguez <sebastian.rodriguez@gitia.org>.
+ * Copyright 2018 Matías Rodschild <mroodschild@gmail.com>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,80 +24,60 @@
 package org.gitia.froog.lossfunction;
 
 import org.ejml.simple.SimpleMatrix;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.junit.Ignore;
 
 /**
  *
- * @author Matías Roodschild <mroodschild@gmail.com>
+ * @author Matías Rodschild <mroodschild@gmail.com>
  */
-public class CrossEntropyLossTest {
+public class MSETest {
 
-  public CrossEntropyLossTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
+    public MSETest() {
     }
 
     /**
-     * Test of cost method, of class CrossEntropyLoss.
+     * Test of cost method, of class MSE.
      */
     @Test
     public void testCost() {
-        System.out.println("org.gitia.neuralnetwork.lossfunction.CrossEntropyLossTest.testCost()");
-        double[] data = {0.1, 0.10, 0.8};
-        double[] data1 = {0, 0, 1.0};
-        SimpleMatrix Ycalc = new SimpleMatrix(1, 3, true, data);
+        System.out.println("cost");
+        double[] data = {0, 0, 1.0};
+        double[] data1 = {0.1, 0.1, 0.8};
+        SimpleMatrix Yobs = new SimpleMatrix(3, 1, true, data);
+        SimpleMatrix Ycalc = new SimpleMatrix(3, 1, true, data1);
         //Ycalc.print();
-
-        SimpleMatrix Yobs = new SimpleMatrix(1, 3, true, data1);
         //Yobs.print();
-        CrossEntropyLoss instance = new CrossEntropyLoss();
-        double expResult = 0.22314355131421;
+        MSE instance = new MSE();
+        double expResult = 0.12247448713915889;
         double result = instance.cost(Ycalc, Yobs);
-        System.out.println("result: " + result + "\t Expected: " + expResult);
+//        System.out.println("cost: "+result);
+        System.out.println("costAll: " + instance.costAll(Ycalc, Yobs));
         assertEquals(expResult, result, 0.00000000000001);
     }
 
     /**
-     * Test of costAll method, of class CrossEntropyLoss.
+     * Test of costAll method, of class MSE.
      */
-    @Ignore
     @Test
     public void testCostAll() {
-        System.out.println("org.gitia.neuralnetwork.lossfunction.CrossEntropyLossTest.testCostAll()");
-        double[] data = {0.1, 0.3, 0.1, 0.9,
+        System.out.println("costAll");
+        double[] data = {
+            0.1, 0.3, 0.1, 0.9,
             0.1, 0.5, 0.1, 0.05,
             0.8, 0.1, 0.20, 0.05};
-        double[] data1 = {0, 0, 0, 1,
+        SimpleMatrix Ycalc = new SimpleMatrix(3, 4, true, data);
+        double[] data1 = {
+            0, 0, 0, 1,
             0, 1, 0, 0,
             1.0, 0, 1, 0};
-        SimpleMatrix Ycalc = new SimpleMatrix(3, 4, true, data);
         SimpleMatrix Yobs = new SimpleMatrix(3, 4, true, data1);
 //        Ycalc.print();
 //        Yobs.print();
-        CrossEntropyLoss instance = new CrossEntropyLoss();
-        double expResult = 2.63108915996608;
-        double result = instance.costAll(Ycalc.transpose(), Yobs.transpose());
-        System.out.println("result: " + result + "\t Expected: " + expResult);
+        MSE instance = new MSE();
+//        System.out.println("costAll:\t" + instance.costAll(Ycalc, Yobs));
+        double expResult = 0.13020416659999787;
+        double result = instance.costAll(Ycalc, Yobs);
         assertEquals(expResult, result, 0.00000000000001);
     }
 

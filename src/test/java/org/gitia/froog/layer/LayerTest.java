@@ -27,7 +27,6 @@
  */
 package org.gitia.froog.layer;
 
-import org.gitia.froog.layer.Layer;
 import org.ejml.simple.SimpleMatrix;
 import org.gitia.froog.transferfunction.TransferFunction;
 import org.junit.Test;
@@ -46,12 +45,14 @@ public class LayerTest {
     @Test
     public void testOutput_doubleArr() {
         System.out.println("output");
-        SimpleMatrix w = new SimpleMatrix(2, 3, true, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6);
-        SimpleMatrix b = new SimpleMatrix(2, 1, true, 0.1, 0.2);
+        double[] data = {0.1, 0.2, 0.3, 0.4, 0.5, 0.6};
+        double[] data1 = {0.1, 0.2};
+        SimpleMatrix w = new SimpleMatrix(2, 3, true, data);
+        SimpleMatrix b = new SimpleMatrix(2, 1, true, data1);
         double[] input = {0.2, 0.4, 0.6};
         Layer instance = new Layer(w, b, TransferFunction.LOGSIG);
         double[] expResult = {0.5938731029341, 0.6984652160025};
-        double[] result = instance.output(input).getMatrix().getData();
+        double[] result = instance.output(input).getDDRM().getData();
         assertArrayEquals(expResult, result, 0.0000000000001);
     }
 
@@ -61,12 +62,15 @@ public class LayerTest {
     @Test
     public void testOutput_SimpleMatrix() {
         System.out.println("output");
-        SimpleMatrix w = new SimpleMatrix(2, 3, true, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6);
-        SimpleMatrix b = new SimpleMatrix(2, 1, true, 0.1, 0.2);
-        SimpleMatrix input = new SimpleMatrix(3, 1, true, 0.2, 0.4, 0.6);
+        double[] data = {0.1, 0.2, 0.3, 0.4, 0.5, 0.6};
+        double[] data1 = {0.1, 0.2};
+        double[] data2 = {0.2, 0.4, 0.6};
+        SimpleMatrix w = new SimpleMatrix(2, 3, true, data);
+        SimpleMatrix b = new SimpleMatrix(2, 1, true, data1);
+        SimpleMatrix input = new SimpleMatrix(3, 1, true, data2);
         Layer instance = new Layer(w, b, TransferFunction.LOGSIG);
         double[] expResult = {0.5938731029341, 0.6984652160025};
-        double[] result = instance.output(input).getMatrix().getData();
+        double[] result = instance.output(input).getDDRM().getData();
         instance.output(input).print();
         assertArrayEquals(expResult, result, 0.0000000000001);
     }
@@ -77,12 +81,15 @@ public class LayerTest {
     @Test
     public void testOutput_SimpleMatrixAll() {
         System.out.println("output");
-        SimpleMatrix w = new SimpleMatrix(2, 3, true, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6);
-        SimpleMatrix b = new SimpleMatrix(2, 1, true, 0.1, 0.2);
-        SimpleMatrix input = new SimpleMatrix(3, 2, false, 0.2, 0.4, 0.6, 0.2, 0.4, 0.6);
+        double[] data = {0.1, 0.2, 0.3, 0.4, 0.5, 0.6};
+        double[] data1 = {0.1, 0.2};
+        double[] data2 = {0.2, 0.4, 0.6, 0.2, 0.4, 0.6};
+        SimpleMatrix w = new SimpleMatrix(2, 3, true, data);
+        SimpleMatrix b = new SimpleMatrix(2, 1, true, data1);
+        SimpleMatrix input = new SimpleMatrix(3, 2, false, data2);
         Layer instance = new Layer(w, b, TransferFunction.LOGSIG);
         double[] expResult = {0.5938731029341, 0.5938731029341, 0.6984652160025, 0.6984652160025};
-        double[] result = instance.output(input).getMatrix().getData();
+        double[] result = instance.output(input).getDDRM().getData();
         assertArrayEquals(expResult, result, 0.0000000000001);
     }
 

@@ -27,8 +27,6 @@
  */
 package org.gitia.froog.transferfunction;
 
-import org.gitia.froog.transferfunction.TransferFunction;
-import org.gitia.froog.transferfunction.FunctionFactory;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -68,8 +66,9 @@ public class PurelimTest {
     @Test
     public void testOutput() {
         TransferFunction purelim = FunctionFactory.getFunction("purelim");
-        SimpleMatrix a = new SimpleMatrix(1, 5, true, -3, -1, 0, 1, 3);
-        double[] salida = purelim.output(a).getMatrix().getData();
+        double[] data ={-3, -1, 0, 1, 3.0};
+        SimpleMatrix a = new SimpleMatrix(1, 5, true, data);
+        double[] salida = purelim.output(a).getDDRM().getData();
         double[] esperado = {-3, -1, 0, 1, 3};
         assertArrayEquals(esperado, salida, 0.000000001);
     }
@@ -80,8 +79,9 @@ public class PurelimTest {
     @Test
     public void testDerivative() {
         TransferFunction purelim = FunctionFactory.getFunction("purelim");
-        SimpleMatrix a = new SimpleMatrix(1, 5, true, -3, -1, 0, 1, 3);
-        double[] salida = purelim.derivative(a).getMatrix().getData();
+        double[] data ={-3, -1, 0, 1, 3.0};
+        SimpleMatrix a = new SimpleMatrix(1, 5, true, data);
+        double[] salida = purelim.derivative(a).getDDRM().getData();
         double[] esperado = {1, 1, 1, 1, 1};
         assertArrayEquals(esperado, salida, 0.000000001);
     }

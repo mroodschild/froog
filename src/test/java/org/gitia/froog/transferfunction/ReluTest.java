@@ -27,7 +27,6 @@
  */
 package org.gitia.froog.transferfunction;
 
-import org.gitia.froog.transferfunction.Relu;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -35,7 +34,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.junit.Ignore;
 
 /**
  *
@@ -68,26 +66,27 @@ public class ReluTest {
     @Test
     public void testOutput() {
         System.out.println("output");
-        SimpleMatrix z = new SimpleMatrix(1, 5, true, -1, 1, 0, .1, -.1);
+        double[] data ={-1, 1.0, 0, .1, -.1};
+        SimpleMatrix z = new SimpleMatrix(1, 5, true, data);
         Relu instance = new Relu();
         double[] expResult = {0, 1, 0, 0.1, 0};
         SimpleMatrix result = instance.output(z);
-        assertArrayEquals(expResult, result.getMatrix().getData(), 0);
+        assertArrayEquals(expResult, result.getDDRM().getData(), 0);
         // TODO review the generated test code and remove the default call to fail.
     }
 
     /**
      * Test of derivative method, of class Relu.
      */
-    @Ignore
     @Test
     public void testDerivative() {
         System.out.println("output");
-        SimpleMatrix z = new SimpleMatrix(1, 5, true, -1, 1, 0, .1, -.1);
+        double[] data = {-1, 1.0, 0, .1, -.1};
+        SimpleMatrix z = new SimpleMatrix(1, 5, true, data);
         Relu instance = new Relu();
-        double[] expResult = {0, 1, 0, 1, 0};
+        double[] expResult = {0, 1, 1, 1, 0};
         SimpleMatrix result = instance.derivative(z);
-        assertArrayEquals(expResult, result.getMatrix().getData(), 0);
+        assertArrayEquals(expResult, result.getDDRM().getData(), 0);
     }
 
     /**

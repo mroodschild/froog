@@ -62,7 +62,7 @@ public class Test {
         //int nn = 30;
         Feedforward net = new Feedforward();
         net.addLayer(new Layer(inputSize, 10, TransferFunction.TANSIG, rand));
-        net.addLayer(new Layer(10, 5, TransferFunction.PRERELU, rand));
+        net.addLayer(new Layer(10, 5, TransferFunction.PRELU, rand));
         net.addLayer(new Layer(5, outputSize, TransferFunction.PURELIM, rand));
         
         //=================  configuraciones del ensayo ========================
@@ -78,7 +78,7 @@ public class Test {
 
         input.printDimensions();
         output.printDimensions();
-        bp.entrenar(net, input, output);
+        bp.train(net, input, output);
         
 //        System.out.println("Salidas Capa Oculta");
 //        net.getLayers().get(0).output(all_in.transpose()).transpose().print();
@@ -86,7 +86,7 @@ public class Test {
 //        net.getLayers().get(1).getW().print();
 
         try {
-            net.outputAll(all_in).saveToFileCSV("src/main/resources/function/res_train.csv");
+            net.output(all_in).saveToFileCSV("src/main/resources/function/res_train.csv");
         } catch (IOException ex) {
             Logger.getLogger(Test.class.getName()).log(Level.SEVERE, null, ex);
         }
