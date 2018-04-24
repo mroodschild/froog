@@ -41,16 +41,23 @@ public interface TransferFunction {
     public static String LOGSIG = "logsig";
     public static String TANSIG = "tansig";
     public static String RELU = "relu";
-    public static String PRERELU = "prerelu";
+    public static String PRELU = "prelu";
 
     /**
-     * El parámetro z = W * X + B
+     * z = W * X + B
      *
      * @param z
      * @return retorna el resultado de la función deseada
      */
     public SimpleMatrix output(SimpleMatrix z);
 
+    /**
+     * 
+     * @param W [neurons, inputs]
+     * @param a [inputs, m] where m is the amount of data
+     * @param B [neurons, 1]
+     * @return 
+     */
     public SimpleMatrix outputZ(SimpleMatrix W, SimpleMatrix a, SimpleMatrix B);
 
     public SimpleMatrix derivative(SimpleMatrix a);

@@ -27,6 +27,7 @@
  */
 package org.gitia.froog.transferfunction;
 
+import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.ops.CommonOps;
 import org.ejml.simple.SimpleMatrix;
 
@@ -57,10 +58,10 @@ public class Softmax implements TransferFunction {
 //        return p.divide(sum);
         SimpleMatrix p = z.elementExp();
         SimpleMatrix sum = new SimpleMatrix(1, p.numCols());
-        CommonOps.sumCols(p.getMatrix(), sum.getMatrix());
+        CommonOps_DDRM.sumCols(p.getMatrix(), sum.getMatrix());
         for (int i = 0; i < p.numCols(); i++) {
             p.setColumn(i, 0, p.extractVector(false, i).
-                    divide(sum.get(i)).getMatrix().getData());
+                    divide(sum.get(i)).getDDRM().getData());
         }
         return p;
     }
@@ -75,7 +76,8 @@ public class Softmax implements TransferFunction {
      */
     @Override
     public SimpleMatrix derivative(SimpleMatrix a) {
-        throw new UnsupportedOperationException("Softmax was not supported in Hidden Layers.");
+        throw new UnsupportedOperationException(
+                "Softmax was not supported in Hidden Layers.");
     }
 
     /**
@@ -108,12 +110,7 @@ public class Softmax implements TransferFunction {
     @Override
     public SimpleMatrix outputZ(SimpleMatrix W, SimpleMatrix a, SimpleMatrix B) {
         //in softmax B is not necesary
-        //return W.mult(a);//.plus(B);
-        //return W.mult(a).plus(B);
         SimpleMatrix aux = W.mult(a);
-//        for (int i = 0; i < aux.numCols(); i++) {
-//            aux.setColumn(i, 0, aux.extractVector(false, i).plus(B).getMatrix().getData());
-//        }
         return aux;
     }
 

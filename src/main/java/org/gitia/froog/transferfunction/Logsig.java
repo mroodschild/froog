@@ -27,6 +27,7 @@
  */
 package org.gitia.froog.transferfunction;
 
+import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.simple.SimpleMatrix;
 
 /**
@@ -37,33 +38,31 @@ public class Logsig implements TransferFunction {
 
     /**
      * Logsig: <br>
-     * 1 / (1 + e^(-a))
+     * 1 / (1 + e^(-z))
      *
-     * @param a
-     * @return
+     * @param z
+     * @return a
      */
     @Override
-    public SimpleMatrix output(SimpleMatrix a) {
-        SimpleMatrix div = a.scale(-1).elementExp().plus(1);
-        SimpleMatrix b = new SimpleMatrix(a.numRows(), a.numCols());
-        b.set(1);
-        return b.elementDiv(div);
+    public SimpleMatrix output(SimpleMatrix z) {
+        SimpleMatrix a = z.scale(-1).elementExp().plus(1);
+        CommonOps_DDRM.divide(1, a.getDDRM());
+        return a;
     }
 
     /**
-     * 
-     * @param W W[neuronas x entrada]
-     * @param a a[entrada x 1]
-     * @param B B[neuronas x 1]
-     * @return 
+     *
+     * @param W W[neurons x inputs]
+     * @param a a[inputs x m] where m is the amount of data
+     * @param B B[neurons x 1]
+     * @return
      */
     @Override
     public SimpleMatrix outputZ(SimpleMatrix W, SimpleMatrix a, SimpleMatrix B) {
-        //return W.mult(a).plus(B);
-        SimpleMatrix aux = W.mult(a);
-        for (int i = 0; i < aux.numCols(); i++) {
-            aux.setColumn(i, 0, aux.extractVector(false, i).plus(B).getMatrix().getData());
-        }
+        SimpleMatrix b = new SimpleMatrix(1, a.numCols());
+        b.fill(1);
+        SimpleMatrix aux = B.mult(b);
+        CommonOps_DDRM.multAdd(W.getDDRM(), a.getDDRM(), aux.getDDRM());
         return aux;
     }
 
@@ -75,7 +74,7 @@ public class Logsig implements TransferFunction {
      */
     @Override
     public SimpleMatrix derivative(SimpleMatrix a) {
-        return a.scale(-1).plus(1).elementMult(a);
+        return a.negative().plus(1).elementMult(a);
     }
 
     @Override
@@ -85,10 +84,7 @@ public class Logsig implements TransferFunction {
 
     @Override
     public SimpleMatrix derivative(SimpleMatrix yCalc, SimpleMatrix yObs) {
-        //calculamos la derivada del "a" de salida
-        SimpleMatrix f_a = derivative(yCalc);
-        //ponemos la derivada de la salida en la posición de la salida
-        return yCalc.minus(yObs).elementMult(f_a);
+        return yCalc.minus(yObs);
     }
 
     @Override

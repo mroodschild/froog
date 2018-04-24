@@ -49,7 +49,7 @@ public class Relu implements TransferFunction {
 //        return W.mult(a).plus(B);
         SimpleMatrix aux = W.mult(a);
         for (int i = 0; i < aux.numCols(); i++) {
-            aux.setColumn(i, 0, aux.extractVector(false, i).plus(B).getMatrix().getData());
+            aux.setColumn(i, 0, aux.extractVector(false, i).plus(B).getDDRM().getData());
         }
         return aux;
     }

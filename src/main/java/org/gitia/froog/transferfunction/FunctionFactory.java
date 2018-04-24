@@ -54,11 +54,11 @@ public class FunctionFactory {
                 return new Softmax();
             case TransferFunction.RELU:
                 return new Relu();
-            case TransferFunction.PRERELU:
-                return new PreRelu();
+            case TransferFunction.PRELU:
+                return new PRelu();
             default:
-                System.err.println("La funcion: '" + function + "' no existe, "
-                        + "por favor pruebe con otra.");
+                System.err.println("Function: '" + function + "' not found, "
+                        + "please try with another one.");
                 System.exit(0);
         }
         return null;

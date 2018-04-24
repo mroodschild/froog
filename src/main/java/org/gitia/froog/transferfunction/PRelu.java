@@ -33,7 +33,7 @@ import org.ejml.simple.SimpleMatrix;
  *
  * @author Matías Roodschild <mroodschild@gmail.com>
  */
-public class PreRelu implements TransferFunction {
+public class PRelu implements TransferFunction {
 
     @Override
     public SimpleMatrix output(SimpleMatrix z) {
@@ -50,7 +50,7 @@ public class PreRelu implements TransferFunction {
 //        return W.mult(a).plus(B);
         SimpleMatrix aux = W.mult(a);
         for (int i = 0; i < aux.numCols(); i++) {
-            aux.setColumn(i, 0, aux.extractVector(false, i).plus(B).getMatrix().getData());
+            aux.setColumn(i, 0, aux.extractVector(false, i).plus(B).getDDRM().getData());
         }
         return aux;
     }
