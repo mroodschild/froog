@@ -1,3 +1,5 @@
+[![](https://jitpack.io/v/mroodschild/froog.svg)](https://jitpack.io/#mroodschild/froog)
+
 # Froog
                     Authors:  Roodschild Matías     / mroodschild@gmail.com
                               Jorge Gotay Sardiñas  / jgotay57@gmail.com
