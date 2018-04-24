@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2017 
+ * Copyright 2017 - 2018
  *   Matías Roodschild <mroodschild@gmail.com>.
  *   Jorge Gotay Sardiñas <jgotay57@gmail.com>.
  *   Adrian Will <adrian.will.01@gmail.com>.
@@ -80,34 +80,6 @@ public class Feedforward implements NeuralNetwork {
     }
 
     /**
-     * Recibimos los datos ordenados de la siguiente manera:<br><br>
-     * Donde las columnas son las características y las filas son los datos a
-     * procesar <br>
-     * <br>
-     * <table>
-     * <tr><td>|0.9</td><td>0.8</td><td>0.66|</td></tr>
-     * <tr><td>|0.1</td><td>0.3</td><td>0.4 |</td></tr>
-     * <tr><td>|...</td><td>...</td><td>... |</td></tr>
-     * <tr><td>|0.1</td><td>0.3</td><td>0.4 |</td></tr>
-     * </table>
-     *
-     * @param input
-     * @return
-     */
-    @Override
-    public SimpleMatrix outputAll(SimpleMatrix input) {
-//        SimpleMatrix inputT = input.transpose();
-//        SimpleMatrix out = new SimpleMatrix(input.numRows(), layers.get(layers.size() - 1).numNeuron());
-//        int size = input.numRows();
-//        for (int i = 0; i < size; i++) {
-//            SimpleMatrix in = inputT.extractVector(false, i);
-//            out.setRow(i, 0, output(in).transpose().getMatrix().getData());
-//        }
-//        return out;
-        return output(input.transpose()).transpose();
-    }
-
-    /**
      *
      * @param input entrada a la red
      * @param layer salida de la Layer deseada
@@ -122,36 +94,38 @@ public class Feedforward implements NeuralNetwork {
     }
 
     /**
-     * retornamos todas las salidas de todas las capas
+     * retornamos todas las salidas de todas las capas, cada fila de la entrada
+     * y la salida es una característica y cada columna es un dato
      *
      * @param input
      * @return
      */
-    public List<SimpleMatrix> outputLayers(SimpleMatrix input) {
-        List<SimpleMatrix> outputs = new ArrayList<>();
-        SimpleMatrix aux = new SimpleMatrix(input);
+    public List<SimpleMatrix> activations(SimpleMatrix input) {
+        List<SimpleMatrix> A = new ArrayList<>();
+        SimpleMatrix a = input.copy();
         int size = layers.size();
         for (int i = 0; i < size; i++) {
-            aux = layers.get(i).output(aux);
-        outputs.add(aux);
+            a = layers.get(i).output(a);
+            A.add(a);
         }
-        return outputs;
+        return A;
     }
-
+    
     /**
-     * devuelve la z de la capa deseada
+     * 
      *
-     * @param input
-     * @param layer
-     * @return
+     * @param input inputs to evaluate with dropout
+     * @return outputs with dropout
      */
-    public SimpleMatrix outputZ(SimpleMatrix input, int layer) {
-        SimpleMatrix aux = new SimpleMatrix(input);
-        aux = layers.get(0).outputZ(aux);
-        for (int i = 1; i <= layer; i++) {
-            aux = layers.get(i).output(aux);
+    public List<SimpleMatrix> activationsDropout(SimpleMatrix input) {
+        List<SimpleMatrix> A = new ArrayList<>();
+        SimpleMatrix a = input.copy();
+        int size = layers.size();
+        for (int i = 0; i < size; i++) {
+            a = layers.get(i).outputDropout(a);
+            A.add(a);
         }
-        return aux;
+        return A;
     }
 
     /**
@@ -175,21 +149,16 @@ public class Feedforward implements NeuralNetwork {
 
     /**
      *
-     * @return W1, W2, ..., Wn, B1, B2, ...,Bm
+     * @return W1, W2, ..., Wn, B1, B2, ...,Bm [1 x n]
      */
-    public SimpleMatrix getParams() {
+    public SimpleMatrix getParameters() {
         if (layers.isEmpty()) {
             System.err.println("Inicialice los pesos primero");
             return null;
         }
-        double[] aux = new double[0];
-        for (int i = 0; i < layers.size(); i++) {
-            aux = ArrayUtils.addAll(aux, layers.get(i).getW().getMatrix().getData());
-        }
-        for (int i = 0; i < layers.size(); i++) {
-            aux = ArrayUtils.addAll(aux, layers.get(i).getB().getMatrix().getData());
-        }
-        return new SimpleMatrix(1, aux.length, true, aux);
+        SimpleMatrix w = getParamsW();
+        SimpleMatrix b = getParamsB();
+        return w.concatColumns(b);
     }
 
     /**
@@ -201,11 +170,17 @@ public class Feedforward implements NeuralNetwork {
             System.err.println("layers empty");
             return null;
         }
-        double[] aux = new double[0];
-        for (int i = 0; i < layers.size(); i++) {
-            aux = ArrayUtils.addAll(aux, layers.get(i).getW().getMatrix().getData());
+        int numW = 0;
+        for (Layer next : layers) {
+            numW += next.getW().getNumElements();
         }
-        return new SimpleMatrix(1, aux.length, true, aux);
+        SimpleMatrix w = new SimpleMatrix(1, numW);
+        int pos = 0;
+        for (Layer next : layers) {
+            w.setRow(0, pos, next.getW().getDDRM().getData());
+            pos += next.getW().getDDRM().getNumElements();
+        }
+        return w;
     }
 
     /**
@@ -217,11 +192,17 @@ public class Feedforward implements NeuralNetwork {
             System.err.println("Inicialice los pesos primero");
             return null;
         }
-        double[] aux = new double[0];
-        for (int i = 0; i < layers.size(); i++) {
-            aux = ArrayUtils.addAll(aux, layers.get(i).getB().getMatrix().getData());
+        int numB = 0;
+        for (Layer next : layers) {
+            numB += next.getB().getNumElements();
         }
-        return new SimpleMatrix(1, aux.length, true, aux);
+        SimpleMatrix b = new SimpleMatrix(1, numB);
+        int pos = 0;
+        for (Layer next : layers) {
+            b.setRow(0, pos, next.getB().getDDRM().getData());
+            pos += next.getB().getDDRM().getNumElements();
+        }
+        return b;
     }
 
     /**
@@ -232,39 +213,30 @@ public class Feedforward implements NeuralNetwork {
      * 4 5 6 <br>
      * 7 8 9 <br>
      *
-     * @param pesos
+     * @param weights
      */
-    public void setPesos(SimpleMatrix pesos) {
+    public void setParameters(SimpleMatrix weights) {
         if (layers.isEmpty()) {
             System.err.println("Inicialice los capas primero");
         } else {
-            double[] aux = new double[0];
-            //reservamos los espacios de w
-            for (int i = 0; i < layers.size(); i++) {
-                aux = ArrayUtils.addAll(aux, layers.get(i).getW().getMatrix().getData());
-            }
-            //reservamos los espacios de b
-            for (int i = 0; i < layers.size(); i++) {
-                aux = ArrayUtils.addAll(aux, layers.get(i).getB().getMatrix().getData());
-            }
-            int posicion = 0;
+            int pos = 0;
             int size;
-            double[] datos = pesos.getMatrix().getData();
+            double[] datos = weights.getDDRM().getData();
             //cargamos los w
             for (int i = 0; i < layers.size(); i++) {
                 Layer layer = layers.get(i);
                 size = layer.getW().getNumElements();
-                layer.getW().getMatrix().setData(
-                        ArrayUtils.subarray(datos, posicion, posicion + size));
-                posicion += size;
+                layer.getW().getDDRM().setData(
+                        ArrayUtils.subarray(datos, pos, pos + size));
+                pos += size;
             }
             //cargamos los b
             for (int i = 0; i < layers.size(); i++) {
                 Layer layer = layers.get(i);
                 size = layer.getB().getNumElements();
-                layer.getB().getMatrix().setData(
-                        ArrayUtils.subarray(datos, posicion, posicion + size));
-                posicion += size;
+                layer.getB().getDDRM().setData(
+                        ArrayUtils.subarray(datos, pos, pos + size));
+                pos += size;
             }
         }
     }
