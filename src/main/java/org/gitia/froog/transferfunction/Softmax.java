@@ -28,7 +28,6 @@
 package org.gitia.froog.transferfunction;
 
 import org.ejml.dense.row.CommonOps_DDRM;
-import org.ejml.ops.CommonOps;
 import org.ejml.simple.SimpleMatrix;
 
 /**

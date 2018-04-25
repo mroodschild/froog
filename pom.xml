@@ -77,10 +77,5 @@
             <artifactId>junit</artifactId>
             <version>4.12</version>
         </dependency>
-        <dependency>
-            <groupId>com.github.mroodschild</groupId>
-            <artifactId>JDataAnalysis</artifactId>
-            <version>0.2</version>
-        </dependency>
     </dependencies>
 </project>
