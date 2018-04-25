@@ -51,6 +51,9 @@ public class Layer {
 
     protected Random random = new Random();
 
+    /**
+     *
+     */
     public Layer() {
     }
 
@@ -128,6 +131,12 @@ public class Layer {
         this(input, output, funcion, new Random());
     }
 
+    /**
+     *
+     * @param W
+     * @param B
+     * @param funcion
+     */
     public Layer(SimpleMatrix W, SimpleMatrix B, String funcion) {
         this.W = W;
         this.B = B;
@@ -220,50 +229,98 @@ public class Layer {
         return W;
     }
 
+    /**
+     *
+     * @param W
+     */
     public void setW(SimpleMatrix W) {
         this.W = W;
     }
 
+    /**
+     *
+     * @return
+     */
     public SimpleMatrix getB() {
         return B;
     }
 
+    /**
+     *
+     * @param B
+     */
     public void setB(SimpleMatrix B) {
         this.B = B;
     }
 
+    /**
+     *
+     * @return
+     */
     public Random getRandom() {
         return random;
     }
 
+    /**
+     *
+     * @param random
+     */
     public void setRandom(Random random) {
         this.random = random;
     }
 
+    /**
+     *
+     * @return
+     */
     public TransferFunction getFunction() {
         return function;
     }
 
+    /**
+     *
+     * @param function
+     */
     public void setFunction(TransferFunction function) {
         this.function = function;
     }
 
+    /**
+     *
+     * @param keepProb
+     */
     public void setKeepProb(double keepProb) {
         this.keepProb = keepProb;
     }
 
+    /**
+     *
+     * @return
+     */
     public double getKeepProb() {
         return keepProb;
     }
 
+    /**
+     *
+     * @param Drop
+     */
     public void setDrop(SimpleMatrix Drop) {
         this.Drop = Drop;
     }
 
+    /**
+     *
+     * @return
+     */
     public SimpleMatrix getDrop() {
         return Drop;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public String toString() {
         return function.toString();

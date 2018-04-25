@@ -35,8 +35,18 @@ import org.ejml.simple.SimpleMatrix;
  */
 public interface NeuralNetwork {
 
+    /**
+     * 
+     * @param input
+     * @return 
+     */
     public SimpleMatrix output(double[] input);
 
+    /**
+     * 
+     * @param input
+     * @return 
+     */
     public SimpleMatrix output(SimpleMatrix input);
 
 }

@@ -241,14 +241,26 @@ public class Feedforward implements NeuralNetwork {
         }
     }
 
+    /**
+     * 
+     * @return 
+     */
     public List<Layer> getLayers() {
         return layers;
     }
 
+    /**
+     * 
+     * @param layers 
+     */
     public void setLayers(List<Layer> layers) {
         this.layers = layers;
     }
 
+    /**
+     * 
+     * @return 
+     */
     @Override
     public String toString() {
         String info = "";
