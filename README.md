@@ -11,10 +11,6 @@
 
 This project was created with academic purpose for my PhD Tesis. Its design goals are; 1) to be accessible to both novices and experts, and 2) facilitate neural networks manipulations. Froog is free, written in 100% Java and has been released under M.I.T. license.
 
-=============
-Currently Updating v0.2 to 0.3
-=============
-
 Currently Froog supports:
 
 * Backpropagation Algorithm
@@ -23,7 +19,8 @@ Currently Froog supports:
 * Scaled Conjugate Gradient 
 * Accelerate methods (Momentum)
 * Weight Initialization (Default (Xavier), He, Pitfall, PositiveRandom, SmallRandom)
-* Weight Normalization
+* Weight Normalization L2
+* Dropout
 * Loss Functions (RMSE, MSE, CrossEntropy, Logistic)
 * Transfer Functions (Logsig, Tansig, Softmax, Purelim, Softplus, ReLU)
 * Confusion Matrix
@@ -32,30 +29,48 @@ Currently Froog supports:
 ## Documentation - Example
 
 ```
-        //Load data into X and T with JDataAnalysis
-        SimpleMatrix X = CSV.open("src/main/resources/iris/iris-in.csv");
-        SimpleMatrix T = CSV.open("src/main/resources/iris/iris-out.csv");
+//get data
+        SimpleMatrix input = CSV.open("src/main/resources/iris/iris-in.csv");
+        SimpleMatrix output = CSV.open("src/main/resources/iris/iris-out.csv");
 
-        //Create the neural network
-        Feedforward net = new Feedforward();
-        net.addLayer(new Layer(4, 10, TransferFunction.TANSIG));
-        net.addLayer(new Layer(10, 3, TransferFunction.LOGSIG));
+        //Standard Desviation
+        STD std = new STD();
+        std.fit(input);
 
-        //Configure training algorithm
+        //normalization
+        input = std.eval(input);
+        Random random = new Random(1);
+        
+        //set data in horizontal format (a column is a register and a row is a feature)
+        input = input.transpose();
+        output = output.transpose();
+
+        //setting backpropagation
         Backpropagation bp = new Backpropagation();
         bp.setEpoch(1000);
         bp.setMomentum(0.9);
-        bp.setLossFunction(LossFunction.MSE);
+        bp.setClassification(true);
+        bp.setLossFunction(LossFunction.CROSSENTROPY);
 
-        //train your neural network
-        bp.entrenar(net, X, T);
+        //number of neurons
+        int Nhl = 2;
+
+        Feedforward net = new Feedforward();
+
+        //add layers to neural network
+        net.addLayer(new Layer(input.numRows(), Nhl, TransferFunction.TANSIG, random));
+        net.addLayer(new Layer(Nhl, output.numRows(), TransferFunction.SOFTMAX, random));
         
-        //Evaluating outputs of your data
-        SimpleMatrix salidaNet = Compite.eval(net.outputAll(X));
-        ConfusionMatrix cmatrix = new ConfusionMatrix();
+        //train your net
+        bp.train(net, input, output);
         
-        //print your Confusion Matrix
-        cmatrix.eval(salidaNet, T);
+        //show results
+        System.out.println("Print all output");
+        SimpleMatrix salida = net.output(input);
+        ConfusionMatrix confusionMatrix = new ConfusionMatrix();
+        confusionMatrix.eval(Compite.eval(salida.transpose()), output.transpose());
+        confusionMatrix.printStats();
+        
 ```
 
 ## Maven - jitpack.io
@@ -73,12 +88,12 @@ Froog is in Maven jitpack.io and can easily be added to Maven, and similar proje
         <dependency>
             <groupId>com.github.mroodschild</groupId>
             <artifactId>froog</artifactId>
-            <version>v0.2</version>
+            <version>v0.3</version>
         </dependency>
         <dependency>
             <groupId>org.ejml</groupId>
             <artifactId>all</artifactId>
-            <version>0.30</version>
+            <version>0.34</version>
         </dependency>
     </dependencies>
 ```
@@ -89,7 +104,7 @@ Froog is in Maven jitpack.io and can easily be added to Maven, and similar proje
 
 The main Froog modules depends on the following libraries
 
-- [ EJML 0.30         ]  ( http://code.google.com/p/efficient-java-matrix-library )
+- [ EJML 0.34         ]  ( http://code.google.com/p/efficient-java-matrix-library )
 - [ Apache Commons-lang3          ]  ( https://commons.apache.org/proper/commons-lang/ )
 
 The following is required for unit tests
