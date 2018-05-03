@@ -88,7 +88,7 @@ Froog is in Maven jitpack.io and can easily be added to Maven, and similar proje
         <dependency>
             <groupId>com.github.mroodschild</groupId>
             <artifactId>froog</artifactId>
-            <version>v0.3</version>
+            <version>0.3</version>
         </dependency>
         <dependency>
             <groupId>org.ejml</groupId>
