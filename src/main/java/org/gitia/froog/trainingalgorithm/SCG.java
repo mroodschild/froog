@@ -80,8 +80,6 @@ public class SCG extends Backpropagation {
                 sigmaK = sigma / NormOps_DDRM.normP2(pk.getDDRM());
                 net.setParameters(Wk);
                 SimpleMatrix g1 = computeGradient(net, input, output);
-//                Wk.printDimensions();
-//                pk.printDimensions();
                 net.setParameters(Wk.plus(pk.transpose().scale(sigmaK)));
                 SimpleMatrix g2 = computeGradient(net, input, output);
                 Sk = g2.minus(g1).divide(sigmaK);
