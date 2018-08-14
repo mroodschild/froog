@@ -27,6 +27,7 @@ import java.util.List;
 import org.ejml.dense.row.NormOps_DDRM;
 import org.ejml.simple.SimpleMatrix;
 import org.gitia.froog.Feedforward;
+import org.gitia.froog.statistics.Clock;
 
 public class SCG extends Backpropagation {
 
@@ -73,8 +74,10 @@ public class SCG extends Backpropagation {
         rk = computeGradient(net, input, output).negative();
         pk = rk.copy();
         success = true;
+        Clock c = new Clock();
         for (k = 0; k < epoch; k++) {
-            System.out.println("k: " + k);
+            //System.out.println("k: " + k);
+            c.start();
             //informacionSegOrden();//paso 2
             if (success == true) {
                 sigmaK = sigma / NormOps_DDRM.normP2(pk.getDDRM());
@@ -136,6 +139,8 @@ public class SCG extends Backpropagation {
             } else {
                 break;
             }
+            c.stop();
+            System.out.println("k: " + k + "\tE:\t" + E + "\tE_conj:\t" + E_conj + "\trk_new:\t" + rk.normF() + "\ttime:\t" + c.timeSec() + " s.");
         }
     }
 
