@@ -44,24 +44,24 @@ import org.gitia.froog.trainingalgorithm.updaterule.UpdateRule;
  */
 public class TrainingAlgorithm {
 
-    Feedforward net;//red a train
-    SimpleMatrix input;//datos de entrada original a la red (cada fila es un dato, y cada columna una entrada)
-    SimpleMatrix output;//salida original de la red correspondiente a la entrada
-    SimpleMatrix inputTest;// = new SimpleMatrix();
-    SimpleMatrix outputTest;// = new SimpleMatrix();
-    double learningRate = 0.01;
-    double L2_Lambda = 0;
-    UpdateRule updateRule = new Update();
-    List<SimpleMatrix> gradW_prev = new ArrayList<>();//deltas de los W calculados para cada capa
-    List<SimpleMatrix> gradB_prev = new ArrayList<>();//deltas de los B calculados para cada capa
-    List<SimpleMatrix> gradW = new ArrayList<>();//gradientes para cada capa
-    List<SimpleMatrix> gradB = new ArrayList<>();//gradientes para cada capa
-    int epoch = 0;
-    int cantidadBach;
-    int testFrecuency = 1;
-    boolean classification = false;
+    protected Feedforward net;//red a train
+    protected SimpleMatrix input;//datos de entrada original a la red (cada fila es un dato, y cada columna una entrada)
+    protected SimpleMatrix output;//salida original de la red correspondiente a la entrada
+    protected SimpleMatrix inputTest;// = new SimpleMatrix();
+    protected SimpleMatrix outputTest;// = new SimpleMatrix();
+    protected double learningRate = 0.01;
+    protected double L2_Lambda = 0;
+    protected UpdateRule updateRule = new Update();
+    protected List<SimpleMatrix> gradW_prev = new ArrayList<>();//deltas de los W calculados para cada capa
+    protected List<SimpleMatrix> gradB_prev = new ArrayList<>();//deltas de los B calculados para cada capa
+    protected List<SimpleMatrix> gradW = new ArrayList<>();//gradientes para cada capa
+    protected List<SimpleMatrix> gradB = new ArrayList<>();//gradientes para cada capa
+    protected int epoch = 0;
+    protected int cantidadBach;
+    protected int testFrecuency = 1;
+    protected boolean classification = false;
 
-    LossFunction lossFunction = LossFunctionFactory.getLossFunction(LossFunction.MSE);
+    protected LossFunction lossFunction = LossFunctionFactory.getLossFunction(LossFunction.MSE);
 
     ArrayList<Double> cost = new ArrayList<>();
     ArrayList<Double> costTest = new ArrayList<>();
@@ -107,8 +107,7 @@ public class TrainingAlgorithm {
             System.out.println("Momentum:\t" + momentum);
         }
     }
-    
-    
+
     /**
      *
      * @return a matrix with all the gradients of dimensions [n x 1] GW1,GW2...
@@ -121,7 +120,7 @@ public class TrainingAlgorithm {
         }
         return getGradients(gradW, gradB);
     }
-    
+
     /**
      *
      * @param gradW
@@ -138,6 +137,31 @@ public class TrainingAlgorithm {
             aux = ArrayUtils.addAll(aux, gradB.get(i).getDDRM().getData());
         }
         return new SimpleMatrix(aux.length, 1, true, aux);
+    }
+
+    /**
+     *
+     * @param g
+     * @param gradW
+     * @param gradB
+     */
+    public void setGradientsToList(SimpleMatrix g, List<SimpleMatrix> gradW, List<SimpleMatrix> gradB) {
+        int posicion = 0;
+        int size;
+        double[] datos = g.getDDRM().getData();
+        for (int i = 0; i < gradW.size(); i++) {
+            size = gradW.get(i).getNumElements();
+            gradW.get(i).getDDRM().setData(
+                    ArrayUtils.subarray(datos, posicion, posicion + size));
+            posicion += size;
+        }
+        for (int i = 0; i < gradB.size(); i++) {
+            size = gradB.get(i).getNumElements();
+            gradB.get(i).getDDRM().setData(
+                    ArrayUtils.subarray(datos, posicion, posicion + size));
+            posicion += size;
+        }
+        
     }
 
     public LossFunction getLossFunction() {
@@ -177,6 +201,14 @@ public class TrainingAlgorithm {
 
     public Feedforward getNet() {
         return net;
+    }
+
+    public List<SimpleMatrix> getGradW() {
+        return gradW;
+    }
+
+    public List<SimpleMatrix> getGradB() {
+        return gradB;
     }
 
     public void setInputTest(SimpleMatrix inputTest) {
