@@ -151,13 +151,14 @@ public class ConfusionMatrix {
     public String toString() {
         String info = "";
         info += "\nConfusion Matrix\n";
-        info += confusionMatrix.toString();
-        info += "\nAciertos:\t" + aciertos + "/" + (double) elements;
-        info += "\nAciertos %:\t" + aciertosPorc;
+        //info += confusionMatrix.toString();
+        info += getStringMatrix()+"\n";
+        info += "\nAccuracy:\t" + aciertos + "/" + (double) elements;
+        info += "\nAccuracy %:\t" + aciertosPorc;
         int size = confusionMatrix.numCols();
         double VP = 0;
         double FN = 0;
-        info += "\nAciertos por clase:\t";
+        info += "\nAccuracy per class:\t";
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 if (i != j) {
@@ -166,11 +167,26 @@ public class ConfusionMatrix {
                     VP = confusionMatrix.get(i, j);
                 }
             }
-            info += "\nClase " + i + ": \t" + VP / (VP + FN) + "\t";
+            info += "\nClass " + i + ": \t" + VP / (VP + FN) + "\t"+VP+"/"+(VP + FN);
             VP = 0;
             FN = 0;
         }
         return info;
+    }
+    
+    /**
+     * 
+     * @return matrix with format
+     */
+    private String getStringMatrix(){
+        String m = "";
+        for (int i = 0; i < confusionMatrix.numRows(); i++) {
+            for (int j = 0; j < confusionMatrix.numCols(); j++) {
+                m += String.valueOf(confusionMatrix.get(i, j))+"\t";
+            }
+            m+="\n";
+        }
+        return m;
     }
 
     /**
