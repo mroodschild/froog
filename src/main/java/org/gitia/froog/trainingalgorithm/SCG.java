@@ -23,13 +23,14 @@
  */
 package org.gitia.froog.trainingalgorithm;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.ejml.dense.row.NormOps_DDRM;
 import org.ejml.simple.SimpleMatrix;
 import org.gitia.froog.Feedforward;
+import org.gitia.froog.statistics.Clock;
 
 public class SCG extends Backpropagation {
-
     SimpleMatrix pk;// = new SimpleMatrix();
     SimpleMatrix rk;// -gradient
     SimpleMatrix r_new;
@@ -48,6 +49,10 @@ public class SCG extends Backpropagation {
 
     SimpleMatrix Wk;
     SimpleMatrix W_new;
+    List<SimpleMatrix> Ak = new ArrayList<>();
+    int L;//ultima capa
+
+    Clock c = new Clock();
 
     public SCG() {
     }
@@ -65,55 +70,56 @@ public class SCG extends Backpropagation {
         N = net.getParameters().getNumElements();
         this.Wk = net.getParameters();
         W_new = Wk.copy();
-        lambdaK = 1e-7;
-        lambdaT = 0;
-        init();//
-
+        init();
         //primeraDireccion();//paso1
-        rk = computeGradient(net, input, output).negative();
+        Ak = net.activations(input);
+        L = Ak.size() - 1;
+        SimpleMatrix g1 = computeGradient(net, Ak, input, output);
+        rk = g1.negative();
         pk = rk.copy();
         success = true;
+        double E = lossFunction.costAll(Ak.get(L), output);//modificacion
         for (k = 0; k < epoch; k++) {
-            System.out.println("k: " + k);
+            c.start();
             //informacionSegOrden();//paso 2
             if (success == true) {
                 sigmaK = sigma / NormOps_DDRM.normP2(pk.getDDRM());
-                net.setParameters(Wk);
-                SimpleMatrix g1 = computeGradient(net, input, output);
                 net.setParameters(Wk.plus(pk.transpose().scale(sigmaK)));
-                SimpleMatrix g2 = computeGradient(net, input, output);
+                Ak = net.activations(input);
+                SimpleMatrix g2 = computeGradient(net,Ak, input, output);
                 Sk = g2.minus(g1).divide(sigmaK);
                 deltaK = pk.transpose().mult(Sk).get(0);
             }
             //escalado();//paso 3
-            deltaK = deltaK + (lambdaK - lambdaT) * Math.pow(NormOps_DDRM.normP2(pk.getDDRM()), 2);
+            double pk_nomrP2pow2 = Math.pow(NormOps_DDRM.normP2(pk.getDDRM()), 2);
+            deltaK = deltaK + (lambdaK - lambdaT) * pk_nomrP2pow2;
             //hessianPositive();//paso 4
             if (deltaK <= 0) {
-                lambdaT = 2 * (lambdaK - deltaK / Math.pow(NormOps_DDRM.normP2(pk.getDDRM()), 2));
-                deltaK = -deltaK + lambdaK * Math.pow(NormOps_DDRM.normP2(pk.getDDRM()), 2);
+                lambdaT = 2 * (lambdaK - deltaK / pk_nomrP2pow2);
+                deltaK = -deltaK + lambdaK * pk_nomrP2pow2;
                 lambdaK = lambdaT;
             }
             //tamanoPaso();//paso 5
             uk = pk.transpose().mult(rk).get(0);
             alphak = uk / deltaK;
             //comparacionParametros();//paso 6
-            net.setParameters(Wk);
-            double E = lossFunction.costAll(net.output(input), output);
             net.setParameters(Wk.plus(pk.transpose().scale(alphak)));
-            double E_conj = lossFunction.costAll(net.output(input), output);
+            Ak = net.activations(input);
+            double E_conj = lossFunction.costAll(Ak.get(L), output);
             nablaK = 2 * deltaK * (E - E_conj) / Math.pow(uk, 2);
             //evalNabla();//paso 7
             if (nablaK >= 0) {
                 W_new = Wk.plus(pk.transpose().scale(alphak));
                 net.setParameters(W_new);
-                r_new = computeGradient(net, input, output).negative();
+                g1 = computeGradient(net, Ak, input, output);
+                r_new = g1.negative();
                 lambdaT = 0;
                 success = true;
                 if (k % N == 0) {
                     p_new = r_new;
                 } else {
-                    double norm2 = Math.pow(NormOps_DDRM.normP2(r_new.getDDRM()), 2);
-                    double beta = (norm2 - r_new.transpose().mult(rk).get(0)) / uk;
+                    double r_new_norm2 = Math.pow(NormOps_DDRM.normP2(r_new.getDDRM()), 2);
+                    double beta = (r_new_norm2 - r_new.transpose().mult(rk).get(0)) / uk;
                     p_new = r_new.plus(pk.scale(beta));
                 }
                 if (nablaK >= 0.75) {
@@ -125,16 +131,27 @@ public class SCG extends Backpropagation {
             }
             //evalSmallNabla();//paso 8
             if (nablaK < 0.25) {
-                lambdaK = lambdaK + (deltaK * (1 - nablaK) / Math.pow(NormOps_DDRM.normP2(pk.getDDRM()), 2));
+                lambdaK = lambdaK + (deltaK * (1 - nablaK) / pk_nomrP2pow2);
             }
             //actualizarPesos();
             //paso 9 
-            if (rk.elementSum() != 0) {
+            if (rk.normF() != 0) {
                 rk = r_new;
                 pk = p_new;
                 Wk = W_new.copy();
             } else {
+                net.setParameters(W_new);
+                c.stop();
+                System.out.println("k: " + k + "\tE:\t" + E + "\tE_conj:\t" + E_conj + "\trk_new:\t" + rk.normF() + "\ttime:\t" + c.timeSec() + "\ts.");
                 break;
+            }
+            c.stop();
+            System.out.println("k: " + k + "\tE:\t" + E + "\tE_conj:\t" + E_conj + "\trk_new:\t" + rk.normF() + "\ttime:\t" + c.timeSec() + "\ts.");
+            /**
+             * * Mejora **
+             */
+            if (nablaK >= 0) {
+                E = E_conj;
             }
         }
     }
@@ -142,12 +159,12 @@ public class SCG extends Backpropagation {
     /**
      *
      * @param net
+     * @param A
      * @param X
      * @param Y
      * @return
      */
-    public SimpleMatrix computeGradient(Feedforward net, SimpleMatrix X, SimpleMatrix Y) {
-        List<SimpleMatrix> A = net.activations(X);
+    public SimpleMatrix computeGradient(Feedforward net, List<SimpleMatrix> A, SimpleMatrix X, SimpleMatrix Y) {
         gradient.compute(net, A, gradW, gradB, X, Y);
         return getGradients(gradW, gradB);
     }
