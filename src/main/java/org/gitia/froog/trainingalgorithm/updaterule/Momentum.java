@@ -28,6 +28,7 @@ import java.util.List;
 import org.ejml.simple.SimpleMatrix;
 import org.gitia.froog.Feedforward;
 import org.gitia.froog.layer.Layer;
+import org.gitia.froog.trainingalgorithm.accelerate.Accelerate;
 
 /**
  *
@@ -35,8 +36,8 @@ import org.gitia.froog.layer.Layer;
  */
 public class Momentum implements UpdateRule {
 
-    List<SimpleMatrix> gradW_prev = new ArrayList<>();
-    List<SimpleMatrix> gradB_prev = new ArrayList<>();
+    List<SimpleMatrix> dW = new ArrayList<>();
+    List<SimpleMatrix> dB = new ArrayList<>();
     double momentum = 0;
 
     public Momentum() {
@@ -49,8 +50,8 @@ public class Momentum implements UpdateRule {
      */
     @Override
     public void init(List<SimpleMatrix> gradW, List<SimpleMatrix> gradB) {
-        gradB_prev.addAll(gradB);
-        gradW_prev.addAll(gradW);
+        dB.addAll(gradB);
+        dW.addAll(gradW);
     }
 
     /**
@@ -65,27 +66,40 @@ public class Momentum implements UpdateRule {
     @Override
     public void updateParameters(Feedforward net, double m, double L2_lambda, double learningRate, List<SimpleMatrix> gradW, List<SimpleMatrix> gradB) {
 //        gradW.get(1).print();
-//        gradW_prev.get(1).print();
+//        dW.get(1).print();
         for (int i = 0; i < net.getLayers().size(); i++) {
             Layer layer = net.getLayers().get(i);
             SimpleMatrix W = layer.getW();
             SimpleMatrix B = layer.getB();
             SimpleMatrix reg = W.scale(L2_lambda);
-            SimpleMatrix vW = gradW_prev.get(i).scale(momentum).minus(gradW.get(i).plus(reg).scale(learningRate));
+            
+            SimpleMatrix vW = dW.get(i).scale(momentum)
+                    .minus(gradW.get(i).plus(reg).scale(learningRate));
             W = W.plus(vW);
-            SimpleMatrix vB = gradB_prev.get(i).scale(momentum).minus(gradB.get(i).scale(learningRate));
+            
+//            SimpleMatrix vW = dW.get(i).scale(momentum)
+//                    .plus(gradW.get(i).scale(learningRate));
+            //W = W.minus(vW);
+            
+            SimpleMatrix vB = dB.get(i).scale(momentum).minus(gradB.get(i).scale(learningRate));
             B = B.plus(vB);
+            
             layer.setW(W);
             layer.setB(B);
             net.getLayers().set(i, layer);
-            gradW_prev.set(i, vW);
-            gradB_prev.set(i, vB);
+            dW.set(i, vW);
+            dB.set(i, vB);
         }
     }
 
     @Override
     public void setMomentum(double momentum) {
         this.momentum = momentum;
+    }
+
+    @Override
+    public void setAccelerate(Accelerate accelerate) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

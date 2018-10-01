@@ -27,12 +27,16 @@ import java.util.List;
 import org.ejml.simple.SimpleMatrix;
 import org.gitia.froog.Feedforward;
 import org.gitia.froog.layer.Layer;
+import org.gitia.froog.trainingalgorithm.accelerate.Accelerate;
+import org.gitia.froog.trainingalgorithm.accelerate.AccelerateRule;
 
 /**
  *
  * @author Matías Rodschild <mroodschild@gmail.com>
  */
 public class Update implements UpdateRule {
+
+    Accelerate accelerate = AccelerateRule.nonAccelerate();
 
     public Update() {
     }
@@ -44,29 +48,34 @@ public class Update implements UpdateRule {
      */
     @Override
     public void init(List<SimpleMatrix> gradW, List<SimpleMatrix> gradB) {
-
+        
     }
 
     /**
      *
-     * @param net
-     * @param m
-     * @param L2_Lambda
+     * @param net neural network
+     * @param m amount of data (it's used by L2)
+     * @param L2_Lambda regularization parameter
      * @param learningRate
-     * @param gradW
-     * @param gradB
+     * @param dW gradient W
+     * @param dB gradient B
      */
     @Override
-    public void updateParameters(Feedforward net, double m, double L2_Lambda, double learningRate, List<SimpleMatrix> gradW, List<SimpleMatrix> gradB) {
+    public void updateParameters(Feedforward net, double m, double L2_Lambda, double learningRate, List<SimpleMatrix> dW, List<SimpleMatrix> dB) {
+        //calculamos todos los deltas
+        accelerate.grad(dW, dB, learningRate);
         for (int i = 0; i < net.getLayers().size(); i++) {
             Layer layer = net.getLayers().get(i);
             SimpleMatrix W = layer.getW();
             SimpleMatrix B = layer.getB();
+
             if (L2_Lambda > 0) {
                 W = W.scale((1 - learningRate * L2_Lambda / m));//weight decay
             }
-            W = W.minus(gradW.get(i).scale(learningRate));
-            B = B.minus(gradB.get(i).scale(learningRate));
+            
+            W = W.minus(dW.get(i));
+            B = B.minus(dB.get(i));
+            
             layer.setW(W);
             layer.setB(B);
             net.getLayers().set(i, layer);
@@ -76,6 +85,15 @@ public class Update implements UpdateRule {
     @Override
     public void setMomentum(double momentum) {
 
+    }
+
+    @Override
+    public void setAccelerate(Accelerate accelerate) {
+        this.accelerate = accelerate;
+    }
+
+    public Accelerate getAccelerate() {
+        return accelerate;
     }
 
 }

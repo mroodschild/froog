@@ -27,6 +27,7 @@ import java.util.List;
 import org.ejml.simple.SimpleMatrix;
 import org.gitia.froog.Feedforward;
 import org.gitia.froog.layer.Layer;
+import org.gitia.froog.trainingalgorithm.accelerate.Accelerate;
 
 /**
  *
@@ -76,6 +77,11 @@ public class SGC implements UpdateRule {
     @Override
     public void setMomentum(double momentum) {
 
+    }
+
+    @Override
+    public void setAccelerate(Accelerate accelerate) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

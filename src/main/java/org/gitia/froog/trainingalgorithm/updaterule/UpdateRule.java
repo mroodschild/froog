@@ -26,6 +26,7 @@ package org.gitia.froog.trainingalgorithm.updaterule;
 import java.util.List;
 import org.ejml.simple.SimpleMatrix;
 import org.gitia.froog.Feedforward;
+import org.gitia.froog.trainingalgorithm.accelerate.Accelerate;
 
 /**
  *
@@ -38,4 +39,6 @@ public interface UpdateRule {
     public void updateParameters(Feedforward net, double m, double L2_lambda, double learningRate, List<SimpleMatrix> gradW, List<SimpleMatrix> gradB);
     
     public void setMomentum(double momentum);
+    
+    public void setAccelerate(Accelerate accelerate);
 }
