@@ -34,6 +34,7 @@ import org.ejml.simple.SimpleMatrix;
 import org.gitia.froog.statistics.Clock;
 import org.gitia.froog.statistics.Compite;
 import org.gitia.froog.statistics.ConfusionMatrix;
+import org.gitia.froog.trainingalgorithm.accelerate.Accelerate;
 import org.gitia.froog.trainingalgorithm.gradient.Gradient;
 import org.gitia.froog.trainingalgorithm.gradient.StandardGradient;
 
@@ -43,14 +44,15 @@ import org.gitia.froog.trainingalgorithm.gradient.StandardGradient;
  */
 public class Backpropagation extends TrainingAlgorithm {
 
-    double costOverall;//costo despues de pasar todos los datos hasta terminar el mini bach
-    double costOverallTest = -1;
-    double costPartial;//costo parcial dato por dato
-    List<SimpleMatrix> deriv = new ArrayList<>();//derivadas
-    List<SimpleMatrix> Activations = new ArrayList<>();//Activations in every layers with train data
-    int iteracion = 0;
-    int printFrecuency = 1;
-    Gradient gradient = new StandardGradient();
+    protected double costOverall;//costo despues de pasar todos los datos hasta terminar el mini bach
+    protected double costOverallTest = -1;
+    protected double costPartial;//costo parcial dato por dato
+    protected List<SimpleMatrix> deriv = new ArrayList<>();//derivadas
+    protected List<SimpleMatrix> Activations = new ArrayList<>();//Activations in every layers with train data
+    protected int iteracion = 0;
+    protected int printFrecuency = 1;
+    protected Gradient gradient = new StandardGradient();
+    protected double gradientClipping = 0;
 
     public Backpropagation() {
     }
@@ -68,17 +70,39 @@ public class Backpropagation extends TrainingAlgorithm {
         this.output = new SimpleMatrix(output);
         init();
         Clock clock = new Clock();
+        int L = net.getLayers().size()-1;
         for (int i = 0; i < this.epoch; i++) {
             clock.start();
             Activations = net.activations(input);
-            costOverall = loss(Activations.get(Activations.size() - 1), output);
+            costOverall = loss(Activations.get(L), output);
+            //System.out.println("Cost:\t"+costOverall);
             this.cost.add(costOverall);
             gradient.compute(net, Activations, gradW, gradB, input, output);
-            updateRule.updateParameters(net,(double) input.numCols(), L2_Lambda, learningRate, gradW, gradB);
+            computeGradientClipping(gradW, gradB);
+            updateRule.updateParameters(net, (double) input.numCols(), L2_Lambda, learningRate, gradW, gradB);
             if (iteracion % printFrecuency == 0) {
                 printScreen(clock);
             }
             iteracion++;
+        }
+        printScreen(clock);
+    }
+
+    /**
+     *
+     * @param gradW
+     * @param gradB
+     */
+    public void computeGradientClipping(List<SimpleMatrix> gradW, List<SimpleMatrix> gradB) {
+        if (gradientClipping > 0) {
+            SimpleMatrix g = getGradients(gradW, gradB);
+            double norm = g.normF();
+            //System.out.println("norm:\t"+norm);
+            if (norm >= gradientClipping) {
+                g = g.scale(gradientClipping / norm);
+                //System.out.println("Se hizo Gradient Clipping");
+            }
+            setGradientsToList(g, gradW, gradB);
         }
     }
 
@@ -133,7 +157,7 @@ public class Backpropagation extends TrainingAlgorithm {
         gradW.clear();
         cost.clear();
         for (int i = 0; i < net.getLayers().size(); i++) {
-            deriv.add(new SimpleMatrix(1,1));
+            deriv.add(new SimpleMatrix(1, 1));
             gradW.add(new SimpleMatrix(net.getLayers().get(i).getW()));
             gradB.add(new SimpleMatrix(net.getLayers().get(i).getB()));
             gradW.get(i).zero();
@@ -192,6 +216,27 @@ public class Backpropagation extends TrainingAlgorithm {
 
     public void setPrintFrecuency(int printFrecuency) {
         this.printFrecuency = printFrecuency;
+    }
+
+    public void setGradient(Gradient gradient) {
+        this.gradient = gradient;
+    }
+
+    public Gradient getGradient() {
+        return gradient;
+    }
+
+    public void setGradientClipping(double gradientClipping) {
+        this.gradientClipping = gradientClipping;
+        System.out.println("Gradient Clipping Threshold:\t" + this.gradientClipping);
+    }
+
+    public double getGradientClipping() {
+        return gradientClipping;
+    }
+    
+    public void setAcceleration(Accelerate accelerate){
+        updateRule.setAccelerate(accelerate);
     }
 
 }
