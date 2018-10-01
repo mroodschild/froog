@@ -110,9 +110,9 @@ public class Feedforward implements NeuralNetwork {
         }
         return A;
     }
-    
+
     /**
-     * 
+     *
      *
      * @param input inputs to evaluate with dropout
      * @return outputs with dropout
