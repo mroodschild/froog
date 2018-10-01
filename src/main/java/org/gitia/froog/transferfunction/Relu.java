@@ -65,7 +65,7 @@ public class Relu implements TransferFunction {
 
     @Override
     public SimpleMatrix derivative(SimpleMatrix a, double b) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return derivative(a).plus(b);
     }
 
     @Override
