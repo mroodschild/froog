@@ -17,7 +17,7 @@ Currently Froog supports:
 * Stochastic Gradient Descent
 * Conjugate Gradient
 * Scaled Conjugate Gradient 
-* Accelerate methods (Momentum)
+* Accelerate methods (Momentum, Momentum Rumelhart, Adam)
 * Weight Initialization (Default (Xavier), He, Pitfall, PositiveRandom, SmallRandom)
 * Weight Normalization L2
 * Dropout
@@ -88,12 +88,12 @@ Froog is in Maven jitpack.io and can easily be added to Maven, and similar proje
         <dependency>
             <groupId>com.github.mroodschild</groupId>
             <artifactId>froog</artifactId>
-            <version>0.3</version>
+            <version>0.4</version>
         </dependency>
         <dependency>
             <groupId>org.ejml</groupId>
             <artifactId>ejml-all</artifactId>
-            <version>0.34</version>
+            <version>0.36</version>
         </dependency>
     </dependencies>
 ```
@@ -104,7 +104,7 @@ Froog is in Maven jitpack.io and can easily be added to Maven, and similar proje
 
 The main Froog modules depends on the following libraries
 
-- [ EJML 0.34         ]  ( http://code.google.com/p/efficient-java-matrix-library )
+- [ EJML 0.36         ]  ( http://ejml.org )
 - [ Apache Commons-lang3          ]  ( https://commons.apache.org/proper/commons-lang/ )
 
 The following is required for unit tests
