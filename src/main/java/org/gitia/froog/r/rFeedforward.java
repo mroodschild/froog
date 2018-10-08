@@ -26,26 +26,46 @@ package org.gitia.froog.r;
 import org.ejml.simple.SimpleMatrix;
 import org.gitia.froog.Feedforward;
 import org.gitia.froog.layer.Layer;
+import org.gitia.froog.trainingalgorithm.Backpropagation;
 
 /**
  *
  * @author Matías Rodschild <mroodschild@gmail.com>
  */
 public class rFeedforward {
-    
+
     Feedforward net;
+    Backpropagation bp;
 
     public rFeedforward() {
         net = new Feedforward();
+        bp = new Backpropagation();
     }
-    
-    public void addLayer(int input, int neuronas, String function){
+
+    public void addLayer(int input, int neuronas, String function) {
         net.addLayer(new Layer(input, neuronas, function));
     }
-    
-    public double[] out(double[] matrix, int row, int col){
+
+    public double[] out(double[] matrix, int row, int col) {
         SimpleMatrix m = new SimpleMatrix(row, col, true, matrix);
         return net.output(m).getDDRM().getData();
     }
     
+    public void bp(double[] x, int xrow, int xcol, double[] y, int yrow, int ycol){
+        SimpleMatrix input = new SimpleMatrix(xrow, xcol, true, x);
+        SimpleMatrix output = new SimpleMatrix(yrow, ycol, true, y);
+        bp.setEpoch(10);
+        bp.train(net, input, output);
+    }
+
+    public String hola() {
+        return "Hola";
+    }
+
+    public void summary() {
+        for (int i = 0; i < net.getLayers().size(); i++) {
+            Layer l = net.getLayers().get(i);
+            System.out.println("Neuronas: "+l.numNeuron()+" Activation: "+l.getFunction().toString());
+        }
+    }
 }
