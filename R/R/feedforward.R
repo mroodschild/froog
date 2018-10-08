@@ -26,3 +26,17 @@ out<-function(net, matrix){
   a <- .jcall(net, '[D','out', matrix, as.integer(nrow(matrix)), as.integer(ncol(matrix)))
   return(a)
 }
+
+hola<-function(net){
+  a <- .jcall(net, 'S','hola')
+  return(a)
+}
+
+summary<-function(net){
+  a <- .jcall(net, 'S','summary')
+  return(a)
+}
+
+bp<-function(net, input, output){
+  .jcall(net, 'V','bp', input, as.integer(nrow(input)), as.integer(ncol(input)), output, as.integer(nrow(output)), as.integer(ncol(output)))
+}
