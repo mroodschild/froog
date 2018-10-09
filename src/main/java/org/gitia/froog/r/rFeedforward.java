@@ -27,6 +27,7 @@ import org.ejml.simple.SimpleMatrix;
 import org.gitia.froog.Feedforward;
 import org.gitia.froog.layer.Layer;
 import org.gitia.froog.trainingalgorithm.Backpropagation;
+import org.gitia.froog.trainingalgorithm.accelerate.AccelerateRule;
 
 /**
  *
@@ -36,6 +37,9 @@ public class rFeedforward {
 
     Feedforward net;
     Backpropagation bp;
+
+    SimpleMatrix inputTest;
+    SimpleMatrix outputTest;
 
     public rFeedforward() {
         net = new Feedforward();
@@ -47,25 +51,57 @@ public class rFeedforward {
     }
 
     public double[] out(double[] matrix, int row, int col) {
-        SimpleMatrix m = new SimpleMatrix(row, col, true, matrix);
+        SimpleMatrix m = new SimpleMatrix(row, col, false, matrix);
+        m.print();
+        net.output(m).print();
         return net.output(m).getDDRM().getData();
     }
-    
-    public void bp(double[] x, int xrow, int xcol, double[] y, int yrow, int ycol){
-        SimpleMatrix input = new SimpleMatrix(xrow, xcol, true, x);
-        SimpleMatrix output = new SimpleMatrix(yrow, ycol, true, y);
-        bp.setEpoch(10);
+
+    public void bp(double[] x, int xrow, int xcol, double[] y, int yrow, int ycol, int epochs, String acc, double acc_parm) {
+        SimpleMatrix input = new SimpleMatrix(xrow, xcol, false, x);
+        SimpleMatrix output = new SimpleMatrix(yrow, ycol, false, y);
+        bp.setEpoch(epochs);
+        if (acc != null) {
+            switch (acc) {
+                case "adam":
+                    bp.setAcceleration(AccelerateRule.adam(acc_parm, 0.999, 1e-5, 2));
+                    break;
+                case "momentum":
+                    bp.setAcceleration(AccelerateRule.momentum(acc_parm));
+                    break;
+                case "momentum_rumelhart":
+                    bp.setAcceleration(AccelerateRule.momentumRumelhart(acc_parm));
+                    break;
+                default:
+                    break;
+            }
+        }
+        if(inputTest!=null){
+            bp.setInputTest(inputTest);
+            bp.setOutputTest(outputTest);
+            bp.setTestFrecuency(1);
+        }
         bp.train(net, input, output);
     }
+    
+//    public void bp(double[] x, int xrow, int xcol, double[] y, int yrow, int ycol, int epochs) {
+//        bp(x, xrow, xcol, y, yrow, ycol, epochs, null, 0);
+//    }
 
-    public String hola() {
-        return "Hola";
+    public int getOutCount() {
+        int L = net.getLayers().size();
+        return net.getLayers().get(L - 1).numNeuron();
     }
 
     public void summary() {
         for (int i = 0; i < net.getLayers().size(); i++) {
             Layer l = net.getLayers().get(i);
-            System.out.println("Neuronas: "+l.numNeuron()+" Activation: "+l.getFunction().toString());
+            System.out.println("Neuronas: " + l.numNeuron() + " Activation: " + l.getFunction().toString());
         }
+    }
+
+    public void setTestData(double[] x, int xrow, int xcol, double[] y, int yrow, int ycol) {
+        inputTest = new SimpleMatrix(xrow, xcol, false, x);
+        outputTest = new SimpleMatrix(yrow, ycol, false, y);
     }
 }
