@@ -30,6 +30,9 @@ import org.ejml.simple.SimpleMatrix;
  * @author Matías Rodschild <mroodschild@gmail.com>
  */
 public interface BetaRule {
+    
+    public static String FLETCHER_REEVES = "fletcher_reeves";
+    public static String POLAK_REBIERE = "polak_rebiere";
 
     public double compute(SimpleMatrix g, SimpleMatrix gpr);
 }
