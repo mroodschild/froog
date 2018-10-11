@@ -27,7 +27,11 @@ import org.ejml.simple.SimpleMatrix;
 import org.gitia.froog.Feedforward;
 import org.gitia.froog.layer.Layer;
 import org.gitia.froog.trainingalgorithm.Backpropagation;
+import org.gitia.froog.trainingalgorithm.CG;
+import org.gitia.froog.trainingalgorithm.SCG;
+import org.gitia.froog.trainingalgorithm.SGD;
 import org.gitia.froog.trainingalgorithm.accelerate.AccelerateRule;
+import org.gitia.froog.trainingalgorithm.conjugategradient.beta.BetaFactory;
 
 /**
  *
@@ -37,6 +41,9 @@ public class rFeedforward {
 
     Feedforward net;
     Backpropagation bp;
+    SGD sgd;
+    CG cg;
+    SCG scg;
 
     SimpleMatrix inputTest;
     SimpleMatrix outputTest;
@@ -44,6 +51,9 @@ public class rFeedforward {
     public rFeedforward() {
         net = new Feedforward();
         bp = new Backpropagation();
+        sgd = new SGD();
+        cg = new CG();
+        scg = new SCG();
     }
 
     public void addLayer(int input, int neuronas, String function) {
@@ -52,8 +62,6 @@ public class rFeedforward {
 
     public double[] out(double[] matrix, int row, int col) {
         SimpleMatrix m = new SimpleMatrix(row, col, false, matrix);
-        m.print();
-        net.output(m).print();
         return net.output(m).getDDRM().getData();
     }
 
@@ -76,17 +84,69 @@ public class rFeedforward {
                     break;
             }
         }
-        if(inputTest!=null){
+        if (inputTest != null) {
             bp.setInputTest(inputTest);
             bp.setOutputTest(outputTest);
             bp.setTestFrecuency(1);
         }
         bp.train(net, input, output);
     }
+
+    public void sgd(double[] x, int xrow, int xcol, double[] y, int yrow, int ycol,
+            int epochs, int batchsize, String acc, double acc_parm) {
+        SimpleMatrix input = new SimpleMatrix(xrow, xcol, false, x);
+        SimpleMatrix output = new SimpleMatrix(yrow, ycol, false, y);
+        sgd.setEpoch(epochs);
+        sgd.setBatchSize(batchsize);
+        if (acc != null) {
+            switch (acc) {
+                case "adam":
+                    sgd.setAcceleration(AccelerateRule.adam(acc_parm, 0.999, 1e-5, 2));
+                    break;
+                case "momentum":
+                    sgd.setAcceleration(AccelerateRule.momentum(acc_parm));
+                    break;
+                case "momentum_rumelhart":
+                    sgd.setAcceleration(AccelerateRule.momentumRumelhart(acc_parm));
+                    break;
+                default:
+                    break;
+            }
+        }
+        if (inputTest != null) {
+            sgd.setInputTest(inputTest);
+            sgd.setOutputTest(outputTest);
+            sgd.setTestFrecuency(1);
+        }
+        sgd.train(net, input, output);
+    }
     
-//    public void bp(double[] x, int xrow, int xcol, double[] y, int yrow, int ycol, int epochs) {
-//        bp(x, xrow, xcol, y, yrow, ycol, epochs, null, 0);
-//    }
+    public void cg(double[] x, int xrow, int xcol, double[] y, int yrow, int ycol,
+            int epochs, String beta_rule) {
+        SimpleMatrix input = new SimpleMatrix(xrow, xcol, false, x);
+        SimpleMatrix output = new SimpleMatrix(yrow, ycol, false, y);
+        cg.setEpoch(epochs);
+        cg.setBetaRule(BetaFactory.getBeta(beta_rule));
+        if (inputTest != null) {
+            cg.setInputTest(inputTest);
+            cg.setOutputTest(outputTest);
+            cg.setTestFrecuency(1);
+        }
+        cg.train(net, input, output);
+    }
+    
+    public void scg(double[] x, int xrow, int xcol, double[] y, int yrow, int ycol,
+            int epochs) {
+        SimpleMatrix input = new SimpleMatrix(xrow, xcol, false, x);
+        SimpleMatrix output = new SimpleMatrix(yrow, ycol, false, y);
+        scg.setEpoch(epochs);
+        if (inputTest != null) {
+            scg.setInputTest(inputTest);
+            scg.setOutputTest(outputTest);
+            scg.setTestFrecuency(1);
+        }
+        scg.train(net, input, output);
+    }
 
     public int getOutCount() {
         int L = net.getLayers().size();
@@ -104,4 +164,5 @@ public class rFeedforward {
         inputTest = new SimpleMatrix(xrow, xcol, false, x);
         outputTest = new SimpleMatrix(yrow, ycol, false, y);
     }
+    
 }
