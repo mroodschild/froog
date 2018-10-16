@@ -142,11 +142,13 @@ public class SCG extends Backpropagation {
             } else {
                 net.setParameters(W_new);
                 c.stop();
-                System.out.println("k: " + k + "\tE:\t" + E + "\tE_conj:\t" + E_conj + "\trk_new:\t" + rk.normF() + "\ttime:\t" + c.timeSec() + " s.");
+                //System.out.println("It: " + k + "\ttrain:\t" + E + "\tE_conj:\t" + E_conj + "\trk_new:\t" + rk.normF() + "\ttime:\t" + c.timeSec() + " s.");
+                System.out.println("It:\t" + k + "\ttrain:\t" + E + "\ttime:\t" + c.timeSec() + "\ts.");
                 break;
             }
             c.stop();
-            System.out.println("k: " + k + "\tE:\t" + E + "\tE_conj:\t" + E_conj + "\trk_new:\t" + rk.normF() + "\ttime:\t" + c.timeSec() + " s.");
+            //System.out.println("It: " + k + "\ttrain:\t" + E + "\tE_conj:\t" + E_conj + "\trk_new:\t" + rk.normF() + "\ttime:\t" + c.timeSec() + " s.");
+            System.out.println("It:\t" + k + "\ttrain:\t" + E + "\ttime:\t" + c.timeSec() + "\ts.");
             /**
              * * Mejora **
              */
