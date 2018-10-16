@@ -65,9 +65,12 @@ public class rFeedforward {
         return net.output(m).getDDRM().getData();
     }
 
-    public void bp(double[] x, int xrow, int xcol, double[] y, int yrow, int ycol, int epochs, String acc, double acc_parm) {
+    public void bp(double[] x, int xrow, int xcol, double[] y, int yrow, int ycol, 
+            int epochs, String lossFunction, String acc, double acc_parm, boolean accuracy) {
         SimpleMatrix input = new SimpleMatrix(xrow, xcol, false, x);
         SimpleMatrix output = new SimpleMatrix(yrow, ycol, false, y);
+        bp.setLossFunction(lossFunction);
+        bp.setClassification(accuracy);
         bp.setEpoch(epochs);
         if (acc != null) {
             switch (acc) {
@@ -93,9 +96,12 @@ public class rFeedforward {
     }
 
     public void sgd(double[] x, int xrow, int xcol, double[] y, int yrow, int ycol,
-            int epochs, int batchsize, String acc, double acc_parm) {
+            int epochs, int batchsize, String lossFunction, String acc, 
+            double acc_parm, boolean accuracy) {
         SimpleMatrix input = new SimpleMatrix(xrow, xcol, false, x);
         SimpleMatrix output = new SimpleMatrix(yrow, ycol, false, y);
+        sgd.setLossFunction(lossFunction);
+        sgd.setClassification(accuracy);
         sgd.setEpoch(epochs);
         sgd.setBatchSize(batchsize);
         if (acc != null) {
