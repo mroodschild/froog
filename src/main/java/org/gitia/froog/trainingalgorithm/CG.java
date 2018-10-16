@@ -55,14 +55,14 @@ public class CG extends Backpropagation {
      */
     @Override
     public void train(Feedforward net, SimpleMatrix input, SimpleMatrix output) {
-        Clock ck = new Clock();
+        //Clock ck = new Clock();
         this.net = net;
         this.input = new SimpleMatrix(input);
         this.output = new SimpleMatrix(output);
         init();
-        ck.stop();
-        ck.printTime("Inicio de datos");
-        ck.start();
+        //ck.stop();
+        //ck.printTime("Inicio de datos");
+        //ck.start();
 
         Activations = net.activations(input);
         costOverall = loss(Activations.get(Activations.size() - 1), output);//f=function(x)
@@ -74,8 +74,8 @@ public class CG extends Backpropagation {
         pPrev = g.negative();
         gPrev = g.copy();
         pBeta = 0;
-        ck.stop();
-        ck.printTime("primer gradiente");
+        //ck.stop();
+        //ck.printTime("primer gradiente");
         for (int i = 0; i < this.epoch; i++) {
             //System.out.println("----Iteracion----\t"+i);
             Clock ckIt = new Clock();
@@ -85,16 +85,16 @@ public class CG extends Backpropagation {
             if (iteracion > 0) {
                 //Activations = net.activations(inputBach);
                 //f = loss(Activations.get(Activations.size() - 1), outputBach);
-                ck.start();
+                //ck.start();
                 //computeGradient(input, output);
                 gradient.compute(net, Activations, gradW, gradB, input, output);
                 g = getGradients();//asignamos el g
                 pBeta = betaRule.compute(g, gPrev);
-                ck.stop();
-                ck.printTime("segundo gradiente");
+                //ck.stop();
+                //ck.printTime("segundo gradiente");
             }
 
-            ck.start();
+            //ck.start();
             p = pPrev.scale(pBeta).minus(g);//-g+pbeta*ppr
 
             double norm = NormOps_DDRM.normPInf(g.getDDRM());
@@ -104,9 +104,9 @@ public class CG extends Backpropagation {
             double alpha = 1;
             SimpleMatrix xnew;
             double fxnew = 0;
-            double k_it = 0;
+            //double k_it = 0;
             for (int k = 0; k < 10; k++) {
-                k_it = k;
+                //k_it = k;
                 xnew = x.plus(p.scale(alpha).transpose());
                 net.setParameters(xnew);
                 Activations = net.activations(input);
@@ -122,10 +122,11 @@ public class CG extends Backpropagation {
             pPrev = p;
             gPrev = g;
             iteracion++;
-            ck.stop();
-            ck.printTime("ajuste");
+            //ck.stop();
+            //ck.printTime("ajuste");
             ckIt.stop();
-            System.out.println("Iteracion: \t" + i + "\tk_it:\t" + k_it + "\tMSE:\t" + f + "\tnorm:\t" + norm + "\ttime:\t" + ckIt.timeSec() + "\ts");
+            //System.out.println("It: \t" + i + "\tk_it:\t" + k_it + "\tMSE:\t" + f + "\tnorm:\t" + norm + "\ttime:\t" + ckIt.timeSec() + "\ts");
+            System.out.println("It: \t" + i + "\ttrain:\t" + f + "\ttime:\t" + ckIt.timeSec() + "\ts");
         }
     }
 
