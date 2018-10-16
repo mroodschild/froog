@@ -1,12 +1,11 @@
 Package: FroogNeuralNetwork
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Neural Network Framework
 Version: 0.4.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Author: Matías Roodschild, Jorge Gotay Sardiñas, Adrián Will, Sebastián Rodriguez
+Maintainer: Matías Roodschild <mroodschild@gmail.com>
+Description: Froog is a simple neural network, it's developed at GITIA from National Technological University of Tucuman, Argentina.
+License: Froog is released under the Apache v2.0 open source license
 Encoding: UTF-8
 LazyData: true
 depends: R(>= 3.5.1), rJava(>= 0.9-10)
