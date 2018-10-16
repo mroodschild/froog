@@ -85,7 +85,7 @@ public class Backpropagation extends TrainingAlgorithm {
             }
             iteracion++;
         }
-        printScreen(clock);
+        //printScreen(clock);
     }
 
     /**
