@@ -169,14 +169,15 @@ public class Backpropagation extends TrainingAlgorithm {
     protected void printScreen(Clock clock) {
         double aciertoTrain = 0;
         double aciertoTest = 0;
-        double costAllTrain = -1;
+        //double costAllTrain = -1;
         if ((iteracion % testFrecuency) == 0 && inputTest != null) {
-            SimpleMatrix yCalcTrain = net.output(this.input);
+            //SimpleMatrix yCalcTrain = net.output(this.input);
+            //costAllTrain = loss(yCalcTrain, this.output);
             SimpleMatrix yCalcTest = net.output(this.inputTest);
-            costAllTrain = loss(yCalcTrain, this.output);
             costOverallTest = loss(yCalcTest, outputTest);
             this.costTest.add(costOverallTest);
             if (classification) {
+                SimpleMatrix yCalcTrain = net.output(this.input);
                 ConfusionMatrix cMatrixTrain = new ConfusionMatrix();
                 cMatrixTrain.eval(Compite.eval(yCalcTrain.transpose()), this.output.transpose());
                 aciertoTrain = cMatrixTrain.getAciertosPorc();
@@ -196,7 +197,7 @@ public class Backpropagation extends TrainingAlgorithm {
                 System.out.println(
                         "It:\t" + iteracion
                         + "\tTrain:\t" + costOverall
-                        + "\tTrain Complete:\t" + costAllTrain
+                        //+ "\tTrain Complete:\t" + costAllTrain
                         + "\tTest:\t" + costOverallTest
                         + "\tTrain Aciertos:\t" + aciertoTrain + "\t%."
                         + "\tTest Aciertos:\t" + aciertoTest + "\t%."
@@ -206,7 +207,7 @@ public class Backpropagation extends TrainingAlgorithm {
                 System.out.println(
                         "It:\t" + iteracion
                         + "\tTrain:\t" + costOverall
-                        + "\tTrain Complete:\t" + costAllTrain
+                        //+ "\tTrain Complete:\t" + costAllTrain
                         + "\tTest:\t" + costOverallTest
                         + "\tTime:\t" + clock.timeSec() + "\ts."
                 );
