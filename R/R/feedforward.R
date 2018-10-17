@@ -95,3 +95,10 @@ scg<-function(net, input, output, epochs = 100){
          as.integer(epochs))
 }
 
+setTestData<-function(net, input, output){
+  .jcall(net, 'V', 'setTestData',
+         input, as.integer(nrow(input)), as.integer(ncol(input)),
+         output, as.integer(nrow(output)), as.integer(ncol(output))
+         )
+}
+
