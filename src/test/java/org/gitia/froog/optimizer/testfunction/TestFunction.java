@@ -17,40 +17,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.gitia.froog.r;
+package org.gitia.froog.optimizer.testfunction;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.ejml.simple.SimpleMatrix;
 
 /**
  *
  * @author Matías Rodschild <mroodschild@gmail.com>
  */
-public class rFeedforwardTest {
+public interface TestFunction {
     
-    public rFeedforwardTest() {
-    }
-
     /**
-     * Test of out method, of class rFeedforward.
+     * function output
+     * @param X [n x 1]
+     * @return 
      */
-    @Test
-    public void testOut() {
-        System.out.println("out");
-        double[] matrix = {0.4,0.5,0.6,0.7,0.8,0.9};
-        int row = 2;
-        int col = 3;
-        rFeedforward net = new rFeedforward();
-        net.addLayer(2, 2, "tansig");
-        net.addLayer(2, 1, "purelim");
-        
-        double[] expResult = net.out(matrix, 2, 3);
-        for (int i = 0; i < expResult.length; i++) {
-            double d = expResult[i];
-            System.out.printf("%.2f\t",d);
-        }
-        
-        System.out.println("");
-    }
+    public double compute(SimpleMatrix X);
     
+    /**
+     * function gradient
+     * @param X [n x 1]
+     * @return
+     */
+    public SimpleMatrix gradient(SimpleMatrix X);
 }
