@@ -28,7 +28,7 @@ import java.util.Formatter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.gitia.froog.Feedforward;
-import org.gitia.froog.layer.Layer;
+import org.gitia.froog.layer.Dense;
 
 /**
  *
@@ -97,7 +97,7 @@ public class Save {
     private static void process(Feedforward net) {
 
         for (int i = 0; i < net.getLayers().size(); i++) {
-            Layer layer = net.getLayers().get(i);
+            Dense layer = net.getLayers().get(i);
             formatter.format("\n<layer>");
             formatter.format("\n\t<transferFunction>%s</transferFunction>",
                     layer.getFunction().toString());

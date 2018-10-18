@@ -29,7 +29,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.ejml.simple.SimpleMatrix;
 import org.gitia.froog.Feedforward;
-import org.gitia.froog.layer.Layer;
+import org.gitia.froog.layer.Dense;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -79,7 +79,7 @@ public class Open {
                     String weight = obtenerNodoValor("w", layerElement);
                     double[] b = Arrays.stream(bias.split(",")).mapToDouble(Double::valueOf).toArray();
                     double[] w = Arrays.stream(weight.split(",")).mapToDouble(Double::valueOf).toArray();
-                    net.addLayer(new Layer(
+                    net.addLayer(new Dense(
                             new SimpleMatrix(b.length, w.length / b.length, true, w),
                             new SimpleMatrix(b.length, 1, true, b),
                             function));

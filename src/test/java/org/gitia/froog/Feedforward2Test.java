@@ -19,7 +19,7 @@
  */
 package org.gitia.froog;
 
-import org.gitia.froog.layer.Layer;
+import org.gitia.froog.layer.Dense;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -57,8 +57,8 @@ public class Feedforward2Test {
     @Test
     public void testLayer() {
         Feedforward net = new Feedforward();
-        net.addLayer(new Layer(4, 2, "tansig"));
-        net.addLayer(new Layer(2, 2, "purelim"));
+        net.addLayer(new Dense(4, 2, "tansig"));
+        net.addLayer(new Dense(2, 2, "purelim"));
 
         assertEquals("Dimensiones Entrada", 8, net.getLayers().get(0).getW().getNumElements());
         assertEquals("Dimensiones Entrada", 4, net.getLayers().get(1).getW().getNumElements());
@@ -76,8 +76,8 @@ public class Feedforward2Test {
         SimpleMatrix b2 = new SimpleMatrix(2, 1, true, data3);
 
         Feedforward net = new Feedforward();
-        net.addLayer(new Layer(w1, b1, "tansig"));
-        net.addLayer(new Layer(w2, b2, "purelim"));
+        net.addLayer(new Dense(w1, b1, "tansig"));
+        net.addLayer(new Dense(w2, b2, "purelim"));
         double[] entrada = {0.2, 0.6};
         double[] esperado = {0.7104, 1.0993};
         assertArrayEquals(esperado, net.output(entrada).getDDRM().getData(), 0.0001);
@@ -99,16 +99,16 @@ public class Feedforward2Test {
         SimpleMatrix b3 = new SimpleMatrix(2, 1, true, data5);
 
         Feedforward net = new Feedforward();
-        net.addLayer(new Layer(w1, b1, "tansig"));
-        net.addLayer(new Layer(w2, b2, "tansig"));
-        net.addLayer(new Layer(w3, b3, "purelim"));
+        net.addLayer(new Dense(w1, b1, "tansig"));
+        net.addLayer(new Dense(w2, b2, "tansig"));
+        net.addLayer(new Dense(w3, b3, "purelim"));
 
         double[] entrada = {0.2, 0.6};
         double[] esperado = {1.2686148090686, 1.7212904026294};
 //        List<Layer> layers = net.getLayers();
 //        for (int i = 0; i < layers.size(); i++) {
-//            Layer l = layers.get(i);
-//            System.out.println("Layer: " + i + " tipo: " + l.toString());
+//            Dense l = layers.get(i);
+//            System.out.println("Dense: " + i + " tipo: " + l.toString());
 //            l.getW().print();
 //        }
 //        System.out.println("Salida:");

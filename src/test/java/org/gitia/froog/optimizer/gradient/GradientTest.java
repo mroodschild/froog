@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.ejml.simple.SimpleMatrix;
 import org.gitia.froog.Feedforward;
-import org.gitia.froog.layer.Layer;
+import org.gitia.froog.layer.Dense;
 import org.gitia.froog.transferfunction.TransferFunction;
 import org.junit.Test;
 
@@ -68,8 +68,8 @@ public class GradientTest {
         Activations.add(A2);
 
         Feedforward net = new Feedforward();
-        net.addLayer(new Layer(W1, W1, TransferFunction.TANSIG));
-        net.addLayer(new Layer(W2, W2, TransferFunction.TANSIG));
+        net.addLayer(new Dense(W1, W1, TransferFunction.TANSIG));
+        net.addLayer(new Dense(W2, W2, TransferFunction.TANSIG));
         
         double[][] x = {{1.62434536, -0.61175641, -0.52817175},
         {-1.07296862, 0.86540763, -2.3015387}};

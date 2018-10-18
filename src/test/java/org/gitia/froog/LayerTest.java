@@ -19,7 +19,7 @@
  */
 package org.gitia.froog;
 
-import org.gitia.froog.layer.Layer;
+import org.gitia.froog.layer.Dense;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -54,7 +54,7 @@ public class LayerTest {
     }
 
     /**
-     * Test of outputZ method, of class Layer.
+     * Test of outputZ method, of class Dense.
      */
     @Test
     public void testOutputZ() {
@@ -63,7 +63,7 @@ public class LayerTest {
         SimpleMatrix w1 = new SimpleMatrix(2, 2, true, data);
         SimpleMatrix b1 = new SimpleMatrix(2, 1, true, data1);
 
-        Layer layer = new Layer(w1, b1, "tansig");
+        Dense layer = new Dense(w1, b1, "tansig");
 
         double[] data2 = {0.2, 0.6};
         SimpleMatrix entrada = new SimpleMatrix(2, 1, true, data2);
@@ -72,7 +72,7 @@ public class LayerTest {
     }
 
     /**
-     * Test of output method, of class Layer.
+     * Test of output method, of class Dense.
      */
     @Test
     public void testOutput_SimpleMatrix() {
@@ -83,14 +83,14 @@ public class LayerTest {
         SimpleMatrix b1 = new SimpleMatrix(2, 1, true, data1);
         SimpleMatrix a = new SimpleMatrix(2, 1, true, data2);
 
-        Layer instance = new Layer(w1, b1, "tansig");
+        Dense instance = new Dense(w1, b1, "tansig");
 
         double[] esperado = {0.5648995528462, 0.3799489622552};
         assertArrayEquals(esperado, instance.output(a).getDDRM().getData(), 0.0000001);
     }
 
     /**
-     * Test of output method, of class Layer.
+     * Test of output method, of class Dense.
      */
     @Test
     public void testOutput_doubleArr() {
@@ -100,7 +100,7 @@ public class LayerTest {
         SimpleMatrix b1 = new SimpleMatrix(2, 1, true, data1);
         double[] a = {0.2, 0.6};
         
-        Layer instance = new Layer(w1, b1, "tansig");
+        Dense instance = new Dense(w1, b1, "tansig");
 
         double[] esperado = {0.5648995528462, 0.3799489622552};
         assertArrayEquals(esperado, instance.output(a).getDDRM().getData(), 0.0000001);

@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.ejml.simple.SimpleMatrix;
 import org.gitia.froog.Feedforward;
-import org.gitia.froog.layer.Layer;
+import org.gitia.froog.layer.Dense;
 import org.gitia.froog.optimizer.updaterule.Update;
 import org.gitia.froog.optimizer.updaterule.UpdateRule;
 import org.gitia.froog.transferfunction.TransferFunction;
@@ -77,13 +77,13 @@ public class UpdateTest {
         gradB.add(new SimpleMatrix(gB2));
 
         Feedforward net = new Feedforward();
-        net.addLayer(new Layer(W1, B1, TransferFunction.LOGSIG));
-        net.addLayer(new Layer(W2, B2, TransferFunction.LOGSIG));
+        net.addLayer(new Dense(W1, B1, TransferFunction.LOGSIG));
+        net.addLayer(new Dense(W2, B2, TransferFunction.LOGSIG));
 
         UpdateRule update = new Update();
         update.updateParameters(net, 1, 0, 1.2, gradW, gradB);
 
-        for (Layer l : net.getLayers()) {
+        for (Dense l : net.getLayers()) {
             l.getW().print("%.8f");
             l.getB().print("%.8f");
         }

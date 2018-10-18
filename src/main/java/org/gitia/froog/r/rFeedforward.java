@@ -21,7 +21,7 @@ package org.gitia.froog.r;
 
 import org.ejml.simple.SimpleMatrix;
 import org.gitia.froog.Feedforward;
-import org.gitia.froog.layer.Layer;
+import org.gitia.froog.layer.Dense;
 import org.gitia.froog.optimizer.Backpropagation;
 import org.gitia.froog.optimizer.CG;
 import org.gitia.froog.optimizer.SCG;
@@ -53,7 +53,7 @@ public class rFeedforward {
     }
 
     public void addLayer(int input, int neuronas, String function) {
-        net.addLayer(new Layer(input, neuronas, function));
+        net.addLayer(new Dense(input, neuronas, function));
     }
 
     public double[] out(double[] matrix, int row, int col) {
@@ -157,7 +157,7 @@ public class rFeedforward {
 
     public void summary() {
         for (int i = 0; i < net.getLayers().size(); i++) {
-            Layer l = net.getLayers().get(i);
+            Dense l = net.getLayers().get(i);
             System.out.println("Neuronas: " + l.numNeuron() + " Activation: " + l.getFunction().toString());
         }
     }

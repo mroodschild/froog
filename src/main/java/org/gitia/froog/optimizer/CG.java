@@ -41,7 +41,7 @@ public class CG extends TrainingAlgorithm {
     SimpleMatrix p;// = new SimpleMatrix();
     SimpleMatrix g;
     List<SimpleMatrix> Ak = new ArrayList<>();
-    int L;//Number of last Layer (size - 1)
+    int L;//Number of last Dense (size - 1)
     
     public CG() {
     }

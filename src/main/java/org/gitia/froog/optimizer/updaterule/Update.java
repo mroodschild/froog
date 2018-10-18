@@ -22,7 +22,7 @@ package org.gitia.froog.optimizer.updaterule;
 import java.util.List;
 import org.ejml.simple.SimpleMatrix;
 import org.gitia.froog.Feedforward;
-import org.gitia.froog.layer.Layer;
+import org.gitia.froog.layer.Dense;
 import org.gitia.froog.optimizer.accelerate.Accelerate;
 import org.gitia.froog.optimizer.accelerate.AccelerateRule;
 
@@ -61,7 +61,7 @@ public class Update implements UpdateRule {
         //calculamos todos los deltas
         accelerate.grad(dW, dB, learningRate);
         for (int i = 0; i < net.getLayers().size(); i++) {
-            Layer layer = net.getLayers().get(i);
+            Dense layer = net.getLayers().get(i);
             SimpleMatrix W = layer.getW();
             SimpleMatrix B = layer.getB();
 

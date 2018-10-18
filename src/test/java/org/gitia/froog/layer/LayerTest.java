@@ -32,7 +32,7 @@ import org.junit.Ignore;
 public class LayerTest {
 
     /**
-     * Test of output method, of class Layer.
+     * Test of output method, of class Dense.
      */
     @Test
     public void testOutput_doubleArr() {
@@ -42,14 +42,14 @@ public class LayerTest {
         SimpleMatrix w = new SimpleMatrix(2, 3, true, data);
         SimpleMatrix b = new SimpleMatrix(2, 1, true, data1);
         double[] input = {0.2, 0.4, 0.6};
-        Layer instance = new Layer(w, b, TransferFunction.LOGSIG);
+        Dense instance = new Dense(w, b, TransferFunction.LOGSIG);
         double[] expResult = {0.5938731029341, 0.6984652160025};
         double[] result = instance.output(input).getDDRM().getData();
         assertArrayEquals(expResult, result, 0.0000000000001);
     }
 
     /**
-     * Test of output method, of class Layer.
+     * Test of output method, of class Dense.
      */
     @Test
     public void testOutput_SimpleMatrix() {
@@ -60,7 +60,7 @@ public class LayerTest {
         SimpleMatrix w = new SimpleMatrix(2, 3, true, data);
         SimpleMatrix b = new SimpleMatrix(2, 1, true, data1);
         SimpleMatrix input = new SimpleMatrix(3, 1, true, data2);
-        Layer instance = new Layer(w, b, TransferFunction.LOGSIG);
+        Dense instance = new Dense(w, b, TransferFunction.LOGSIG);
         double[] expResult = {0.5938731029341, 0.6984652160025};
         double[] result = instance.output(input).getDDRM().getData();
         instance.output(input).print();
@@ -68,7 +68,7 @@ public class LayerTest {
     }
 
     /**
-     * Test of output method, of class Layer.
+     * Test of output method, of class Dense.
      */
     @Test
     public void testOutput_SimpleMatrixAll() {
@@ -79,21 +79,21 @@ public class LayerTest {
         SimpleMatrix w = new SimpleMatrix(2, 3, true, data);
         SimpleMatrix b = new SimpleMatrix(2, 1, true, data1);
         SimpleMatrix input = new SimpleMatrix(3, 2, false, data2);
-        Layer instance = new Layer(w, b, TransferFunction.LOGSIG);
+        Dense instance = new Dense(w, b, TransferFunction.LOGSIG);
         double[] expResult = {0.5938731029341, 0.5938731029341, 0.6984652160025, 0.6984652160025};
         double[] result = instance.output(input).getDDRM().getData();
         assertArrayEquals(expResult, result, 0.0000000000001);
     }
 
     /**
-     * Test of outputN method, of class Layer.
+     * Test of outputN method, of class Dense.
      */
     @Test
     @Ignore
     public void testOutputN() {
         System.out.println("outputN");
         SimpleMatrix z = null;
-        Layer instance = new Layer();
+        Dense instance = new Dense();
         SimpleMatrix expResult = null;
         SimpleMatrix result = instance.outputN(z);
         assertEquals(expResult, result);
@@ -102,14 +102,14 @@ public class LayerTest {
     }
 
     /**
-     * Test of outputZ method, of class Layer.
+     * Test of outputZ method, of class Dense.
      */
     @Test
     @Ignore
     public void testOutputZ() {
         System.out.println("outputZ");
         SimpleMatrix a = null;
-        Layer instance = new Layer();
+        Dense instance = new Dense();
         SimpleMatrix expResult = null;
         SimpleMatrix result = instance.outputZ(a);
         assertEquals(expResult, result);

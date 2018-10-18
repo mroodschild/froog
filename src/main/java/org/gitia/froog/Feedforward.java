@@ -19,7 +19,7 @@
  */
 package org.gitia.froog;
 
-import org.gitia.froog.layer.Layer;
+import org.gitia.froog.layer.Dense;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.lang3.ArrayUtils;
@@ -31,7 +31,7 @@ import org.ejml.simple.SimpleMatrix;
  */
 public class Feedforward implements NeuralNetwork {
 
-    List<Layer> layers = new ArrayList<>();
+    List<Dense> layers = new ArrayList<>();
 
     public Feedforward() {
     }
@@ -41,10 +41,10 @@ public class Feedforward implements NeuralNetwork {
      *
      * @param layer
      */
-    public void addLayer(Layer layer) {
+    public void addLayer(Dense layer) {
         layers.add(layer);
     }
-
+    
     /**
      *
      * @param input Horizontal
@@ -74,7 +74,7 @@ public class Feedforward implements NeuralNetwork {
     /**
      *
      * @param input entrada a la red
-     * @param layer salida de la Layer deseada
+     * @param layer salida de la Dense deseada
      * @return
      */
     public SimpleMatrix output(SimpleMatrix input, int layer) {
@@ -163,12 +163,12 @@ public class Feedforward implements NeuralNetwork {
             return null;
         }
         int numW = 0;
-        for (Layer next : layers) {
+        for (Dense next : layers) {
             numW += next.getW().getNumElements();
         }
         SimpleMatrix w = new SimpleMatrix(1, numW);
         int pos = 0;
-        for (Layer next : layers) {
+        for (Dense next : layers) {
             w.setRow(0, pos, next.getW().getDDRM().getData());
             pos += next.getW().getDDRM().getNumElements();
         }
@@ -185,12 +185,12 @@ public class Feedforward implements NeuralNetwork {
             return null;
         }
         int numB = 0;
-        for (Layer next : layers) {
+        for (Dense next : layers) {
             numB += next.getB().getNumElements();
         }
         SimpleMatrix b = new SimpleMatrix(1, numB);
         int pos = 0;
-        for (Layer next : layers) {
+        for (Dense next : layers) {
             b.setRow(0, pos, next.getB().getDDRM().getData());
             pos += next.getB().getDDRM().getNumElements();
         }
@@ -216,7 +216,7 @@ public class Feedforward implements NeuralNetwork {
             double[] datos = weights.getDDRM().getData();
             //cargamos los w
             for (int i = 0; i < layers.size(); i++) {
-                Layer layer = layers.get(i);
+                Dense layer = layers.get(i);
                 size = layer.getW().getNumElements();
                 layer.getW().getDDRM().setData(
                         ArrayUtils.subarray(datos, pos, pos + size));
@@ -224,7 +224,7 @@ public class Feedforward implements NeuralNetwork {
             }
             //cargamos los b
             for (int i = 0; i < layers.size(); i++) {
-                Layer layer = layers.get(i);
+                Dense layer = layers.get(i);
                 size = layer.getB().getNumElements();
                 layer.getB().getDDRM().setData(
                         ArrayUtils.subarray(datos, pos, pos + size));
@@ -237,7 +237,7 @@ public class Feedforward implements NeuralNetwork {
      * 
      * @return 
      */
-    public List<Layer> getLayers() {
+    public List<Dense> getLayers() {
         return layers;
     }
 
@@ -245,7 +245,7 @@ public class Feedforward implements NeuralNetwork {
      * 
      * @param layers 
      */
-    public void setLayers(List<Layer> layers) {
+    public void setLayers(List<Dense> layers) {
         this.layers = layers;
     }
 
@@ -257,7 +257,7 @@ public class Feedforward implements NeuralNetwork {
     public String toString() {
         String info = "";
         for (int i = 0; i < layers.size(); i++) {
-            Layer l = layers.get(i);
+            Dense l = layers.get(i);
             info += "l" + i + ": " + l.numNeuron() + "\t" + l.getFunction().toString() + "\t";
         }
         return info;

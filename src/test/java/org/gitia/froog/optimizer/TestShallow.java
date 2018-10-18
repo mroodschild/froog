@@ -21,7 +21,7 @@ package org.gitia.froog.optimizer;
 
 import org.ejml.simple.SimpleMatrix;
 import org.gitia.froog.Feedforward;
-import org.gitia.froog.layer.Layer;
+import org.gitia.froog.layer.Dense;
 import org.gitia.froog.transferfunction.TransferFunction;
 
 /**
@@ -50,8 +50,8 @@ public class TestShallow {
 //b2 = [[ 0.]]
         
         Feedforward net = new Feedforward();
-        net.addLayer(new Layer(5, 4, TransferFunction.LOGSIG));
-        net.addLayer(new Layer(4, 2, TransferFunction.LOGSIG));
+        net.addLayer(new Dense(5, 4, TransferFunction.LOGSIG));
+        net.addLayer(new Dense(4, 2, TransferFunction.LOGSIG));
 
         System.out.println(net.toString());
 

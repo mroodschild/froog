@@ -125,7 +125,7 @@ public class Backpropagation extends TrainingAlgorithm {
         double loss = 0;
         if (L2_Lambda > 0) {
             loss = Math.pow(net.getParamsW().normF(), 2) * L2_Lambda / (2 * m);
-//            for (Layer layer : net.getLayers()) {
+//            for (Dense layer : net.getLayers()) {
 //                loss += layer.getW().elementPower(2).elementSum();
 //            }
 //            SimpleMatrix weights = net.getParamsW();

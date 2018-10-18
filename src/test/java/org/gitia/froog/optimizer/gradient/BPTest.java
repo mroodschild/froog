@@ -21,7 +21,7 @@ package org.gitia.froog.optimizer.gradient;
 
 import org.ejml.simple.SimpleMatrix;
 import org.gitia.froog.Feedforward;
-import org.gitia.froog.layer.Layer;
+import org.gitia.froog.layer.Dense;
 import org.gitia.froog.lossfunction.LossFunction;
 import org.gitia.froog.optimizer.Backpropagation;
 import org.gitia.froog.optimizer.accelerate.AccelerateRule;
@@ -54,8 +54,8 @@ public class BPTest {
         SimpleMatrix B2 = new SimpleMatrix(b2);
         
         Feedforward net = new Feedforward();
-        net.addLayer(new Layer(W1, B1, TransferFunction.TANSIG));
-        net.addLayer(new Layer(W2, B2, TransferFunction.LOGSIG));
+        net.addLayer(new Dense(W1, B1, TransferFunction.TANSIG));
+        net.addLayer(new Dense(W2, B2, TransferFunction.LOGSIG));
         
         Backpropagation bp = new Backpropagation();
         bp.setEpoch(10000);
@@ -71,7 +71,7 @@ public class BPTest {
         System.out.println("");
         
         for (int i = 0; i < net.getLayers().size(); i++) {
-            Layer l = net.getLayers().get(i);
+            Dense l = net.getLayers().get(i);
             System.out.println("W"+(i+1));
             l.getW().print("%.8f");
             System.out.println("B"+(i+1));

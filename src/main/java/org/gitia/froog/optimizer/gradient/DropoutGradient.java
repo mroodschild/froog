@@ -23,7 +23,7 @@ import java.util.List;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.simple.SimpleMatrix;
 import org.gitia.froog.Feedforward;
-import org.gitia.froog.layer.Layer;
+import org.gitia.froog.layer.Dense;
 
 /**
  *
@@ -56,7 +56,7 @@ public class DropoutGradient implements Gradient{
         SimpleMatrix W = net.getLayers().get(L).getW();
         SimpleMatrix dA;
         for (int i = L - 1; i >= 0; i--) {
-            Layer l = net.getLayers().get(i);
+            Dense l = net.getLayers().get(i);
             dA = net.getLayers().get(i).getFunction().derivative(A);
             dA = dA.elementMult(l.getDrop()).divide(l.getKeepProb());
             dZ = W.transpose().mult(dZ).elementMult(dA);

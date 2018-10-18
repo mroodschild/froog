@@ -20,7 +20,7 @@
 package org.gitia.froog.lossfunction;
 
 import org.ejml.simple.SimpleMatrix;
-import org.gitia.froog.layer.Layer;
+import org.gitia.froog.layer.Dense;
 import org.gitia.froog.transferfunction.TransferFunction;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -68,7 +68,7 @@ public class LogisticRegressionTest {
         SimpleMatrix X = new SimpleMatrix(2, 3, true, data1);
         SimpleMatrix W = new SimpleMatrix(1, 2, true, data2);
         SimpleMatrix b = new SimpleMatrix(1, 1, true, data3);
-        Layer l = new Layer(W, b, TransferFunction.LOGSIG);
+        Dense l = new Dense(W, b, TransferFunction.LOGSIG);
         double expResult = 5.801545319394553;
         double result = instance.costAll(l.output(X), Y);
         assertEquals(expResult, result, 0.0);
