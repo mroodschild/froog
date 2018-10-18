@@ -15,6 +15,7 @@
  */
 package org.gitia.froog.layer;
 
+import java.util.Random;
 import org.ejml.data.BMatrixRMaj;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.simple.SimpleMatrix;
@@ -23,29 +24,31 @@ import org.ejml.simple.SimpleMatrix;
  *
  * @author Matías Roodschild <mroodschild@gmail.com>
  */
-public class Dropout{// implements Layer{
+public class Dropout implements Layer{
     
     double keepProb;
     SimpleMatrix Drop;
+    
+    Random r = new Random();
 
     public Dropout(double keepProb) {
         this.keepProb = keepProb;
     }
     
-    //@Override
+    @Override
     public SimpleMatrix output(SimpleMatrix a) {
-//         if (this.keepProb > 0 && this.keepProb < 1) {
+         if (this.keepProb > 0 && this.keepProb < 1) {
 //            //A = neurons x m
-//            Drop = SimpleMatrix.random_DDRM(W.numRows(), a.numCols(), 0, 1, this.random);
-//            BMatrixRMaj keepMatrix = new BMatrixRMaj(Drop.numRows(), Drop.numCols());
-//            CommonOps_DDRM.elementLessThan(Drop.getDDRM(), keepProb, keepMatrix);
-//            for (int i = 0; i < Drop.getNumElements(); i++) {
-//                Drop.set(i, (keepMatrix.get(i)) ? 1 : 0);
-//            }
+            Drop = SimpleMatrix.random_DDRM(a.numRows(), a.numCols(), 0, 1, r);
+            BMatrixRMaj keepMatrix = new BMatrixRMaj(Drop.numRows(), Drop.numCols());
+            CommonOps_DDRM.elementLessThan(Drop.getDDRM(), keepProb, keepMatrix);
+            for (int i = 0; i < Drop.getNumElements(); i++) {
+                Drop.set(i, (keepMatrix.get(i)) ? 1 : 0);
+            }
 //            return output(a).elementMult(Drop).divide(keepProb);
-//        } else {
-//            return output(a);
-//        }
+        } else {
+            return output(a);
+        }
     return null;
     }
     
