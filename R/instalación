@@ -1,0 +1,38 @@
+instalación
+
+1- sudo R CMD javareconf
+2- reiniciar rStudio
+3- install.packages('rJava', dependencies=TRUE, repos='http://cran.rstudio.com/')
+4- library('rJava')
+
+
+Usar Librería
+
+1- levantar path a la libreria
+2- levantar path desde la libreria a la clase a usar
+3- enviar parametros con sus identifaciones en JNI
+
+Crear Librería R para llamar a las funciones
+
+Ejemplo
+
+Levantamos la librería
+library('rJava')
+iniciamos la librería
+.jinit()
+agregamos el framework
+.jaddClassPath('/home/matias/NetBeansProjects/froog/target/froog-0.4-jar-with-dependencies.jar')
+agregamos la clase
+net <- .jnew("org/gitia/froog/r/rFeedforward")
+agregamos la capa
+.jcall(net, 'V','addLayer', as.integer(2), as.integer(2), 'tansig')
+.jcall(net, 'V','addLayer', as.integer(2), as.integer(1), 'tansig')
+
+creamos los datos
+m <- c(1,2,3,4,5,6,7,8,9,10)
+
+ejecutamos
+a <- .jcall(net, '[D','out', m, as.integer(2), as.integer(5))
+
+imprimimos
+a
