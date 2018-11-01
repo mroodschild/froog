@@ -22,6 +22,7 @@ addLayer<-function(net, input, neurons, activation){
   .jcall(net, 'V','addLayer', as.integer(input), as.integer(neurons), activation)
 }
 
+# Cambiar nombres y poner predict en vez de out, y a matrix ponerle input
 #' @param net
 #' @param matrix
 out<-function(net, matrix){
