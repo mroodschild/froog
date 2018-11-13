@@ -28,6 +28,7 @@ import org.gitia.froog.optimizer.SCG;
 import org.gitia.froog.optimizer.SGD;
 import org.gitia.froog.optimizer.accelerate.AccelerateRule;
 import org.gitia.froog.optimizer.conjugategradient.beta.BetaFactory;
+import org.gitia.jdataanalysis.data.OneHot;
 
 /**
  *
@@ -40,6 +41,7 @@ public class rFeedforward {
     SGD sgd;
     CG cg;
     SCG scg;
+    OneHot oneHot;
 
     SimpleMatrix inputTest;
     SimpleMatrix outputTest;
@@ -61,7 +63,7 @@ public class rFeedforward {
         return net.output(m).getDDRM().getData();
     }
 
-    public void bp(double[] x, int xrow, int xcol, double[] y, int yrow, int ycol, 
+    public void bp(double[] x, int xrow, int xcol, double[] y, int yrow, int ycol,
             int epochs, String lossFunction, String acc, double acc_parm, boolean accuracy) {
         SimpleMatrix input = new SimpleMatrix(xrow, xcol, false, x);
         SimpleMatrix output = new SimpleMatrix(yrow, ycol, false, y);
@@ -92,7 +94,7 @@ public class rFeedforward {
     }
 
     public void sgd(double[] x, int xrow, int xcol, double[] y, int yrow, int ycol,
-            int epochs, int batchsize, String lossFunction, String acc, 
+            int epochs, int batchsize, String lossFunction, String acc,
             double acc_parm, boolean accuracy) {
         SimpleMatrix input = new SimpleMatrix(xrow, xcol, false, x);
         SimpleMatrix output = new SimpleMatrix(yrow, ycol, false, y);
@@ -122,7 +124,7 @@ public class rFeedforward {
         }
         sgd.train(net, input, output);
     }
-    
+
     public void cg(double[] x, int xrow, int xcol, double[] y, int yrow, int ycol,
             int epochs, String beta_rule) {
         SimpleMatrix input = new SimpleMatrix(xrow, xcol, false, x);
@@ -136,7 +138,7 @@ public class rFeedforward {
         }
         cg.train(net, input, output);
     }
-    
+
     public void scg(double[] x, int xrow, int xcol, double[] y, int yrow, int ycol,
             int epochs) {
         SimpleMatrix input = new SimpleMatrix(xrow, xcol, false, x);
@@ -166,5 +168,18 @@ public class rFeedforward {
         inputTest = new SimpleMatrix(xrow, xcol, false, x);
         outputTest = new SimpleMatrix(yrow, ycol, false, y);
     }
-    
+
+    public double[] OneHot(String[] labels) {
+        oneHot = new OneHot(labels);
+        return oneHot.encode(labels);
+    }
+
+    public void decodeOneHot(double[] x, int xrow, int xcol) {
+        SimpleMatrix predict = new SimpleMatrix(xrow, xcol, false, x);
+        for (int i = 0; i < xrow; i++) {
+            String label = oneHot.tag(predict.extractVector(true, i).getDDRM().getData());
+            System.out.println("idx: "+i+":\t"+label);
+        }
+    }
+
 }

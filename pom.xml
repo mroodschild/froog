@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.gitia</groupId>
     <artifactId>froog</artifactId>
-    <version>0.4</version>
+    <version>0.4.1</version>
     <packaging>jar</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -101,6 +101,11 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.12</version>
+        </dependency>
+        <dependency>
+            <groupId>org.gitia</groupId>
+            <artifactId>JDataAnalysis</artifactId>
+            <version>0.4</version>
         </dependency>
     </dependencies>
 </project>
