@@ -169,9 +169,13 @@ public class rFeedforward {
         outputTest = new SimpleMatrix(yrow, ycol, false, y);
     }
 
-    public double[] OneHot(String[] labels) {
+    public double[] oneHot(String[] labels) {
         oneHot = new OneHot(labels);
         return oneHot.encode(labels);
+    }
+    
+    public int getNumLabels(){
+        return oneHot.getNumberOfClasses();
     }
 
     public void decodeOneHot(double[] x, int xrow, int xcol) {

@@ -103,3 +103,11 @@ setTestData<-function(net, input, output){
          )
 }
 
+oneHot<-function(tags){
+  net2<-sequencial_model()
+  a <- .jcall(net2, '[D', 'oneHot', as.character(tags))
+  a
+  classes <- .jcall(net2,'I','getNumLabels')
+  m <- matrix(data = a, nrow = length(as.character(tags)), ncol = classes, byrow = TRUE)
+  return(m)
+}
