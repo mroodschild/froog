@@ -174,7 +174,7 @@ public class rFeedforward {
         return oneHot.encode(labels);
     }
     
-    public int getNumLabels(){
+    public int getNumClasses(){
         return oneHot.getNumberOfClasses();
     }
 

@@ -27,7 +27,7 @@ import static org.junit.Assert.*;
  * @author Matías Rodschild <mroodschild@gmail.com>
  */
 public class rFeedforwardTest {
-    
+
     public rFeedforwardTest() {
     }
 
@@ -37,20 +37,34 @@ public class rFeedforwardTest {
     @Test
     public void testOut() {
         System.out.println("out");
-        double[] matrix = {0.4,0.5,0.6,0.7,0.8,0.9};
+        double[] matrix = {0.4, 0.5, 0.6, 0.7, 0.8, 0.9};
         int row = 2;
         int col = 3;
         rFeedforward net = new rFeedforward();
         net.addLayer(2, 2, "tansig");
         net.addLayer(2, 1, "purelim");
-        
+
         double[] expResult = net.out(matrix, 2, 3);
         for (int i = 0; i < expResult.length; i++) {
             double d = expResult[i];
-            System.out.printf("%.2f\t",d);
+            System.out.printf("%.2f\t", d);
         }
-        
+
         System.out.println("");
     }
-    
+
+    @Test
+    public void testOneHot() {
+        System.out.println("org.gitia.froog.r.rFeedforwardTest.testOneHot()");
+        rFeedforward instance = new rFeedforward();
+        String[] words = {"hola", "mundo", "matias", "hola"};
+        double[] resultados = instance.oneHot(words);
+
+        System.out.println("Clases: "+ instance.getNumClasses());
+        for (int i = 0; i < resultados.length; i++) {
+            double resultado = resultados[i];
+            System.out.println(i+": "+resultado);
+        }
+    }
+
 }
