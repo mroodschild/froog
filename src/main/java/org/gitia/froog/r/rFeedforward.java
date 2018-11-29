@@ -173,8 +173,8 @@ public class rFeedforward {
         oneHot = new OneHot(labels);
         return oneHot.encode(labels);
     }
-    
-    public int getNumClasses(){
+
+    public int getNumClasses() {
         return oneHot.getNumberOfClasses();
     }
 
@@ -182,7 +182,7 @@ public class rFeedforward {
         SimpleMatrix predict = new SimpleMatrix(xrow, xcol, false, x);
         for (int i = 0; i < xrow; i++) {
             String label = oneHot.tag(predict.extractVector(true, i).getDDRM().getData());
-            System.out.println("idx: "+i+":\t"+label);
+            System.out.println("idx: " + i + ":\t" + label);
         }
     }
 

@@ -19,21 +19,33 @@
  */
 package org.gitia.froog.r;
 
+import org.gitia.jdataanalysis.data.OneHot;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Ignore;
 
 /**
  *
  * @author Matías Rodschild <mroodschild@gmail.com>
  */
 public class rFeedforwardTest {
+    
+    OneHot onehot;
+    String[] words = {"hola", "mundo", "matias", "hola", "matias"};
 
     public rFeedforwardTest() {
+    }
+    
+    @Before
+    public void setUp() {
+        onehot = new OneHot(words);
     }
 
     /**
      * Test of out method, of class rFeedforward.
      */
+    @Ignore
     @Test
     public void testOut() {
         System.out.println("out");
@@ -57,14 +69,12 @@ public class rFeedforwardTest {
     public void testOneHot() {
         System.out.println("org.gitia.froog.r.rFeedforwardTest.testOneHot()");
         rFeedforward instance = new rFeedforward();
-        String[] words = {"hola", "mundo", "matias", "hola"};
+        String[] words = {"hola", "mundo", "matias", "mundo"};
         double[] resultados = instance.oneHot(words);
-
-        System.out.println("Clases: "+ instance.getNumClasses());
-        for (int i = 0; i < resultados.length; i++) {
-            double resultado = resultados[i];
-            System.out.println(i+": "+resultado);
-        }
+        
+        double[] expResult = {1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0};
+        double[] result = instance.oneHot(words);
+        assertArrayEquals(expResult, result, 0);
     }
 
 }

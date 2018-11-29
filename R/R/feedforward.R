@@ -14,10 +14,13 @@ sequencial_model<-function() {
   return(net)
 }
 
-#'  @param net
-#'  @param input
-#'  @param neurons
-#'  @param activation
+#' This function adds a new layer to the neural network 'net'
+#' \code{addLayer} adds a new layer to the neural network
+#'
+#'  @param net is the model to add a new layer.
+#'  @param input number of inputs received by the neural network.
+#'  @param neurons number of neurons in this layer.
+#'  @param activation type of activation function, it can be "tansig", "logsig", "relu", "purelim", "softmax", "softplus".
 addLayer<-function(net, input, neurons, activation){
   .jcall(net, 'V','addLayer', as.integer(input), as.integer(neurons), activation)
 }
@@ -106,10 +109,7 @@ setTestData<-function(net, input, output){
 oneHot<-function(tags){
   net2<-sequencial_model()
   a <- .jcall(net2, '[D', 'oneHot', as.character(tags))
-  a
-  print(a)
   classes <- .jcall(net2,'I','getNumClasses')
-  print(classes)
   m <- matrix(data = a, nrow = length(as.character(tags)), ncol = classes, byrow = TRUE)
   return(m)
 }
