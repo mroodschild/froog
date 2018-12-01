@@ -29,7 +29,7 @@ addLayer<-function(net, input, neurons, activation){
 #' @param net
 #' @param matrix
 out<-function(net, matrix){
-  a <- .jcall(net, '[D','out', matrix, as.integer(nrow(matrix)), as.integer(ncol(matrix)))
+  a <- .jcall(net, '[D','out', as.double(as.matrix(matrix)), as.integer(nrow(matrix)), as.integer(ncol(matrix)))
   nrowOutput <- .jcall(net,'I','getOutCount')
   m <- matrix(data = a, nrow = nrowOutput, ncol = as.integer(ncol(matrix)), byrow = TRUE)
   return(m)
@@ -45,8 +45,8 @@ out<-function(net, matrix){
 #' @param accuracy
 bp<-function(net, input, output, epochs = 100, loss_function ="rmse", acceleration = "", acc_param = 0.9, accuracy = FALSE){
   .jcall(net, 'V','bp',
-         input, as.integer(nrow(input)), as.integer(ncol(input)),
-         output, as.integer(nrow(output)), as.integer(ncol(output)),
+         as.double(as.matrix(input)), as.integer(nrow(input)), as.integer(ncol(input)),
+                             as.double(as.matrix(output)), as.integer(nrow(output)), as.integer(ncol(output)),
          as.integer(epochs),
          loss_function,
          acceleration,
@@ -65,8 +65,8 @@ bp<-function(net, input, output, epochs = 100, loss_function ="rmse", accelerati
 #' @param accuracy
 sgd<-function(net, input, output, epochs = 100, batch_size = 10, loss_function ="rmse", acceleration = "", acc_param = 0.9, accuracy = FALSE){
   .jcall(net, 'V','sgd',
-         input, as.integer(nrow(input)), as.integer(ncol(input)),
-         output, as.integer(nrow(output)), as.integer(ncol(output)),
+         as.double(as.matrix(input)), as.integer(nrow(input)), as.integer(ncol(input)),
+         as.double(as.matrix(output)), as.integer(nrow(output)), as.integer(ncol(output)),
          as.integer(epochs),
          as.integer(batch_size),
          loss_function,
@@ -80,29 +80,33 @@ sgd<-function(net, input, output, epochs = 100, batch_size = 10, loss_function =
 #' @param output
 #' @param epochs
 #' @param beta_rule
-cg<-function(net, input, output, epochs = 100, beta_rule = "fletcher_reeves"){
+cg<-function(net, input, output, epochs = 100, beta_rule = "fletcher_reeves", loss_function ="rmse", accuracy = FALSE){
   .jcall(net, 'V','cg',
-         input, as.integer(nrow(input)), as.integer(ncol(input)),
-         output, as.integer(nrow(output)), as.integer(ncol(output)),
+         as.double(as.matrix(input)), as.integer(nrow(input)), as.integer(ncol(input)),
+         as.double(as.matrix(output)), as.integer(nrow(output)), as.integer(ncol(output)),
          as.integer(epochs),
-         beta_rule)
+         beta_rule,
+         loss_function,
+         accuracy)
 }
 
 #' @param net
 #' @param input
 #' @param output
 #' @param epochs
-scg<-function(net, input, output, epochs = 100){
+scg<-function(net, input, output, epochs = 100, loss_function ="rmse", accuracy = FALSE){
   .jcall(net, 'V','scg',
-         input, as.integer(nrow(input)), as.integer(ncol(input)),
-         output, as.integer(nrow(output)), as.integer(ncol(output)),
-         as.integer(epochs))
+         as.double(as.matrix(input)),  as.integer(nrow(input)),  as.integer(ncol(input)),
+         as.double(as.matrix(output)), as.integer(nrow(output)), as.integer(ncol(output)),
+         as.integer(epochs),
+         loss_function,
+         accuracy)
 }
 
 setTestData<-function(net, input, output){
   .jcall(net, 'V', 'setTestData',
-         input, as.integer(nrow(input)), as.integer(ncol(input)),
-         output, as.integer(nrow(output)), as.integer(ncol(output))
+         as.double(as.matrix(input)), as.integer(nrow(input)), as.integer(ncol(input)),
+         as.double(as.matrix(output)), as.integer(nrow(output)), as.integer(ncol(output))
          )
 }
 

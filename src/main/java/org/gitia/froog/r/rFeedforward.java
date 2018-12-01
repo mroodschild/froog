@@ -126,11 +126,15 @@ public class rFeedforward {
     }
 
     public void cg(double[] x, int xrow, int xcol, double[] y, int yrow, int ycol,
-            int epochs, String beta_rule) {
+            int epochs, String beta_rule,
+            String loss_function,
+            boolean accuracy) {
         SimpleMatrix input = new SimpleMatrix(xrow, xcol, false, x);
         SimpleMatrix output = new SimpleMatrix(yrow, ycol, false, y);
         cg.setEpoch(epochs);
         cg.setBetaRule(BetaFactory.getBeta(beta_rule));
+        cg.setLossFunction(loss_function);
+        cg.setClassification(accuracy);
         if (inputTest != null) {
             cg.setInputTest(inputTest);
             cg.setOutputTest(outputTest);
@@ -140,10 +144,13 @@ public class rFeedforward {
     }
 
     public void scg(double[] x, int xrow, int xcol, double[] y, int yrow, int ycol,
-            int epochs) {
+            int epochs, String loss_function,
+            boolean accuracy) {
         SimpleMatrix input = new SimpleMatrix(xrow, xcol, false, x);
         SimpleMatrix output = new SimpleMatrix(yrow, ycol, false, y);
         scg.setEpoch(epochs);
+        scg.setLossFunction(loss_function);
+        scg.setClassification(accuracy);
         if (inputTest != null) {
             scg.setInputTest(inputTest);
             scg.setOutputTest(outputTest);
