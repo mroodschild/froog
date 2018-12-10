@@ -20,6 +20,7 @@
 package org.gitia.froog.optimizer;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import org.ejml.dense.row.NormOps_DDRM;
 import org.ejml.simple.SimpleMatrix;
@@ -46,9 +47,11 @@ public class SCG extends TrainingAlgorithm {
     SimpleMatrix Wk;
     SimpleMatrix W_new;
     List<SimpleMatrix> Ak = new ArrayList<>();
+    List<SimpleMatrix> Ak_new = new ArrayList<>();
+    
     int L;//Number of Layers
 
-    Clock c = new Clock();
+    Clock clock = new Clock();
 
     public SCG() {
     }
@@ -61,21 +64,23 @@ public class SCG extends TrainingAlgorithm {
      * @param output every row is a feature and every column is a register
      */
     public void train(Feedforward net, SimpleMatrix input, SimpleMatrix output) {
+        //------------------------------------
         this.net = net;
         N = net.getParameters().getNumElements();
         this.Wk = net.getParameters();
         W_new = Wk.copy();
         init();
-        //primeraDireccion();//paso1
         Ak = net.activations(input);
         L = Ak.size() - 1;
+        //------------------------------------
+        //primeraDireccion();//paso1
         SimpleMatrix g1 = computeGradient(net, Ak, input, output);
         rk = g1.negative();
         pk = rk.copy();
         success = true;
         double E = lossFunction.costAll(Ak.get(L), output);//modificacion
         for (k = 0; k < epoch; k++) {
-            c.start();
+            clock.start();
             //informacionSegOrden();//paso 2
             if (success == true) {
                 sigmaK = sigma / NormOps_DDRM.normP2(pk.getDDRM());
@@ -99,23 +104,34 @@ public class SCG extends TrainingAlgorithm {
             alphak = uk / deltaK;
             //comparacionParametros();//paso 6
             net.setParameters(Wk.plus(pk.transpose().scale(alphak)));
-            Ak = net.activations(input);
-            double E_conj = lossFunction.costAll(Ak.get(L), output);
+            //Ak = net.activations(input);//este deberia ser Ak_new
+            Ak_new = net.activations(input);//este deberia ser Ak_new
+            //double E_conj = lossFunction.costAll(Ak.get(L), output);//Ak_new
+            double E_conj = lossFunction.costAll(Ak_new.get(L), output);//Ak_new
             nablaK = 2 * deltaK * (E - E_conj) / Math.pow(uk, 2);
             //evalNabla();//paso 7
             if (nablaK >= 0) {
-                W_new = Wk.plus(pk.transpose().scale(alphak));
-                net.setParameters(W_new);
+                //Ak = Ak_new.copy();
+                Collections.copy(Ak, Ak_new);//agregado
+                //W_new = Wk.plus(pk.transpose().scale(alphak));
+                Wk = Wk.plus(pk.transpose().scale(alphak));
+                //net.setParameters(W_new);
+                net.setParameters(Wk);
                 g1 = computeGradient(net, Ak, input, output);
-                r_new = g1.negative();
+                //r_new = g1.negative();//r = g1.negative()
+                rk = g1.negative();//r = g1.negative()
                 lambdaT = 0;
                 success = true;
                 if (k % N == 0) {
-                    p_new = r_new;
+                    //p_new = r_new;//pk = rk;
+                    pk = rk;//pk = rk;
                 } else {
-                    double r_new_norm2 = Math.pow(NormOps_DDRM.normP2(r_new.getDDRM()), 2);
-                    double beta = (r_new_norm2 - r_new.transpose().mult(rk).get(0)) / uk;
-                    p_new = r_new.plus(pk.scale(beta));
+                    //double r_new_norm2 = Math.pow(NormOps_DDRM.normP2(r_new.getDDRM()), 2);
+                    double rk_norm2 = Math.pow(NormOps_DDRM.normP2(rk.getDDRM()), 2);
+                    //double beta = (r_new_norm2 - r_new.transpose().mult(rk).get(0)) / uk;
+                    double beta = (rk_norm2 - rk.transpose().mult(rk).get(0)) / uk;
+                    //p_new = r_new.plus(pk.scale(beta));//pk = rk.plus(pk.scale(beta));
+                    pk = rk.plus(pk.scale(beta));//pk = rk.plus(pk.scale(beta));
                 }
                 if (nablaK >= 0.75) {
                     lambdaK = lambdaK * 0.25;
@@ -131,19 +147,19 @@ public class SCG extends TrainingAlgorithm {
             //actualizarPesos();
             //paso 9 
             if (rk.normF() != 0) {
-                rk = r_new;
-                pk = p_new;
-                Wk = W_new.copy();
+//                rk = r_new;//no
+//                pk = p_new;//no
+//                Wk = W_new.copy();//no
             } else {
-                net.setParameters(W_new);
-                c.stop();
+//                net.setParameters(W_new);
+                clock.stop();
                 //System.out.println("It: " + k + "\ttrain:\t" + E + "\tE_conj:\t" + E_conj + "\trk_new:\t" + rk.normF() + "\ttime:\t" + c.timeSec() + " s.");
-                System.out.println("It:\t" + k + "\ttrain:\t" + E + "\ttime:\t" + c.timeSec() + "\ts.");
+                System.out.println("It:\t" + k + "\ttrain:\t" + E + "\ttime:\t" + clock.timeSec() + "\ts.");
                 break;
             }
-            c.stop();
+            clock.stop();
             //System.out.println("It: " + k + "\ttrain:\t" + E + "\tE_conj:\t" + E_conj + "\trk_new:\t" + rk.normF() + "\ttime:\t" + c.timeSec() + " s.");
-            System.out.println("It:\t" + k + "\ttrain:\t" + E + "\ttime:\t" + c.timeSec() + "\ts.");
+            System.out.println("It:\t" + k + "\ttrain:\t" + E + "\ttime:\t" + clock.timeSec() + "\ts.");
             /**
              * * Mejora **
              */
