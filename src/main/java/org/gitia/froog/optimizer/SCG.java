@@ -22,6 +22,7 @@ package org.gitia.froog.optimizer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 import org.ejml.dense.row.NormOps_DDRM;
 import org.ejml.simple.SimpleMatrix;
 import org.gitia.froog.Feedforward;
@@ -67,6 +68,18 @@ public class SCG extends TrainingAlgorithm {
      * @param output every row is a feature and every column is a register
      */
     public void train(Feedforward net, SimpleMatrix input, SimpleMatrix output) {
+        //=========================
+        Random r = new Random();
+        SimpleMatrix a = SimpleMatrix.random_DDRM(300, 50000, -20, 600, r);
+        SimpleMatrix b = SimpleMatrix.random_DDRM(50000, 768, -20, 600, r);
+        Clock c4 = new Clock();
+        c4.start();
+//        System.out.println("a: " + a.getType() + " b: " + b.getType());
+        a.mult(b);
+        c4.stop();
+        c4.printTime("Tiempo a*b");
+
+        //=========================
         //------------------------------------
         this.net = net;
         N = net.getParameters().getNumElements();
@@ -75,6 +88,8 @@ public class SCG extends TrainingAlgorithm {
         init();
         clockStep.start();
         Ak = net.activations(input);
+        clockMid.stop();
+        clockMid.printTime("ACTIVACIONES");
         L = Ak.size() - 1;
         //------------------------------------
         //primeraDireccion();//paso1
@@ -88,7 +103,7 @@ public class SCG extends TrainingAlgorithm {
         clockMid.start();
         double E = lossFunction.costAll(Ak.get(L), output);//modificacion
         clockMid.stop();
-        clockMid.printTime("g1");
+        clockMid.printTime("E");
         clockStep.stop();
         clockStep.printTime("Step1");
         for (k = 1; k <= epoch; k++) {
@@ -137,10 +152,16 @@ public class SCG extends TrainingAlgorithm {
             clockStep.start();
             //evalNabla();//paso 7
             if (nablaK >= 0) {
+                clockMid.start();
                 Collections.copy(Ak, Ak_new);//agregado
+                clockMid.stop();
+                clockMid.printTime("Collections.copy");
                 Wk = Wk.plus(pk.transpose().scale(alphak));
                 net.setParameters(Wk);
+                clockMid.start();
                 g1 = computeGradient(net, Ak, input, output);
+                clockMid.stop();
+                clockMid.printTime("g1");
                 SimpleMatrix r_old = rk.copy();
                 rk = g1.negative();//r = g1.negative()
                 lambdaT = 0;
@@ -182,6 +203,17 @@ public class SCG extends TrainingAlgorithm {
             clockStep.start();
             clock.stop();
             System.out.println("It:\t" + k + "\ttrain:\t" + E + "\ttime:\t" + clock.timeSec() + "\ts.");
+            
+            //=========================
+            System.out.println("Final a*b");
+            a = SimpleMatrix.random_DDRM(300, 50000, -20, 600, r);
+            b = SimpleMatrix.random_DDRM(50000, 768, -20, 600, r);
+            c4.start();
+            System.out.println("a: " + a.getType() + " b: " + b.getType());
+            a.mult(b);
+            c4.stop();
+            c4.printTime("Tiempo a*b");
+            //=========================
         }
     }
 
@@ -194,7 +226,11 @@ public class SCG extends TrainingAlgorithm {
      * @return
      */
     public SimpleMatrix computeGradient(Feedforward net, List<SimpleMatrix> A, SimpleMatrix X, SimpleMatrix Y) {
+//        Clock c = new Clock();
+//        c.start();
         gradient.compute(net, A, gradW, gradB, X, Y);
+//        c.stop();
+//        c.printTime("Calculo del gradiente");
         return getGradients(gradW, gradB);
     }
 
