@@ -70,12 +70,11 @@ public class SCG extends TrainingAlgorithm {
     public void train(Feedforward net, SimpleMatrix input, SimpleMatrix output) {
         //=========================
         Random r = new Random();
-        SimpleMatrix a = SimpleMatrix.random_DDRM(300, 50000, -20, 600, r);
-        SimpleMatrix b = SimpleMatrix.random_DDRM(50000, 768, -20, 600, r);
+        Clock c = new Clock();
         Clock c4 = new Clock();
         c4.start();
 //        System.out.println("a: " + a.getType() + " b: " + b.getType());
-        a.mult(b);
+
         c4.stop();
         c4.printTime("Tiempo a*b");
 
@@ -203,16 +202,9 @@ public class SCG extends TrainingAlgorithm {
             clockStep.start();
             clock.stop();
             System.out.println("It:\t" + k + "\ttrain:\t" + E + "\ttime:\t" + clock.timeSec() + "\ts.");
-            
+
             //=========================
-            System.out.println("Final a*b");
-            a = SimpleMatrix.random_DDRM(300, 50000, -20, 600, r);
-            b = SimpleMatrix.random_DDRM(50000, 768, -20, 600, r);
-            c4.start();
-            System.out.println("a: " + a.getType() + " b: " + b.getType());
-            a.mult(b);
-            c4.stop();
-            c4.printTime("Tiempo a*b");
+            
             //=========================
         }
     }
