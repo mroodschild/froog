@@ -43,7 +43,7 @@ public class CrossEntropyLoss implements LossFunction {
         //(el resto se hace cero ya que -1 * {y = k} * ln(ak), en las 
         // otras salidas {y != k} => 0
         int Yk = ArrayUtils.indexOf(Yobs.getDDRM().getData(), 1);
-        //obtenemso la salida
+        //obtenemos la salida
         double aCalc = Ycalc.get(Yk);
         //realizamos los calculos
         return -1 * Math.log(aCalc);
