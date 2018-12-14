@@ -19,6 +19,7 @@
  */
 package org.gitia.froog.transferfunction;
 
+import java.util.stream.IntStream;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.simple.SimpleMatrix;
 
@@ -44,13 +45,11 @@ public class Softmax implements TransferFunction {
      */
     @Override
     public SimpleMatrix output(SimpleMatrix z) {
-//        SimpleMatrix p = z.elementExp();
-//        double sum = p.elementSum();
-//        return p.divide(sum);
         SimpleMatrix p = z.elementExp();
         SimpleMatrix sum = new SimpleMatrix(1, p.numCols());
         CommonOps_DDRM.sumCols(p.getMatrix(), sum.getMatrix());
-        for (int i = 0; i < p.numCols(); i++) {
+        int size = p.numCols();
+        for (int i = 0; i < size; i++) {
             p.setColumn(i, 0, p.extractVector(false, i).
                     divide(sum.get(i)).getDDRM().getData());
         }

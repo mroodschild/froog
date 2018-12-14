@@ -19,6 +19,7 @@
  */
 package org.gitia.froog.transferfunction;
 
+import java.util.stream.IntStream;
 import org.ejml.simple.SimpleMatrix;
 
 /**
@@ -41,10 +42,15 @@ public class Purelim implements TransferFunction {
     public SimpleMatrix outputZ(SimpleMatrix W, SimpleMatrix a, SimpleMatrix B) {
 //        return W.mult(a).plus(B);
         //return W.mult(a).plus(B);
+//        SimpleMatrix aux = W.mult(a);
+//        for (int i = 0; i < aux.numCols(); i++) {
+//            aux.setColumn(i, 0, aux.extractVector(false, i).plus(B).getDDRM().getData());
+//        }
+        
         SimpleMatrix aux = W.mult(a);
-        for (int i = 0; i < aux.numCols(); i++) {
-            aux.setColumn(i, 0, aux.extractVector(false, i).plus(B).getDDRM().getData());
-        }
+        int size = aux.numCols();
+        IntStream.range(0, size).parallel()
+                .forEach(i -> aux.setColumn(i, 0, aux.extractVector(false, i).plus(B).getDDRM().getData()));
         return aux;
     }
 
