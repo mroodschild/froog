@@ -19,7 +19,12 @@
  */
 package org.gitia.froog.transferfunction;
 
+import java.util.Arrays;
+import java.util.stream.DoubleStream;
+import java.util.stream.IntStream;
+import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.simple.SimpleMatrix;
+import org.gitia.froog.statistics.Clock;
 
 /**
  *
@@ -30,26 +35,31 @@ public class Relu implements TransferFunction {
     @Override
     public SimpleMatrix output(SimpleMatrix z) {
         SimpleMatrix p = new SimpleMatrix(z.numRows(), z.numCols());
-        for (int i = 0; i < p.getNumElements(); i++) {
-            p.set(i, Math.max(0, z.get(i)));
-        }
+        int size = z.getNumElements();
+        IntStream.range(0, size).parallel()
+                .forEach(i -> p.set(i, Math.max(0, z.get(i))));//tmp2[i] = Math.max(0, tmp[i]));
+//        for (int i = 0; i < p.getNumElements(); i++) {
+//            p.set(i, Math.max(0, z.get(i)));
+//        }
         return p;
     }
 
     @Override
     public SimpleMatrix outputZ(SimpleMatrix W, SimpleMatrix a, SimpleMatrix B) {
-//        return W.mult(a).plus(B);
         SimpleMatrix aux = W.mult(a);
-        for (int i = 0; i < aux.numCols(); i++) {
-            aux.setColumn(i, 0, aux.extractVector(false, i).plus(B).getDDRM().getData());
-        }
+        IntStream.range(0, aux.numCols()).parallel()
+                .forEach(i -> aux.setColumn(i, 0, aux.extractVector(false, i).plus(B).getDDRM().getData()));
+//        for (int i = 0; i < aux.numCols(); i++) {
+//            aux.setColumn(i, 0, aux.extractVector(false, i).plus(B).getDDRM().getData());
+//        }
         return aux;
     }
 
     @Override
     public SimpleMatrix derivative(SimpleMatrix a) {
         SimpleMatrix p = new SimpleMatrix(a.numRows(), a.numCols());
-        for (int i = 0; i < p.getNumElements(); i++) {
+        int size = p.getNumElements();
+        for (int i = 0; i < size; i++) {
             p.set(i, (a.get(i) >= 0) ? 1 : 0);
         }
         return p;

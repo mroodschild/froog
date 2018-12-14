@@ -68,23 +68,13 @@ public class SCG extends TrainingAlgorithm {
      * @param output every row is a feature and every column is a register
      */
     public void train(Feedforward net, SimpleMatrix input, SimpleMatrix output) {
-        //=========================
-        Random r = new Random();
-        Clock c = new Clock();
-        Clock c4 = new Clock();
-        c4.start();
-//        System.out.println("a: " + a.getType() + " b: " + b.getType());
-
-        c4.stop();
-        c4.printTime("Tiempo a*b");
-
-        //=========================
-        //------------------------------------
+      
         this.net = net;
         N = net.getParameters().getNumElements();
         this.Wk = net.getParameters();
         W_new = Wk.copy();
         init();
+        
         clockStep.start();
         Ak = net.activations(input);
         clockMid.stop();
@@ -92,6 +82,7 @@ public class SCG extends TrainingAlgorithm {
         L = Ak.size() - 1;
         //------------------------------------
         //primeraDireccion();//paso1
+       
         clockMid.start();
         SimpleMatrix g1 = computeGradient(net, Ak, input, output);
         clockMid.stop();
@@ -203,9 +194,6 @@ public class SCG extends TrainingAlgorithm {
             clock.stop();
             System.out.println("It:\t" + k + "\ttrain:\t" + E + "\ttime:\t" + clock.timeSec() + "\ts.");
 
-            //=========================
-            
-            //=========================
         }
     }
 

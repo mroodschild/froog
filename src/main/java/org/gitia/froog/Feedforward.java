@@ -94,7 +94,7 @@ public class Feedforward implements NeuralNetwork {
      */
     public List<SimpleMatrix> activations(SimpleMatrix input) {
         List<SimpleMatrix> A = new ArrayList<>();
-        SimpleMatrix a = input.copy();
+        SimpleMatrix a = input;
         int size = layers.size();
         for (int i = 0; i < size; i++) {
             a = layers.get(i).output(a);

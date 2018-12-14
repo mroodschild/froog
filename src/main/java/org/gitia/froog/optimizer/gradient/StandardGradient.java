@@ -23,6 +23,7 @@ import java.util.List;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.simple.SimpleMatrix;
 import org.gitia.froog.Feedforward;
+import org.gitia.froog.statistics.Clock;
 
 /**
  *
@@ -61,7 +62,14 @@ public class StandardGradient implements Gradient {
 
             A = (i > 0) ? Activations.get(i - 1) : X;
             //dZ.mult(At);// 300x50000 50000x784
+            Clock c = new Clock();
+            System.out.println("Inicia el calculo de dZ*At");
+            dZ.printDimensions();
+            A.printDimensions();
+            c.start();
             dW = dZ.mult(A.transpose()).divide(m);// -> 43.27 seg
+            c.stop();
+            c.printTime("Tiempo dZ*dAt");
             CommonOps_DDRM.sumRows(dZ.getDDRM(), sum.getDDRM());
             dB = sum.divide(m);
             gradW.set(i, dW);

@@ -58,10 +58,16 @@ public class Tansig implements TransferFunction {
 //        for (int i = 0; i < aux.numCols(); i++) {
 //            aux.setColumn(i, 0, aux.extractVector(false, i).plus(B).getDDRM().getData());
 //        }
-        SimpleMatrix b = new SimpleMatrix(1, a.numCols());
-        b.fill(1);
-        SimpleMatrix aux = B.mult(b);
-        CommonOps_DDRM.multAdd(W.getDDRM(), a.getDDRM(), aux.getDDRM());
+//        SimpleMatrix b = new SimpleMatrix(1, a.numCols());
+//        b.fill(1);
+//        SimpleMatrix aux = B.mult(b);
+//        CommonOps_DDRM.multAdd(W.getDDRM(), a.getDDRM(), aux.getDDRM());
+//        return aux;
+        
+        SimpleMatrix aux = W.mult(a);
+        for (int i = 0; i < aux.numCols(); i++) {
+            aux.setColumn(i, 0, aux.extractVector(false, i).plus(B).getDDRM().getData());
+        }
         return aux;
     }
 
