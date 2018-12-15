@@ -17,7 +17,7 @@ addLayer(net = model, input = 300, neurons = 10, activation = "softmax")
 
 ##configuramos el algoritmo de entrenamiento
 start.time <- Sys.time()
-scg(net = model,input = t(x), output = t(y), epochs = 2, loss_function = "crossEntropy", accuracy = FALSE)
+scg(net = model,input = t(x), output = t(y), epochs = 10, loss_function = "crossEntropy", accuracy = FALSE)
 end.time <- Sys.time()
 time.taken <- end.time - start.time
 time.taken

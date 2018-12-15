@@ -39,7 +39,8 @@ public class DefaultInit implements WeightInit {
     @Override
     public void init(SimpleMatrix matrix) {
         double r = Math.sqrt(6) / Math.sqrt(matrix.numRows() + matrix.numCols() + 1);
-        for (int i = 0; i < matrix.getNumElements(); i++) {
+        int size = matrix.getNumElements();
+        for (int i = 0; i < size; i++) {
             matrix.set(i, random.nextDouble() * 2 * r - r);
         }
     }

@@ -169,7 +169,8 @@ public class Dense implements Layer {
             Drop = SimpleMatrix.random_DDRM(W.numRows(), a.numCols(), 0, 1, this.random);
             BMatrixRMaj keepMatrix = new BMatrixRMaj(Drop.numRows(), Drop.numCols());
             CommonOps_DDRM.elementLessThan(Drop.getDDRM(), keepProb, keepMatrix);
-            for (int i = 0; i < Drop.getNumElements(); i++) {
+            int size = Drop.getNumElements();
+            for (int i = 0; i < size; i++) {
                 Drop.set(i, (keepMatrix.get(i)) ? 1 : 0);
             }
             return output(a).elementMult(Drop).divide(keepProb);
