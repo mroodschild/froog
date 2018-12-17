@@ -43,33 +43,18 @@ public class Save {
     }
 
     public static void saveNet(Feedforward net, String name, String folder) {
-
-        //System.out.println("1");
         try {
-            //System.out.println("2");
             arch = new File(folder + "/" + name + ".xml");
-            //System.out.println("3");
             if (arch.exists()) {
-                //System.out.println("4");
-                //System.out.println("File alrady exist");
                 arch.delete();
-                //System.out.println("File deleted");
                 if (arch.createNewFile()) {
                     formatter = new Formatter(arch.getAbsoluteFile());
                     save(net);
-                    //System.out.println("File saved");
-                } else {
-                    //System.out.println("File not saved");
                 }
             } else {
-                //System.out.println("5");
                 if (arch.createNewFile()) {
-                    //System.out.println("6");
                     formatter = new Formatter(arch.getAbsoluteFile());
                     save(net);
-                    //System.out.println("File saved");
-                } else {
-                    //System.out.println("File not saved");
                 }
             }
         } catch (IOException ex) {
@@ -89,7 +74,7 @@ public class Save {
                 + "<!--\n"
                 + "\tSystem       :   Froog Neural Network - gitia.org\n"
                 + "\tCreated on   :   " + c.getTime().toString() + "\n"
-                + "\tContact      :   Dr. jgotay@gmail.com; Ing. mroodschild@gmail.com\n-->\n\n"
+                + "\tContact      :   Dr. jgotay57@gmail.com; Ing. mroodschild@gmail.com\n-->\n\n"
                 + "<Datos>";
         formatter.format("%s\n", cabecera);
     }

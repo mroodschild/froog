@@ -22,6 +22,7 @@ package org.gitia.froog.transferfunction;
 import java.util.stream.IntStream;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.simple.SimpleMatrix;
+import org.gitia.froog.statistics.Clock;
 
 /**
  *
@@ -99,9 +100,7 @@ public class Softmax implements TransferFunction {
 
     @Override
     public SimpleMatrix outputZ(SimpleMatrix W, SimpleMatrix a, SimpleMatrix B) {
-        //in softmax B is not necesary
-        SimpleMatrix aux = W.mult(a);
-        return aux;
+        return W.mult(a);
     }
 
 }

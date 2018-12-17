@@ -46,14 +46,7 @@ public class Relu implements TransferFunction {
 
     @Override
     public SimpleMatrix outputZ(SimpleMatrix W, SimpleMatrix a, SimpleMatrix B) {
-        SimpleMatrix aux = W.mult(a);
-        int size = aux.numCols();
-        IntStream.range(0, size).parallel()
-                .forEach(i -> aux.setColumn(i, 0, aux.extractVector(false, i).plus(B).getDDRM().getData()));
-//        for (int i = 0; i < aux.numCols(); i++) {
-//            aux.setColumn(i, 0, aux.extractVector(false, i).plus(B).getDDRM().getData());
-//        }
-        return aux;
+        return Z.output(W, a, B);
     }
 
     @Override
