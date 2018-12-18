@@ -20,7 +20,6 @@
 package org.gitia.froog.optimizer;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import org.ejml.dense.row.NormOps_DDRM;
 import org.ejml.simple.SimpleMatrix;
@@ -39,22 +38,22 @@ public class SCG extends TrainingAlgorithm {
     double sigma = 1e-8;// 0 < sigma <= 1e-4
     double sigmaK = 0;
     double lambdaT = 0;
-    double lambdaK = 1e-7;// 0 < lambdaK <= 1e-6
+    double lambdaK;
+    double lambdaK_init = 1e-7; // 0 < lambdaK <= 1e-6 
     double nablaK = 0;
     int k = 0;
     int N = 0;
     boolean success = true;
+    double E;
+    double E_conj;
 
     SimpleMatrix Wk;
     SimpleMatrix W_new;
     List<SimpleMatrix> Ak = new ArrayList<>();
-    List<SimpleMatrix> Ak_new = new ArrayList<>();
 
     int L;//Number of Layers
 
     Clock clock = new Clock();
-    //Clock clockStep = new Clock();
-    //Clock clockMid = new Clock();
 
     public SCG() {
     }
@@ -67,26 +66,33 @@ public class SCG extends TrainingAlgorithm {
      * @param output every row is a feature and every column is a register
      */
     public void train(Feedforward net, SimpleMatrix input, SimpleMatrix output) {
-      
+
         this.net = net;
         N = net.getParameters().getNumElements();
         this.Wk = net.getParameters();
         W_new = Wk.copy();
         init();
-        boolean restart = false;
-        
+        boolean restart = true;
         Ak = net.activations(input);
-        
         L = Ak.size() - 1;
-        //------------------------------------
-        //primeraDireccion();//paso1
         SimpleMatrix g1 = computeGradient(net, Ak, input, output);
+        E = lossFunction.costAll(Ak.get(L), output);//modificacion
         rk = g1.negative();
         pk = rk.copy();
-        success = true;
-        double E = lossFunction.costAll(Ak.get(L), output);//modificacion
+        //primeraDireccion();//paso1
+
         for (k = 1; k <= epoch; k++) {
             clock.start();
+
+            if (restart) {
+                sigmaK = 0;
+                lambdaT = 0;
+                lambdaK = lambdaK_init;// 0 < lambdaK <= 1e-6
+                nablaK = 0;
+                success = true;
+                restart = false;
+            }
+
             //informacionSegOrden();//paso 2
             if (success == true) {
                 sigmaK = sigma / NormOps_DDRM.normP2(pk.getDDRM());
@@ -110,12 +116,12 @@ public class SCG extends TrainingAlgorithm {
             alphak = uk / deltaK;
             //comparacionParametros();//paso 6
             net.setParameters(Wk.plus(pk.transpose().scale(alphak)));
-            Ak_new = net.activations(input);//este deberia ser Ak_new
-            double E_conj = lossFunction.costAll(Ak_new.get(L), output);//Ak_new
+            Ak = net.activations(input);
+            E_conj = lossFunction.costAll(Ak.get(L), output);
             nablaK = 2 * deltaK * (E - E_conj) / Math.pow(uk, 2);
             //evalNabla();//paso 7
             if (nablaK >= 0) {
-                Collections.copy(Ak, Ak_new);//agregado
+                //Collections.copy(Ak, Ak_new);//agregado
                 Wk = Wk.plus(pk.transpose().scale(alphak));
                 net.setParameters(Wk);
                 g1 = computeGradient(net, Ak, input, output);
@@ -126,6 +132,7 @@ public class SCG extends TrainingAlgorithm {
                 E = E_conj;
                 if (k % N == 0) {
                     pk = rk;//pk = rk;
+                    restart = true;
                 } else {
                     double rk_norm2 = Math.pow(NormOps_DDRM.normP2(rk.getDDRM()), 2);
                     double beta = (rk_norm2 - rk.transpose().mult(r_old).get(0)) / uk;
