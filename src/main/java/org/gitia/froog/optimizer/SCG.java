@@ -73,31 +73,20 @@ public class SCG extends TrainingAlgorithm {
         this.Wk = net.getParameters();
         W_new = Wk.copy();
         init();
+        boolean restart = false;
         
-        //clockStep.start();
         Ak = net.activations(input);
-        //clockMid.stop();
-        //clockMid.printTime("ACTIVACIONES");
+        
         L = Ak.size() - 1;
         //------------------------------------
         //primeraDireccion();//paso1
-       
-        //clockMid.start();
         SimpleMatrix g1 = computeGradient(net, Ak, input, output);
-        //clockMid.stop();
-        //clockMid.printTime("g1");
         rk = g1.negative();
         pk = rk.copy();
         success = true;
-        //clockMid.start();
         double E = lossFunction.costAll(Ak.get(L), output);//modificacion
-        //clockMid.stop();
-        //clockMid.printTime("E");
-        //clockStep.stop();
-        //clockStep.printTime("Step1");
         for (k = 1; k <= epoch; k++) {
             clock.start();
-            //clockStep.start();
             //informacionSegOrden();//paso 2
             if (success == true) {
                 sigmaK = sigma / NormOps_DDRM.normP2(pk.getDDRM());
@@ -107,50 +96,29 @@ public class SCG extends TrainingAlgorithm {
                 Sk = g2.minus(g1).divide(sigmaK);
                 deltaK = pk.transpose().mult(Sk).get(0);
             }
-            //clockStep.stop();
-            //clockStep.printTime("Step2");
-            //clockStep.start();
             //escalado();//paso 3
             double pk_nomrP2pow2 = Math.pow(NormOps_DDRM.normP2(pk.getDDRM()), 2);
             deltaK = deltaK + (lambdaK - lambdaT) * pk_nomrP2pow2;
-            //clockStep.stop();
-            //clockStep.printTime("Step3");
-            //clockStep.start();
             //hessianPositive();//paso 4
             if (deltaK <= 0) {
                 lambdaT = 2 * (lambdaK - deltaK / pk_nomrP2pow2);
                 deltaK = -deltaK + lambdaK * pk_nomrP2pow2;
                 lambdaK = lambdaT;
             }
-            //clockStep.stop();
-            //clockStep.printTime("Step4");
-            //clockStep.start();
             //tamanoPaso();//paso 5
             uk = pk.transpose().mult(rk).get(0);
             alphak = uk / deltaK;
-            //clockStep.stop();
-            //clockStep.printTime("Step5");
-            //clockStep.start();
             //comparacionParametros();//paso 6
             net.setParameters(Wk.plus(pk.transpose().scale(alphak)));
             Ak_new = net.activations(input);//este deberia ser Ak_new
             double E_conj = lossFunction.costAll(Ak_new.get(L), output);//Ak_new
             nablaK = 2 * deltaK * (E - E_conj) / Math.pow(uk, 2);
-            //clockStep.stop();
-            //clockStep.printTime("Step6");
-            //clockStep.start();
             //evalNabla();//paso 7
             if (nablaK >= 0) {
-                //clockMid.start();
                 Collections.copy(Ak, Ak_new);//agregado
-                //clockMid.stop();
-                //clockMid.printTime("Collections.copy");
                 Wk = Wk.plus(pk.transpose().scale(alphak));
                 net.setParameters(Wk);
-                //clockMid.start();
                 g1 = computeGradient(net, Ak, input, output);
-                //clockMid.stop();
-                //clockMid.printTime("g1");
                 SimpleMatrix r_old = rk.copy();
                 rk = g1.negative();//r = g1.negative()
                 lambdaT = 0;
@@ -170,26 +138,16 @@ public class SCG extends TrainingAlgorithm {
                 lambdaT = lambdaK;
                 success = false;
             }
-            //clockStep.stop();
-            //clockStep.printTime("Step7");
-            //clockStep.start();
             //evalSmallNabla();//paso 8
             if (nablaK < 0.25) {
                 lambdaK = lambdaK + (deltaK * (1 - nablaK) / pk_nomrP2pow2);
             }
-            //actualizarPesos();
-            //clockStep.stop();
-            //clockStep.printTime("Step8");
-            //clockStep.start();
             //paso 9 //finalizar algoritmo
             if (rk.normF() == 0) {
                 clock.stop();
                 System.out.println("It:\t" + k + "\ttrain:\t" + E + "\ttime:\t" + clock.timeSec() + "\ts.");
                 break;
             }
-            //clockStep.stop();
-            //clockStep.printTime("Step9");
-            //clockStep.start();
             clock.stop();
             System.out.println("It:\t" + k + "\ttrain:\t" + E + "\ttime:\t" + clock.timeSec() + "\ts.");
 
@@ -205,11 +163,7 @@ public class SCG extends TrainingAlgorithm {
      * @return
      */
     public SimpleMatrix computeGradient(Feedforward net, List<SimpleMatrix> A, SimpleMatrix X, SimpleMatrix Y) {
-//        Clock c = new Clock();
-//        c.start();
         gradient.compute(net, A, gradW, gradB, X, Y);
-//        c.stop();
-//        c.printTime("Calculo del gradiente");
         return getGradients(gradW, gradB);
     }
 
