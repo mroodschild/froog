@@ -34,9 +34,9 @@ import org.gitia.froog.layer.initialization.WeightInit;
  */
 public class Dense implements Layer {
 
-    SimpleMatrix W;//W[neuronas x entrada]
-    SimpleMatrix B;//B[neuronas x 1]
-    TransferFunction function;
+    protected SimpleMatrix W;//W[neuronas x entrada]
+    protected SimpleMatrix B;//B[neuronas x 1]
+    protected TransferFunction function;
     WeightInit initWeight = WeightFactory.getFunction(WeightInit.DEFAULT);
     double keepProb = 0;
     SimpleMatrix Drop;
