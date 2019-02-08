@@ -23,6 +23,7 @@ import org.gitia.froog.transferfunction.FunctionFactory;
 import org.gitia.froog.transferfunction.TransferFunction;
 import java.util.Random;
 import org.ejml.data.BMatrixRMaj;
+import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.simple.SimpleMatrix;
 import org.gitia.froog.layer.initialization.WeightFactory;
@@ -40,6 +41,8 @@ public class Dense implements Layer {
     WeightInit initWeight = WeightFactory.getFunction(WeightInit.DEFAULT);
     double keepProb = 0;
     SimpleMatrix Drop;
+    DMatrixSparseCSC DropSparse;
+    
 
     protected Random random = new Random();
 
