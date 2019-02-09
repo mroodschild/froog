@@ -19,8 +19,13 @@
  */
 package org.gitia.froog.util;
 
+import java.util.stream.IntStream;
 import org.apache.commons.lang3.ArrayUtils;
+import org.ejml.MatrixDimensionException;
+import static org.ejml.UtilEjml.stringShapes;
 import org.ejml.data.DMatrixSparseCSC;
+import org.ejml.data.DMatrixSparseTriplet;
+import org.ejml.ops.ConvertDMatrixStruct;
 import org.gitia.froog.statistics.Clock;
 
 /**
@@ -31,48 +36,63 @@ public class SparseMatrix {
 
     /**
      * Randomly generates matrix with the specified number of non-zero elements
-     * filled with 1.
+     * filled with 1. There is at least one number with "one" per column.
      *
      * @param numRows Number of rows
      * @param numCols Number of columns
-     * @param nz_total Total number of non-zero elements in the matrix
+     * @param percent percent of ones in the columns
      * @return Randomly generated matrix
      */
-    public static DMatrixSparseCSC randomOnesCSC(int numRows, int numCols, int nz_total) {
+    public static DMatrixSparseCSC randomOnesColumnsCSC(int numRows, int numCols, double percent) {
+        DMatrixSparseTriplet work = randomOnesDouble(numRows, numCols, percent);
+        return ConvertDMatrixStruct.convert(work, (DMatrixSparseCSC) null);
+    }
+    
+    public static DMatrixSparseCSC elementMult(DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC C){
+        if( A.numCols != B.numCols || A.numRows != B.numRows )
+            throw new MatrixDimensionException("All inputs must have the same number of rows and columns. "+stringShapes(A,B));
+        C.reshape(A.numRows,A.numCols);
 
-        double[] selected = randomOnesDouble(numRows * numCols, nz_total);
-        
-        DMatrixSparseCSC ret = new DMatrixSparseCSC(numRows, numCols, nz_total);
-        ret.indicesSorted = true;
-        int idx = 0;
-        Clock c = new Clock();
-        c.start();
-        for (int i = 0; i < numRows; i++) {
-            for (int j = 0; j < numCols; j++) {
-                ret.set(i, j, selected[idx++]);
-            }
-        }
-        c.stop();
-        c.printTime("datos agregados");
-        return ret;
+        return null;
     }
 
     /**
-     *
-     * @param N cantidad de valores
-     * @param shuffleUpTo total de valores no nulos
-     * @return
+     * 
+     * @param numRows
+     * @param numCols
+     * @param percent
+     * @return 
      */
-    private static double[] randomOnesDouble(int N, int shuffleUpTo) {
-        double l[] = new double[N];
-        for (int i = 0; i < shuffleUpTo; i++) {
-            l[i] = 1;
-        }
+    private static DMatrixSparseTriplet randomOnesDouble(int numRows, int numCols, double percent) {
+        //cantidad de elementos no nulos
         Clock c = new Clock();
         c.start();
-        ArrayUtils.shuffle(l);
+        int total_number = (int) (numRows * numCols * percent);
+        
+        DMatrixSparseTriplet work = new DMatrixSparseTriplet(numRows, numCols, total_number);
+        IntStream.range(0, numCols).parallel()
+                .forEach(j -> {
+                    //porcentaje de datos que deben tener "1"
+                    int val = (int) (numRows * percent);
+                    //minimo un valor (por las redes neuronales)
+                    val = (val > 0) ? val : 1;
+                    double l[] = new double[numRows];
+                    //llenamos de unos
+                    for (int i = 0; i < val; i++) {
+                        l[i] = 1;
+                    }
+                    //mezclamos
+                    ArrayUtils.shuffle(l);
+                    //copiamos
+                    for (int i = 0; i < numRows; i++) {
+                        double v = l[i];
+                        if (v != 0) {
+                            work.addItem(i, j, v);
+                        }
+                    }
+                });
         c.stop();
-        c.printTime("shuffle");
-        return l;
+        c.printTime("onesDouble");
+        return work;
     }
 }
