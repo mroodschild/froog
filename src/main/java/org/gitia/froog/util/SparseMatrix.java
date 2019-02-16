@@ -19,10 +19,8 @@
  */
 package org.gitia.froog.util;
 
-import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.IntStream;
@@ -32,7 +30,6 @@ import static org.ejml.UtilEjml.stringShapes;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.DMatrixSparseTriplet;
 import org.ejml.ops.ConvertDMatrixStruct;
-import org.gitia.froog.statistics.Clock;
 
 /**
  *

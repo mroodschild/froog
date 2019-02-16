@@ -20,6 +20,7 @@
 package org.gitia.froog.transferfunction;
 
 import java.util.stream.IntStream;
+import org.ejml.data.MatrixType;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.simple.SimpleMatrix;
 
@@ -38,12 +39,20 @@ public class Tansig implements TransferFunction {
      */
     @Override
     public SimpleMatrix output(SimpleMatrix z) {
-        SimpleMatrix div = z.scale(-2).elementExp().plus(1);
-//        SimpleMatrix b = new SimpleMatrix(x.numRows(), x.numCols());
-//        b.set(2);
-//        return b.elementDiv(div).plus(-1);
-        CommonOps_DDRM.divide(2, div.getDDRM());
-        return div.minus(1);
+//        SimpleMatrix div = z.scale(-2).elementExp().plus(1);
+//        CommonOps_DDRM.divide(2, div.getDDRM());
+//        return div.minus(1);
+
+        SimpleMatrix m = new SimpleMatrix(z.numRows(), z.numCols(), MatrixType.DDRM);
+        IntStream.range(0, m.numRows()).parallel().forEach(i -> {
+            int idx = i * m.numCols();
+            for (int j = 0; j < m.numCols(); j++) {
+                m.set(idx, 1.0/(Math.exp(z.get(idx)* -2.0)+1)-1);
+                idx++;
+            }
+        });
+
+        return m;
     }
 
     /**
