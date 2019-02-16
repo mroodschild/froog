@@ -31,12 +31,23 @@ public class Relu implements TransferFunction {
     @Override
     public SimpleMatrix output(SimpleMatrix z) {
         SimpleMatrix p = new SimpleMatrix(z.numRows(), z.numCols());
-        int size = z.getNumElements();
-        IntStream.range(0, size).parallel()
-                .forEach(i -> p.set(i, Math.max(0, z.get(i))));//tmp2[i] = Math.max(0, tmp[i]));
+//        int size = z.getNumElements();
+//        IntStream.range(0, size).parallel()
+//                .forEach(i -> p.set(i, Math.max(0, z.get(i))));//tmp2[i] = Math.max(0, tmp[i]));
+
 //        for (int i = 0; i < p.getNumElements(); i++) {
 //            p.set(i, Math.max(0, z.get(i)));
 //        }
+        int cols = z.numCols();
+        int rows = z.numRows();
+        IntStream.range(0, rows).parallel().forEach(i -> {
+            int idx = i * cols;
+            for (int j = 0; j < cols; j++) {
+                p.set(idx, Math.max(0, z.get(idx)));
+                idx++;
+            }
+        });
+
         return p;
     }
 
@@ -49,12 +60,22 @@ public class Relu implements TransferFunction {
     public SimpleMatrix derivative(SimpleMatrix a) {
         SimpleMatrix p = new SimpleMatrix(a.numRows(), a.numCols());
         //int size = p.getNumElements();
-        int size = a.getNumElements();
-        IntStream.range(0, size).parallel()
-                .forEach(i -> p.set(i, (a.get(i) >= 0) ? 1 : 0));
+//        int size = a.getNumElements();
+//        IntStream.range(0, size).parallel()
+//                .forEach(i -> p.set(i, (a.get(i) >= 0) ? 1 : 0));
 //        for (int i = 0; i < size; i++) {
 //            p.set(i, (a.get(i) >= 0) ? 1 : 0);
 //        }
+
+        int cols = a.numCols();
+        int rows = a.numRows();
+        IntStream.range(0, rows).parallel().forEach(i -> {
+            int idx = i * cols;
+            for (int j = 0; j < cols; j++) {
+                p.set(idx, (a.get(idx) >= 0) ? 1 : 0);
+                idx++;
+            }
+        });
         return p;
     }
 
