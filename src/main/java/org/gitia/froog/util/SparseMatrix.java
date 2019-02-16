@@ -19,6 +19,12 @@
  */
 package org.gitia.froog.util;
 
+import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.IntStream;
 import org.apache.commons.lang3.ArrayUtils;
 import org.ejml.MatrixDimensionException;
@@ -47,52 +53,62 @@ public class SparseMatrix {
         DMatrixSparseTriplet work = randomOnesDouble(numRows, numCols, percent);
         return ConvertDMatrixStruct.convert(work, (DMatrixSparseCSC) null);
     }
-    
-    public static DMatrixSparseCSC elementMult(DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC C){
-        if( A.numCols != B.numCols || A.numRows != B.numRows )
-            throw new MatrixDimensionException("All inputs must have the same number of rows and columns. "+stringShapes(A,B));
-        C.reshape(A.numRows,A.numCols);
+
+    public static DMatrixSparseCSC elementMult(DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC C) {
+        if (A.numCols != B.numCols || A.numRows != B.numRows) {
+            throw new MatrixDimensionException("All inputs must have the same number of rows and columns. " + stringShapes(A, B));
+        }
+        C.reshape(A.numRows, A.numCols);
 
         return null;
     }
 
     /**
-     * 
+     *
      * @param numRows
      * @param numCols
      * @param percent
-     * @return 
+     * @return
      */
     private static DMatrixSparseTriplet randomOnesDouble(int numRows, int numCols, double percent) {
+
         //cantidad de elementos no nulos
-        Clock c = new Clock();
-        c.start();
-        int total_number = (int) (numRows * numCols * percent);
-        
+//        System.out.println(Runtime.getRuntime().availableProcessors());
+//        System.out.println(ForkJoinPool.commonPool());
+
+        int aux = (int) (numRows * percent);
+        final int val = (aux > 0) ? aux : 1;
+        //minimo un valor (por las redes neuronales)
+        final int total_number = val * numCols;
         DMatrixSparseTriplet work = new DMatrixSparseTriplet(numRows, numCols, total_number);
-        IntStream.range(0, numCols).parallel()
-                .forEach(j -> {
-                    //porcentaje de datos que deben tener "1"
-                    int val = (int) (numRows * percent);
-                    //minimo un valor (por las redes neuronales)
-                    val = (val > 0) ? val : 1;
-                    double l[] = new double[numRows];
-                    //llenamos de unos
-                    for (int i = 0; i < val; i++) {
-                        l[i] = 1;
-                    }
-                    //mezclamos
-                    ArrayUtils.shuffle(l);
-                    //copiamos
-                    for (int i = 0; i < numRows; i++) {
-                        double v = l[i];
-                        if (v != 0) {
-                            work.addItem(i, j, v);
-                        }
-                    }
-                });
-        c.stop();
-        c.printTime("onesDouble");
+        ForkJoinPool pool = new ForkJoinPool(4);
+        
+        try {
+            Object result = pool.submit(()->
+                    IntStream.range(0, numCols).parallel()
+                            .forEach(j -> {
+                                double l[] = new double[numRows];
+                                for (int i = 0; i < val; i++) {
+                                    l[i] = 1;
+                                }
+                                ArrayUtils.shuffle(l);
+                                for (int i = 0; i < numRows; i++) {
+                                    double v = l[i];
+                                    if (v != 0) {
+                                        work.addItem(i, j, v);
+                                    }
+                                }
+                            })
+            ).get();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(SparseMatrix.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ExecutionException ex) {
+            Logger.getLogger(SparseMatrix.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+        //pool.shutdown();
+        //pool.awaitTermination(1, TimeUnit.SECONDS);
         return work;
     }
 }
