@@ -20,17 +20,16 @@
 package org.gitia.froog.TestMatrix;
 
 import java.util.Random;
-import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.MatrixType;
-import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.simple.SimpleMatrix;
 import org.ejml.sparse.csc.CommonOps_DSCC;
+import org.ejml.sparse.csc.RandomMatrices_DSCC;
 import org.gitia.froog.statistics.Clock;
 import org.gitia.froog.util.SparseMatrix;
 
 /**
- * 
+ *
  * @author Matías Roodschild <mroodschild@gmail.com>
  */
 public class TestSparse {
@@ -46,13 +45,18 @@ public class TestSparse {
         c.printTime("creación de matriz");
         //Z.print();
         
+
         SimpleMatrix B = SimpleMatrix.random_DDRM(300, 716, -10, 10, new Random());
-        SimpleMatrix C = new SimpleMatrix(300, COLS,MatrixType.DDRM);
+        
+        //CommonOps_DSCC.elementMult(Z, , Z, gw, gx);
+        SimpleMatrix C = new SimpleMatrix(300, COLS, MatrixType.DDRM);
         c.start();
         //CommonOps_DSCC.elementMult(Z, Z, Z, gw, gx);
-        
+        Random r = new Random();
+        c.start();
+        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(ROWS, COLS, (int) (ROWS * COLS * 0.1), r);
         c.stop();
-        c.printTime("mult");
+        c.printTime("A sparse");;
 
     }
 }
