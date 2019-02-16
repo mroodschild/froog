@@ -57,6 +57,17 @@ public class StandardGradient implements Gradient {
         for (int i = L - 1; i >= 0; i--) {
             dA = net.getLayers().get(i).getFunction().derivative(A);
             dZ = W.transpose().mult(dZ).elementMult(dA);
+//            //------------------------
+//            SimpleMatrix dz_aux = new SimpleMatrix(W.numCols(), dZ.numCols(), MatrixType.DDRM);
+//            CommonOps_DDRM.multTransA(W.getDDRM(), dZ.getDDRM(), dz_aux.getDDRM());
+//            dZ = dz_aux.elementMult(dA);
+//            //dZ.printDimensions();
+//            //dz_aux.printDimensions();
+//            //dA.printDimensions();
+//            //System.exit(0);
+//            dZelementMult(dZ, dz_aux, dA);
+//            //------------------------
+            
             A = (i > 0) ? Activations.get(i - 1) : X;
             dW = dZ.mult(A.transpose()).divide(m);
             CommonOps_DDRM.sumRows(dZ.getDDRM(), sum.getDDRM());
@@ -66,5 +77,16 @@ public class StandardGradient implements Gradient {
             W = net.getLayers().get(i).getW();
         }
     }
+
+//    private void dZelementMult(SimpleMatrix dZ, SimpleMatrix dz_aux, SimpleMatrix dA) {
+//        int cols = dZ.numCols();
+//        IntStream.range(0, dZ.numRows()).parallel().forEach(i -> {
+//            int idx = i * cols;
+//            for (int j = 0; j < cols; j++) {
+//                dZ.set(idx, dz_aux.get(idx) * dA.get(idx));
+//                idx++;
+//            }
+//        });
+//    }
 
 }
