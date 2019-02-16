@@ -19,12 +19,8 @@
  */
 package org.gitia.froog.transferfunction;
 
-import java.util.Arrays;
-import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
-import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.simple.SimpleMatrix;
-import org.gitia.froog.statistics.Clock;
 
 /**
  *

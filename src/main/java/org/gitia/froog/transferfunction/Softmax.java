@@ -49,11 +49,19 @@ public class Softmax implements TransferFunction {
         SimpleMatrix p = z.elementExp();
         SimpleMatrix sum = new SimpleMatrix(1, p.numCols());
         CommonOps_DDRM.sumCols(p.getMatrix(), sum.getMatrix());
-        int size = p.numCols();
-        for (int i = 0; i < size; i++) {
+        int cols = p.numCols();
+        for (int i = 0; i < cols; i++) {
             p.setColumn(i, 0, p.extractVector(false, i).
                     divide(sum.get(i)).getDDRM().getData());
         }
+//        int rows = p.numRows();
+//        IntStream.range(0, rows).parallel().forEach(i->{
+//            int idx = i * cols;
+//            for (int j = 0; j < cols; j++) {
+//                p.set(idx, p.get(idx)/sum.get(j));
+//                idx++;
+//            }
+//        });
         return p;
     }
 

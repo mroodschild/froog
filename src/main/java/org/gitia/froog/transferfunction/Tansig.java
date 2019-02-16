@@ -47,7 +47,7 @@ public class Tansig implements TransferFunction {
         IntStream.range(0, m.numRows()).parallel().forEach(i -> {
             int idx = i * m.numCols();
             for (int j = 0; j < m.numCols(); j++) {
-                m.set(idx, 1.0/(Math.exp(z.get(idx)* -2.0)+1)-1);
+                m.set(idx, 2.0 / (Math.exp(z.get(idx) * -2.0) + 1) - 1);
                 idx++;
             }
         });
@@ -75,7 +75,16 @@ public class Tansig implements TransferFunction {
      */
     @Override
     public SimpleMatrix derivative(SimpleMatrix a) {
-        return a.elementPower(2).scale(-1).plus(1);
+        //return a.elementPower(2).scale(-1).plus(1);
+        SimpleMatrix m = new SimpleMatrix(a.numRows(), a.numCols(), MatrixType.DDRM);
+        IntStream.range(0, m.numRows()).parallel().forEach(i -> {
+            int idx = i * m.numCols();
+            for (int j = 0; j < m.numCols(); j++) {
+                m.set(idx, 1 - Math.pow(a.get(idx), 2.0));
+                idx++;
+            }
+        });
+        return m;
     }
 
     /**

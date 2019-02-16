@@ -23,13 +23,24 @@ import org.ejml.simple.SimpleMatrix;
  * @author Matías Roodschild <mroodschild@gmail.com>
  */
 public class Z {
-    
+
     public static SimpleMatrix output(SimpleMatrix W, SimpleMatrix a, SimpleMatrix B) {
         SimpleMatrix aux = W.mult(a);
-        int size = aux.numCols();
-        IntStream.range(0, size).parallel()
-                .forEach(i -> aux.setColumn(i, 0, aux.extractVector(false, i).plus(B).getDDRM().getData()));
+        int cols = aux.numCols();
+//        IntStream.range(0, size).parallel()
+//                .forEach(i -> aux.setColumn(i, 0, aux.extractVector(false, i).plus(B).getDDRM().getData()));
+        int row = aux.numRows();
+        IntStream.range(0, row).parallel()
+                .forEach(i -> {
+                    int idx = i * cols;
+                    double b = B.get(i);
+                    for (int j = 0; j < cols; j++) {
+                        //aux.set(idx, aux.get(idx)+B.get(i));
+                        aux.set(idx, aux.get(idx++)+b);
+                        //idx++;
+                    }
+                });
         return aux;
     }
-    
+
 }
