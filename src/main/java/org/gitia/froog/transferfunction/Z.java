@@ -16,7 +16,6 @@
 package org.gitia.froog.transferfunction;
 
 import java.util.stream.IntStream;
-import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.simple.SimpleMatrix;
 
 /**
@@ -39,7 +38,6 @@ public class Z {
                     for (int j = 0; j < cols; j++) {
                         //aux.set(idx, aux.get(idx)+B.get(i));
                         aux.set(idx, aux.get(idx++)+b);
-                        //idx++;
                     }
                 });
         return aux;
