@@ -59,7 +59,7 @@ public class Backpropagation extends TrainingAlgorithm {
         this.output = new SimpleMatrix(output);
         init();
         Clock clock = new Clock();
-        int L = net.getLayers().size()-1;
+        int L = net.getLayers().size() - 1;
         for (int i = 0; i < this.epoch; i++) {
             clock.start();
             Activations = net.activations(input);
@@ -181,7 +181,7 @@ public class Backpropagation extends TrainingAlgorithm {
             System.out.println(
                     "It:\t" + iteracion
                     + "\tTrain:\t" + costOverall
-                    + "\tTime:\t" + clock.timeSec() + " s.");
+                    + "\tTime:\t" + clock.timeSec() + "\ts.");
         } else {
             if (classification) {
                 System.out.println(
@@ -217,8 +217,8 @@ public class Backpropagation extends TrainingAlgorithm {
     public double getGradientClipping() {
         return gradientClipping;
     }
-    
-    public void setAcceleration(Accelerate accelerate){
+
+    public void setAcceleration(Accelerate accelerate) {
         updateRule.setAccelerate(accelerate);
     }
 
