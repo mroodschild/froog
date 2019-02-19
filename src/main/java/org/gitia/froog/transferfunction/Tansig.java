@@ -21,7 +21,6 @@ package org.gitia.froog.transferfunction;
 
 import java.util.stream.IntStream;
 import org.ejml.data.MatrixType;
-import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.simple.SimpleMatrix;
 
 /**
@@ -42,16 +41,15 @@ public class Tansig implements TransferFunction {
 //        SimpleMatrix div = z.scale(-2).elementExp().plus(1);
 //        CommonOps_DDRM.divide(2, div.getDDRM());
 //        return div.minus(1);
-
         SimpleMatrix m = new SimpleMatrix(z.numRows(), z.numCols(), MatrixType.DDRM);
-        IntStream.range(0, m.numRows()).parallel().forEach(i -> {
-            int idx = i * m.numCols();
-            for (int j = 0; j < m.numCols(); j++) {
-                m.set(idx, 2.0 / (Math.exp(z.get(idx) * -2.0) + 1) - 1);
-                idx++;
+        IntStream.range(0, m.numRows()).parallel()
+                .forEach(i -> {
+            int size = m.numCols();
+            int idx = i * size;
+            for (int j = 0; j < size; j++) {
+                m.set(idx, 2.0 / (Math.exp(z.get(idx++) * -2.0) + 1) - 1);
             }
         });
-
         return m;
     }
 
@@ -77,11 +75,12 @@ public class Tansig implements TransferFunction {
     public SimpleMatrix derivative(SimpleMatrix a) {
         //return a.elementPower(2).scale(-1).plus(1);
         SimpleMatrix m = new SimpleMatrix(a.numRows(), a.numCols(), MatrixType.DDRM);
-        IntStream.range(0, m.numRows()).parallel().forEach(i -> {
-            int idx = i * m.numCols();
-            for (int j = 0; j < m.numCols(); j++) {
-                m.set(idx, 1 - Math.pow(a.get(idx), 2.0));
-                idx++;
+        IntStream.range(0, m.numRows()).parallel()
+                .forEach(i -> {
+            int size = m.numCols();
+            int idx = i * size;
+            for (int j = 0; j < size; j++) {
+                m.set(idx, 1 - Math.pow(a.get(idx++), 2.0));
             }
         });
         return m;
