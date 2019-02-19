@@ -41,6 +41,7 @@ public class StandardGradient implements Gradient {
      */
     @Override
     public void compute(Feedforward net, List<SimpleMatrix> Activations, List<SimpleMatrix> gradW, List<SimpleMatrix> gradB, SimpleMatrix X, SimpleMatrix Y) {
+        
         int L = Activations.size() - 1;
         int m = X.numCols();
         SimpleMatrix A = Activations.get(L);//output
