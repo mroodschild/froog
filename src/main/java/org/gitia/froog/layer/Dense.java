@@ -28,6 +28,7 @@ import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.simple.SimpleMatrix;
 import org.gitia.froog.layer.initialization.WeightFactory;
 import org.gitia.froog.layer.initialization.WeightInit;
+import org.gitia.froog.util.UtilSimpleMatrix;
 
 /**
  *
@@ -169,13 +170,14 @@ public class Dense implements Layer {
     public SimpleMatrix outputDropout(SimpleMatrix a) {
         if (this.keepProb > 0 && this.keepProb < 1) {
             //A = neurons x m
-            Drop = SimpleMatrix.random_DDRM(W.numRows(), a.numCols(), 0, 1, this.random);
-            BMatrixRMaj keepMatrix = new BMatrixRMaj(Drop.numRows(), Drop.numCols());
-            CommonOps_DDRM.elementLessThan(Drop.getDDRM(), keepProb, keepMatrix);
-            int size = Drop.getNumElements();
-            for (int i = 0; i < size; i++) {
-                Drop.set(i, (keepMatrix.get(i)) ? 1 : 0);
-            }
+//            Drop = SimpleMatrix.random_DDRM(W.numRows(), a.numCols(), 0, 1, this.random);
+//            BMatrixRMaj keepMatrix = new BMatrixRMaj(Drop.numRows(), Drop.numCols());
+//            CommonOps_DDRM.elementLessThan(Drop.getDDRM(), keepProb, keepMatrix);
+//            int size = Drop.getNumElements();
+//            for (int i = 0; i < size; i++) {
+//                Drop.set(i, (keepMatrix.get(i)) ? 1 : 0);
+//            }            
+            Drop = UtilSimpleMatrix.randomOnesSM(W.numRows(), a.numCols(), keepProb, this.random);
             return output(a).elementMult(Drop).divide(keepProb);
         } else {
             return output(a);

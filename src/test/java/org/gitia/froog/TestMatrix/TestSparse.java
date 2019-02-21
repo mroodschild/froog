@@ -34,15 +34,16 @@ import org.gitia.froog.util.SparseMatrix;
  */
 public class TestSparse {
 
-    public static int ROWS = 716;
+    public static int ROWS = 2000;
     public static int COLS = 50000;
+    public static double PERCENT = 0.2;
 
     public static void main(String[] args) {
         Clock c = new Clock();
         c.start();
-        DMatrixSparseCSC Z = SparseMatrix.randomOnesColumnsCSC(ROWS, COLS, 0.1);
+        DMatrixSparseCSC Z = SparseMatrix.randomOnesColumnsCSC(ROWS, COLS, PERCENT);
         c.stop();
-        c.printTime("creación de matriz");
+        c.printTime("Creation multithreading sparse matrix");
         //Z.print();
         
 
@@ -54,9 +55,9 @@ public class TestSparse {
         //CommonOps_DSCC.elementMult(Z, Z, Z, gw, gx);
         Random r = new Random();
         c.start();
-        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(ROWS, COLS, (int) (ROWS * COLS * 0.1), r);
+        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(ROWS, COLS, (int) (ROWS * COLS * PERCENT), r);
         c.stop();
-        c.printTime("A sparse");;
+        c.printTime("Creation random sparse matrix");
 
     }
 }

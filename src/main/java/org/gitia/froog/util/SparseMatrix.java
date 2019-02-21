@@ -19,6 +19,7 @@
  */
 package org.gitia.froog.util;
 
+import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
 import java.util.logging.Level;
@@ -29,7 +30,11 @@ import org.ejml.MatrixDimensionException;
 import static org.ejml.UtilEjml.stringShapes;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.DMatrixSparseTriplet;
+import org.ejml.data.MatrixType;
 import org.ejml.ops.ConvertDMatrixStruct;
+import org.ejml.simple.SimpleMatrix;
+import org.gitia.froog.statistics.Clock;
+import org.gitia.jdataanalysis.Util;
 
 /**
  *
@@ -51,15 +56,14 @@ public class SparseMatrix {
         return ConvertDMatrixStruct.convert(work, (DMatrixSparseCSC) null);
     }
 
-    public static DMatrixSparseCSC elementMult(DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC C) {
-        if (A.numCols != B.numCols || A.numRows != B.numRows) {
-            throw new MatrixDimensionException("All inputs must have the same number of rows and columns. " + stringShapes(A, B));
-        }
-        C.reshape(A.numRows, A.numCols);
-
-        return null;
-    }
-
+//    public static DMatrixSparseCSC elementMult(DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC C) {
+//        if (A.numCols != B.numCols || A.numRows != B.numRows) {
+//            throw new MatrixDimensionException("All inputs must have the same number of rows and columns. " + stringShapes(A, B));
+//        }
+//        C.reshape(A.numRows, A.numCols);
+//
+//        return null;
+//    }
     /**
      *
      * @param numRows
@@ -70,42 +74,35 @@ public class SparseMatrix {
     private static DMatrixSparseTriplet randomOnesDouble(int numRows, int numCols, double percent) {
 
         //cantidad de elementos no nulos
-//        System.out.println(Runtime.getRuntime().availableProcessors());
-//        System.out.println(ForkJoinPool.commonPool());
-
         int aux = (int) (numRows * percent);
         final int val = (aux > 0) ? aux : 1;
         //minimo un valor (por las redes neuronales)
         final int total_number = val * numCols;
         DMatrixSparseTriplet work = new DMatrixSparseTriplet(numRows, numCols, total_number);
-        ForkJoinPool pool = new ForkJoinPool(4);
-        
-        try {
-            Object result = pool.submit(()->
-                    IntStream.range(0, numCols).parallel()
-                            .forEach(j -> {
-                                double l[] = new double[numRows];
-                                for (int i = 0; i < val; i++) {
-                                    l[i] = 1;
-                                }
-                                ArrayUtils.shuffle(l);
-                                for (int i = 0; i < numRows; i++) {
-                                    double v = l[i];
-                                    if (v != 0) {
-                                        work.addItem(i, j, v);
-                                    }
-                                }
-                            })
-            ).get();
-        } catch (InterruptedException ex) {
-            Logger.getLogger(SparseMatrix.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ExecutionException ex) {
-            Logger.getLogger(SparseMatrix.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        
-        //pool.shutdown();
-        //pool.awaitTermination(1, TimeUnit.SECONDS);
+        IntStream.range(0, numCols).parallel()
+                .forEach(j -> {
+                    //  for (int j = 0; j < numCols; j++) {
+                    double l[] = new double[numRows];
+                    shuffle(l, val, j, work);
+                    //}
+                });
         return work;
+    }
+
+    public static void shuffle(double[] l, int val, int col, DMatrixSparseTriplet work) {
+        for (int i = 0; i < val; i++) {
+            l[i] = 1;
+        }
+        ArrayUtils.shuffle(l);
+        int flag = 0;
+        for (int i = 0; i < l.length; i++) {
+            double v = l[i];
+            if (v != 0) {
+                work.addItem(i, col, v);
+                if (++flag == val) {
+                    break;
+                }
+            }
+        }
     }
 }
