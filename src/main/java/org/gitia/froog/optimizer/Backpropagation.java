@@ -22,6 +22,8 @@ package org.gitia.froog.optimizer;
 import org.gitia.froog.Feedforward;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.ejml.simple.SimpleMatrix;
 import org.gitia.froog.statistics.Clock;
 import org.gitia.froog.statistics.Compite;
@@ -42,6 +44,8 @@ public class Backpropagation extends TrainingAlgorithm {
     protected int iteracion = 0;
     protected int printFrecuency = 1;
     protected double gradientClipping = 0;
+
+    private static final Logger log = LogManager.getLogger(Backpropagation.class);
 
     public Backpropagation() {
     }
@@ -177,30 +181,14 @@ public class Backpropagation extends TrainingAlgorithm {
             }
         }
         clock.stop();
+        double time = clock.timeSec();
         if ((iteracion % testFrecuency) != 0 || inputTest == null) {
-            System.out.println(
-                    "It:\t" + iteracion
-                    + "\tTrain:\t" + costOverall
-                    + "\tTime:\t" + clock.timeSec() + "\ts.");
+            log.info("It:\t{}\tTrain:\t{}\tTime:\t{}\ts.", iteracion, costOverall, time);
         } else {
             if (classification) {
-                System.out.println(
-                        "It:\t" + iteracion
-                        + "\tTrain:\t" + costOverall
-                        //+ "\tTrain Complete:\t" + costAllTrain
-                        + "\tTest:\t" + costOverallTest
-                        + "\tTrain Aciertos:\t" + aciertoTrain + "\t%."
-                        + "\tTest Aciertos:\t" + aciertoTest + "\t%."
-                        + "\tTime:\t" + clock.timeSec() + "\ts."
-                );
+                log.info("It:\t{}\tTrain:\t{}\tTest:\t{}\tTrain %:\t{}\tTest %:\t{}\tTime:\t{}\ts.", iteracion, costOverall, costOverallTest, aciertoTrain, aciertoTest, time);
             } else {
-                System.out.println(
-                        "It:\t" + iteracion
-                        + "\tTrain:\t" + costOverall
-                        //+ "\tTrain Complete:\t" + costAllTrain
-                        + "\tTest:\t" + costOverallTest
-                        + "\tTime:\t" + clock.timeSec() + "\ts."
-                );
+                log.info("It:\t{}\tTrain:\t{}\tTest:\t{}\tTime:\t{}\ts.", iteracion, costOverall, costOverallTest, time);
             }
         }
     }
