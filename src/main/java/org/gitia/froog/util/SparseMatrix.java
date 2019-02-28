@@ -19,7 +19,13 @@
  */
 package org.gitia.froog.util;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
 import java.util.logging.Level;
@@ -41,6 +47,9 @@ import org.gitia.jdataanalysis.Util;
  * @author Matías Roodschild <mroodschild@gmail.com>
  */
 public class SparseMatrix {
+
+    static double tiempo1 = 0;
+    static double tiempo2 = 0;
 
     /**
      * Randomly generates matrix with the specified number of non-zero elements
@@ -79,30 +88,71 @@ public class SparseMatrix {
         //minimo un valor (por las redes neuronales)
         final int total_number = val * numCols;
         DMatrixSparseTriplet work = new DMatrixSparseTriplet(numRows, numCols, total_number);
-        IntStream.range(0, numCols).parallel()
+        IntStream.range(0, numCols)//.parallel()
                 .forEach(j -> {
                     //  for (int j = 0; j < numCols; j++) {
-                    double l[] = new double[numRows];
-                    shuffle(l, val, j, work);
+
+                    shuffleList(numRows, val, j, work);
+                    //double l[] = new double[numRows];
+                    //shuffle(l, val, j, work);
                     //}
                 });
+
+        System.out.println("Tiempo creando:\t" + tiempo1 / 1000 + "\ttiempo agregando\t" + tiempo2 / 1000);
         return work;
     }
 
-    public static void shuffle(double[] l, int val, int col, DMatrixSparseTriplet work) {
-        for (int i = 0; i < val; i++) {
-            l[i] = 1;
+    public static void shuffle(double[] vectorVacio, int cantValores, int colIndex, DMatrixSparseTriplet work) {
+        Clock c = new Clock();
+        c.start();
+        for (int i = 0; i < cantValores; i++) {
+            vectorVacio[i] = 1;
         }
-        ArrayUtils.shuffle(l);
+        ArrayUtils.shuffle(vectorVacio);
+        c.stop();
+        tiempo1 += c.time();
         int flag = 0;
-        for (int i = 0; i < l.length; i++) {
-            double v = l[i];
+        c.start();
+        for (int i = 0; i < vectorVacio.length; i++) {
+            double v = vectorVacio[i];
             if (v != 0) {
-                work.addItem(i, col, v);
-                if (++flag == val) {
+                work.addItem(i, colIndex, v);
+                if (++flag == cantValores) {
                     break;
                 }
             }
         }
+        c.stop();
+        tiempo2 += c.time();
     }
+
+    public static void shuffleList(int numRows, int cantValores, int colIndex, DMatrixSparseTriplet work) {
+        Random r = new Random();
+        int size = numRows;
+        //LinkedList<Integer> posiciones = new LinkedList<>();
+        List<Integer> posiciones = new ArrayList<>(size);
+        Clock c = new Clock();
+        //generamos los indices
+        c.start();
+        for (int i = 0; i < size; i++) {
+            posiciones.add(i);
+        }
+        c.stop();
+        tiempo1 += c.time();
+        //c.printTime("agregando posiciones");
+
+        int idx;
+        //seleccionamos una cantidad de valores
+        c.start();
+        for (int i = 0; i < cantValores; i++) {
+            idx = r.nextInt(posiciones.size());
+            //guardamos el indice de la posicion seleccionada
+            work.addItem(posiciones.get(idx), colIndex, 1);
+            posiciones.remove(idx);
+        }
+        c.stop();
+        tiempo2 += c.time();
+        //c.printTime("agregando valores");
+    }
+
 }
