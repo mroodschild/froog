@@ -19,6 +19,7 @@
  */
 package org.gitia.froog.statistics;
 
+import java.util.stream.IntStream;
 import org.ejml.simple.SimpleMatrix;
 
 /**
@@ -26,28 +27,28 @@ import org.ejml.simple.SimpleMatrix;
  * @author Matías Roodschild <mroodschild@gmail.com>
  */
 public class Compite {
-    
-    public static SimpleMatrix eval(SimpleMatrix matrix){
-        SimpleMatrix aux = new SimpleMatrix(matrix.numRows(), matrix.numCols());
-        double max;
-        int pos;
+
+    public static SimpleMatrix eval(SimpleMatrix matrix) {
+        int rows = matrix.numRows();
+        int cols = matrix.numCols();
+        SimpleMatrix aux = new SimpleMatrix(rows, cols);
         for (int i = 0; i < aux.numRows(); i++) {
-            SimpleMatrix row = matrix.extractVector(true, i);
-            max = row.get(0);
-            pos = 0;
-            //inicializamos en 1 ya que el 0 ya fue tomado
-            for (int j = 1; j < row.numCols(); j++) {
-                if (max < row.get(j)) {
-                    max = row.get(j);
+        //IntStream.range(0, rows).parallel().forEach(i -> {
+            int idx = i * cols;
+            int end = idx + cols;
+            int pos = idx;
+            double max = matrix.get(idx++);
+            for (int j = idx; j < end; j++) {
+                if (max < matrix.get(j)) {
+                    max = matrix.get(j);
                     //guardamos la posición del mas grande
                     pos = j;
                 }
             }
-            //guardamos en la fila y columna un 1
-            aux.set(i, pos, 1);
-        }
+            aux.set(pos, 1);
+        };//);
         return aux;
-        
+
     }
     
 }
