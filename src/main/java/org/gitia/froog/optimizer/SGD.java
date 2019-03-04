@@ -58,18 +58,19 @@ public class SGD extends Backpropagation {
         init();
         initBatch();
         Clock clock = new Clock();
+        int L = net.getLayers().size() - 1;
         for (int i = 0; i < this.epoch; i++) {
             for (int j = 0; j < cantidadBach; j++) {
                 clock.start();
                 SimpleMatrix bach_in = bachData(j, input);
                 SimpleMatrix bach_out = bachData(j, output);
                 Activations = (isDropOut) ? net.activationsDropout(bach_in) : net.activations(bach_in);
-                costOverall = loss(Activations.get(Activations.size() - 1), bach_out);
+                costOverall = loss(Activations.get(L), bach_out);
                 this.cost.add(costOverall);
                 gradient.compute(net, Activations, gradW, gradB, bach_in, bach_out);
                 updateRule.updateParameters(net, (double) bach_in.numCols(), L2_Lambda, learningRate, gradW, gradB);
                 if (iteracion % printFrecuency == 0) {
-                    printScreen(clock);
+                    printScreen(net, Activations.get(L), bach_out, clock, inputTest, outputTest, iteracion, testFrecuency, classification);
                 }
                 iteracion++;
             }
