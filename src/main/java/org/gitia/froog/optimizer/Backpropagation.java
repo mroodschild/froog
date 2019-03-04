@@ -74,7 +74,7 @@ public class Backpropagation extends TrainingAlgorithm {
             computeGradientClipping(gradW, gradB);
             updateRule.updateParameters(net, (double) input.numCols(), L2_Lambda, learningRate, gradW, gradB);
             if (iteracion % printFrecuency == 0) {
-                printScreen(clock);
+                printScreen(net, Activations.get(L), output, clock, inputTest, outputTest, iteracion, testFrecuency, classification);
             }
             iteracion++;
         }
@@ -160,20 +160,18 @@ public class Backpropagation extends TrainingAlgorithm {
         updateRule.init(gradW, gradB);
     }
 
-    protected void printScreen(Clock clock) {
+    protected void printScreen(Feedforward net, SimpleMatrix yCal, SimpleMatrix yObs, Clock clock, 
+            SimpleMatrix inputTest, SimpleMatrix outputTest, 
+            int iteracion, int testFrecuency, boolean classification) {
         double aciertoTrain = 0;
         double aciertoTest = 0;
-        //double costAllTrain = -1;
         if ((iteracion % testFrecuency) == 0 && inputTest != null) {
-            //SimpleMatrix yCalcTrain = net.output(this.input);
-            //costAllTrain = loss(yCalcTrain, this.output);
-            SimpleMatrix yCalcTest = net.output(this.inputTest);
+            SimpleMatrix yCalcTest = net.output(inputTest);
             costOverallTest = loss(yCalcTest, outputTest);
             this.costTest.add(costOverallTest);
             if (classification) {
-                SimpleMatrix yCalcTrain = net.output(this.input);
                 ConfusionMatrix cMatrixTrain = new ConfusionMatrix();
-                cMatrixTrain.eval(Compite.eval(yCalcTrain.transpose()), this.output.transpose());
+                cMatrixTrain.eval(Compite.eval(yCal.transpose()), yObs.transpose());
                 aciertoTrain = cMatrixTrain.getAciertosPorc();
                 ConfusionMatrix cMatrixTest = new ConfusionMatrix();
                 cMatrixTest.eval(Compite.eval(yCalcTest.transpose()), outputTest.transpose());
