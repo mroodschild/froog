@@ -59,7 +59,9 @@ public class TrainingAlgorithm {
     protected LossFunction lossFunction = LossFunctionFactory.getLossFunction(LossFunction.MSE);
 
     ArrayList<Double> cost = new ArrayList<>();
+    ArrayList<Double> acc = new ArrayList<>();
     ArrayList<Double> costTest = new ArrayList<>();
+    ArrayList<Double> accTest = new ArrayList<>();
 
     public double getLearningRate() {
         return learningRate;
