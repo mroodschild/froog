@@ -61,7 +61,7 @@ public class SGD_Numeric extends SGD {
                 gradient.compute(net, Activations, gradW, gradB, bach_in, bach_out);
                 updateRule.updateParameters(net, (double) bach_in.numCols(), L2_Lambda, learningRate, gradW, gradB);
                 if (iteracion % printFrecuency == 0) {
-                    printScreen(clock);
+                    printScreen(net, bach_in, bach_out, clock, inputTest, outputTest, iteracion, testFrecuency, classification);
                 }
                 iteracion++;
             }
