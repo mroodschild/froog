@@ -78,6 +78,8 @@ public class Backpropagation extends TrainingAlgorithm {
             }
             iteracion++;
         }
+        System.out.println("Finish Training, Resume:");
+        printScreen(net, Activations.get(L), output, clock, inputTest, outputTest, iteracion, testFrecuency, classification);
         //printScreen(clock);
     }
 
@@ -180,15 +182,18 @@ public class Backpropagation extends TrainingAlgorithm {
         }
         clock.stop();
         double time = clock.timeSec();
-        if ((iteracion % testFrecuency) != 0 || inputTest == null) {
-            log.info("It:\t{}\tTrain:\t{}\tTime:\t{}\ts.", iteracion, costOverall, time);
-        } else {
-            if (classification) {
+        //if ((iteracion % testFrecuency) != 0 || inputTest == null) {
+          //  log.info("It:\t{}\tTrain:\t{}\tTime:\t{}\ts.", iteracion, costOverall, time);
+        //} else {
+            if (classification && (iteracion % testFrecuency) == 0 && inputTest != null) {
                 log.info("It:\t{}\tTrain:\t{}\tTest:\t{}\tTrain %:\t{}\tTest %:\t{}\tTime:\t{}\ts.", iteracion, costOverall, costOverallTest, aciertoTrain, aciertoTest, time);
-            } else {
+            } 
+            else if((iteracion % testFrecuency) == 0 && inputTest != null){
                 log.info("It:\t{}\tTrain:\t{}\tTest:\t{}\tTime:\t{}\ts.", iteracion, costOverall, costOverallTest, time);
+            }else if((iteracion % testFrecuency) == 0){
+                log.info("It:\t{}\tTrain:\t{}\tTime:\t{}\ts.", iteracion, costOverall, time);
             }
-        }
+        //}
     }
 
     public void setPrintFrecuency(int printFrecuency) {
