@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 
+ * Copyright 2019
  *   Matías Roodschild <mroodschild@gmail.com>.
  *   Jorge Gotay Sardiñas <jgotay57@gmail.com>.
  *   Adrian Will <adrian.will.01@gmail.com>.
