@@ -76,7 +76,7 @@ public class SGD extends Backpropagation {
             }
         }
         System.out.println("Finish Training, Resume:");
-        printScreen(net, Activations.get(L), output, clock, inputTest, outputTest, iteracion, testFrecuency, classification);
+        printScreen(net, Activations.get(L), bachData(cantidadBach-1, output), clock, inputTest, outputTest, iteracion, testFrecuency, classification);
     }
 
     /**
