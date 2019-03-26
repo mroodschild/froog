@@ -31,8 +31,11 @@ import org.gitia.froog.layer.initialization.WeightInit;
  */
 public class BatchNormalization implements Layer {
 
-    protected SimpleMatrix gamma;//W[neuronas x 1]
-    protected SimpleMatrix Beta;//B[neuronas x 1]
+    protected SimpleMatrix gamma;   //[neurons x 1]
+    protected SimpleMatrix Beta;    //[neurons x 1]
+
+    protected SimpleMatrix media;       //[neurons x 1]
+    protected SimpleMatrix variance;  //[neurons x 1]
 
     protected Random random = new Random();
 
@@ -135,30 +138,41 @@ public class BatchNormalization implements Layer {
      */
     @Override
     public SimpleMatrix output(SimpleMatrix a) {
-        
-        if (gamma == null) {
-            initGamma(a);
-        }
+
+        media(a, media);
+        variance(a, media, variance);
         
 
         return null;
     }
-    
-    public void initGamma(SimpleMatrix a){
+
+    public void media(SimpleMatrix a, SimpleMatrix media) {
         int row = a.numRows();
         int cols = a.numCols();
-        if (gamma == null) {
-            gamma = new SimpleMatrix(row, 1, MatrixType.DDRM);
-        }
         IntStream.range(0, row).parallel()
                 .forEach(i -> {
                     int idx = i * cols;
                     double sum = 0;
                     for (int j = 0; j < cols; j++) {
-                        //aux.set(idx, aux.get(idx)+B.get(i));
                         sum += a.get(idx++);
                     }
-                    gamma.set(i, sum / (double) cols);
+                    media.set(i, sum / (double) cols);
+                });
+    }
+
+    public void variance(SimpleMatrix a, SimpleMatrix media, SimpleMatrix desviation) {
+        int rows = a.numRows();
+        int cols = a.numCols();
+        IntStream.range(0, rows).parallel()
+                .forEach(i -> {
+                    int idx = i * cols;
+                    double sum = 0;
+                    double u = media.get(i);
+                    double m = cols;
+                    for (int j = 0; j < cols; j++) {
+                        sum += Math.pow(a.get(idx++) - u, 2);
+                    }
+                    desviation.set(i, sum / m);
                 });
     }
 
