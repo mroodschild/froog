@@ -9,7 +9,7 @@
 
 ## Introduction
 
-This project was created with academic purpose for my PhD Tesis. Its design goals are; 1) to be accessible to both novices and experts, and 2) facilitate neural networks manipulations. Froog is free, written in 100% Java and has been released under M.I.T. license.
+This project was created with academic purpose for my PhD Tesis. Its design goals are; 1) to be accessible to both novices and experts, and 2) facilitate neural networks manipulations. Froog is free, written in 100% Java and has been released under Apache 2 license.
 
 Currently Froog supports:
 
