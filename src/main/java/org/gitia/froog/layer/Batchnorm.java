@@ -212,7 +212,7 @@ public class Batchnorm implements Layer {
                 });
         return y;
     }
-
+    
     public void backwardpass(SimpleMatrix a, SimpleMatrix dout) {
 
     }
