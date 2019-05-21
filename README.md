@@ -9,7 +9,7 @@
 
 ## Introduction
 
-This project was created with academic purpose for my PhD Tesis. Its design goals are; 1) to be accessible to both novices and experts, and 2) facilitate neural networks manipulations. Froog is free, written in 100% Java and has been released under M.I.T. license.
+This project was created with academic purpose for my PhD Tesis. Its design goals are; 1) to be accessible to both novices and experts, and 2) facilitate neural networks manipulations. Froog is free, written in 100% Java and has been released under Apache 2 license.
 
 Currently Froog supports:
 
@@ -29,7 +29,7 @@ Currently Froog supports:
 ## Documentation - Example
 
 ```
-//get data
+        //get data
         SimpleMatrix input = CSV.open("src/main/resources/iris/iris-in.csv");
         SimpleMatrix output = CSV.open("src/main/resources/iris/iris-out.csv");
 
@@ -93,7 +93,7 @@ Froog is in Maven jitpack.io and can easily be added to Maven, and similar proje
         <dependency>
             <groupId>org.ejml</groupId>
             <artifactId>ejml-all</artifactId>
-            <version>0.36</version>
+            <version>0.37</version>
         </dependency>
         <dependency>
             <groupId>com.github.mroodschild</groupId>
@@ -109,7 +109,7 @@ Froog is in Maven jitpack.io and can easily be added to Maven, and similar proje
 
 The main Froog modules depends on the following libraries
 
-- [ EJML 0.36         ]  ( http://ejml.org )
+- [ EJML 0.37         ]  ( http://ejml.org )
 - [ Apache Commons-lang3          ]  ( https://commons.apache.org/proper/commons-lang/ )
 
 The following is required for unit tests
@@ -118,4 +118,4 @@ The following is required for unit tests
 
 ## License
 
-Froog is released under the M.I.T. open source license, but some libraries used in Froog are under Apache v2.0 License.
+Froog is released under the Apache 2 open source license.

@@ -40,6 +40,16 @@ public class Batchnorm implements Layer {
     protected SimpleMatrix xNormalized; //[neurons x batchSize]
     protected SimpleMatrix y;           //[neurons x batchSize]
 
+    SimpleMatrix mean;
+    SimpleMatrix xmean;
+    SimpleMatrix sq;
+    SimpleMatrix var;
+    SimpleMatrix sqrtvar;
+    SimpleMatrix ivar;
+    SimpleMatrix xhat;
+    SimpleMatrix gammax;
+    SimpleMatrix out;
+
     protected double eps = 2e-8;
 
     protected Random random = new Random();
@@ -212,62 +222,93 @@ public class Batchnorm implements Layer {
                 });
         return y;
     }
-    
-    public void backwardpass(SimpleMatrix a, SimpleMatrix dout) {
+
+    public void forwardpass(SimpleMatrix a) {
+        int row = a.numRows();
+        int cols = a.numCols();
+
+        mean = new SimpleMatrix(row, 1, MatrixType.DDRM);// [neuronas x 1]
+        xmean = new SimpleMatrix(row, cols, MatrixType.DDRM);// [neuronas x datos]
+        sq = new SimpleMatrix(row, cols, MatrixType.DDRM);// [neuronas x datos]**2
+        var = new SimpleMatrix(row, 1, MatrixType.DDRM);// [neuronas x 1]
+        sqrtvar = new SimpleMatrix(row, 1, MatrixType.DDRM);// [neuronas x 1]
+        ivar = new SimpleMatrix(row, 1, MatrixType.DDRM);// [neuronas x 1]
+        xhat = new SimpleMatrix(row, 1, MatrixType.DDRM);// [neuronas x datos]
+        gammax = new SimpleMatrix(row, 1, MatrixType.DDRM);// [neuronas x datos]
+        out = new SimpleMatrix(row, 1, MatrixType.DDRM);// [neuronas x datos]
+
+        // step 1: calculate mean
+        media(a, mean);
+        subtractMean(a, mean, xmean);
+        sq(sq, xmean);
+        var(var, sq);
+        sqrtvar(sqrtvar, var, eps);
+        ivar(ivar, sqrtvar);
+        xhat(xhat, xmean, ivar);
+        gammax(gammax, gamma, xhat);
+        out(out, gammax, beta);
 
     }
 
     /**
-     * reduce one for operation
-     *
+     * xmean = a - mean 
+     * 
      * @param a
-     * @param xNormalized
-     * @param y
-     * @param media
-     * @param variance
-     * @param gamma
-     * @param beta
-     * @param eps
+     * @param mean
+     * @param xmean 
      */
-    private void normalizeScaleShift(SimpleMatrix a, SimpleMatrix xNormalized, SimpleMatrix y, SimpleMatrix media, SimpleMatrix variance, SimpleMatrix gamma, SimpleMatrix beta, double eps) {
-        int rows = xNormalized.numRows();
-        int cols = xNormalized.numCols();
-        IntStream.range(0, rows).parallel()
+    private void subtractMean(SimpleMatrix a, SimpleMatrix mean, SimpleMatrix xmean) {
+        int row = a.numRows();
+        int cols = a.numCols();
+        IntStream.range(0, row).parallel()
                 .forEach(i -> {
                     int idx = i * cols;
-                    double u = media.get(i);
-                    double o = variance.get(i);
-                    double g = gamma.get(i);
-                    double b = beta.get(i);
+                    double mu = mean.get(row);
                     for (int j = 0; j < cols; j++) {
-                        xNormalized.set(idx, (a.get(idx) - u) / (Math.sqrt(o + eps)));
-                        y.set(idx, g * xNormalized.get(idx++) + b);
+                        xmean.set(idx, a.get(idx++) - mu);
                     }
                 });
     }
 
     /**
-     * Retorna el número de neuronas
-     *
-     * @return
+     * 
+     * @param sq
+     * @param xmean 
      */
-    public int numNeuron() {
-        return gamma.numRows();
+    private void sq(SimpleMatrix sq, SimpleMatrix xmean) {
+        int row = sq.numRows();
+        int cols = sq.numCols();
+        IntStream.range(0, row).parallel()
+                .forEach(i -> {
+                    int idx = i * cols;
+                    for (int j = 0; j < cols; j++) {
+                        sq.set(idx, Math.pow(xmean.get(idx++), 2));
+                    }
+                });
     }
 
-    /**
-     *
-     * @return
-     */
-    public Random getRandom() {
-        return random;
+    private void var(SimpleMatrix var, SimpleMatrix sq) {
+        
     }
 
-    /**
-     *
-     * @param random
-     */
-    public void setRandom(Random random) {
-        this.random = random;
+    private void sqrtvar(SimpleMatrix sqrtvar, SimpleMatrix var, double eps) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    private void ivar(SimpleMatrix ivar, SimpleMatrix sqrtvar) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void xhat(SimpleMatrix xhat, SimpleMatrix xmean, SimpleMatrix ivar) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void gammax(SimpleMatrix gammax, SimpleMatrix gamma, SimpleMatrix xhat) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void out(SimpleMatrix out, SimpleMatrix gammax, SimpleMatrix beta) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }
