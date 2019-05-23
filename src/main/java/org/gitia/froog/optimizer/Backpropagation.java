@@ -190,7 +190,8 @@ public class Backpropagation extends TrainingAlgorithm {
             } 
             else if((iteracion % testFrecuency) == 0 && inputTest != null){
                 log.info("It:\t{}\tTrain:\t{}\tTest:\t{}\tTime:\t{}\ts.", iteracion, costOverall, costOverallTest, time);
-            }else if((iteracion % testFrecuency) == 0){
+            //}else if((iteracion % testFrecuency) == 0){
+            }else{
                 log.info("It:\t{}\tTrain:\t{}\tTime:\t{}\ts.", iteracion, costOverall, time);
             }
         //}
