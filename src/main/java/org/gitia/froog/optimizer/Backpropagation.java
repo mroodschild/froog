@@ -162,20 +162,22 @@ public class Backpropagation extends TrainingAlgorithm {
         updateRule.init(gradW, gradB);
     }
 
-    protected void printScreen(Feedforward net, SimpleMatrix yCal, SimpleMatrix yObs, Clock clock, 
-            SimpleMatrix inputTest, SimpleMatrix outputTest, 
+    protected void printScreen(Feedforward net, SimpleMatrix yCal, SimpleMatrix yObs, Clock clock,
+            SimpleMatrix inputTest, SimpleMatrix outputTest,
             int iteracion, int testFrecuency, boolean classification) {
         double aciertoTrain = 0;
         double aciertoTest = 0;
+        ConfusionMatrix cMatrixTrain = new ConfusionMatrix();
+        ConfusionMatrix cMatrixTest = new ConfusionMatrix();
+        if (classification) {
+            cMatrixTrain.eval(Compite.eval(yCal.transpose()), yObs.transpose());
+            aciertoTrain = cMatrixTrain.getAciertosPorc();
+        }
         if ((iteracion % testFrecuency) == 0 && inputTest != null) {
             SimpleMatrix yCalcTest = net.output(inputTest);
             costOverallTest = loss(yCalcTest, outputTest);
             this.costTest.add(costOverallTest);
             if (classification) {
-                ConfusionMatrix cMatrixTrain = new ConfusionMatrix();
-                cMatrixTrain.eval(Compite.eval(yCal.transpose()), yObs.transpose());
-                aciertoTrain = cMatrixTrain.getAciertosPorc();
-                ConfusionMatrix cMatrixTest = new ConfusionMatrix();
                 cMatrixTest.eval(Compite.eval(yCalcTest.transpose()), outputTest.transpose());
                 aciertoTest = cMatrixTest.getAciertosPorc();
             }
@@ -183,17 +185,18 @@ public class Backpropagation extends TrainingAlgorithm {
         clock.stop();
         double time = clock.timeSec();
         //if ((iteracion % testFrecuency) != 0 || inputTest == null) {
-          //  log.info("It:\t{}\tTrain:\t{}\tTime:\t{}\ts.", iteracion, costOverall, time);
+        //  log.info("It:\t{}\tTrain:\t{}\tTime:\t{}\ts.", iteracion, costOverall, time);
         //} else {
-            if (classification && (iteracion % testFrecuency) == 0 && inputTest != null) {
-                log.info("It:\t{}\tTrain:\t{}\tTest:\t{}\tTrain %:\t{}\tTest %:\t{}\tTime:\t{}\ts.", iteracion, costOverall, costOverallTest, aciertoTrain, aciertoTest, time);
-            } 
-            else if((iteracion % testFrecuency) == 0 && inputTest != null){
-                log.info("It:\t{}\tTrain:\t{}\tTest:\t{}\tTime:\t{}\ts.", iteracion, costOverall, costOverallTest, time);
+        if (classification && (iteracion % testFrecuency) == 0 && inputTest != null) {
+            log.info("It:\t{}\tTrain:\t{}\tTest:\t{}\tTrain %:\t{}\tTest %:\t{}\tTime:\t{}\ts.", iteracion, costOverall, costOverallTest, aciertoTrain, aciertoTest, time);
+        } else if (classification) {
+            log.info("It:\t{}\tTrain:\t{}\tTrain %:\t{}\tTime:\t{}\ts.", iteracion, costOverall, aciertoTrain, time);
+        } else if ((iteracion % testFrecuency) == 0 && inputTest != null) {
+            log.info("It:\t{}\tTrain:\t{}\tTest:\t{}\tTime:\t{}\ts.", iteracion, costOverall, costOverallTest, time);
             //}else if((iteracion % testFrecuency) == 0){
-            }else{
-                log.info("It:\t{}\tTrain:\t{}\tTime:\t{}\ts.", iteracion, costOverall, time);
-            }
+        } else {
+            log.info("It:\t{}\tTrain:\t{}\tTime:\t{}\ts.", iteracion, costOverall, time);
+        }
         //}
     }
 

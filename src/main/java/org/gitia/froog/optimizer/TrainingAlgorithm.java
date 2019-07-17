@@ -53,6 +53,7 @@ public class TrainingAlgorithm {
     protected int epoch = 0;
     //protected int cantidadBach;
     protected int testFrecuency = 1;
+    protected int printFrecuency = 1;
     protected boolean classification = false;
     protected Gradient gradient = new StandardGradient();
 
@@ -62,7 +63,7 @@ public class TrainingAlgorithm {
     protected ArrayList<Double> acc = new ArrayList<>();
     protected ArrayList<Double> costTest = new ArrayList<>();
     protected ArrayList<Double> accTest = new ArrayList<>();
-
+    
     public double getLearningRate() {
         return learningRate;
     }
@@ -250,5 +251,9 @@ public class TrainingAlgorithm {
 
     public Gradient getGradient() {
         return gradient;
+    }
+
+    public void setPrintFrecuency(int printFrecuency) {
+        this.printFrecuency = printFrecuency;
     }
 }

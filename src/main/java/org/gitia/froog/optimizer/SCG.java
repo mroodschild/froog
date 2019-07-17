@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 
+ * Copyright 2019
  *   Matías Roodschild <mroodschild@gmail.com>.
  *   Jorge Gotay Sardiñas <jgotay57@gmail.com>.
  *   Adrian Will <adrian.will.01@gmail.com>.
@@ -21,10 +21,14 @@ package org.gitia.froog.optimizer;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.ejml.dense.row.NormOps_DDRM;
 import org.ejml.simple.SimpleMatrix;
 import org.gitia.froog.Feedforward;
 import org.gitia.froog.statistics.Clock;
+import org.gitia.froog.statistics.Compite;
+import org.gitia.froog.statistics.ConfusionMatrix;
 
 public class SCG extends TrainingAlgorithm {
 
@@ -54,6 +58,7 @@ public class SCG extends TrainingAlgorithm {
     int L;//Number of Layers
 
     Clock clock = new Clock();
+    private static final Logger log = LogManager.getLogger(SCG.class);
 
     public SCG() {
     }
@@ -152,13 +157,59 @@ public class SCG extends TrainingAlgorithm {
             //paso 9 //finalizar algoritmo
             if (rk.normF() == 0) {
                 clock.stop();
-                System.out.println("It:\t" + k + "\ttrain:\t" + E + "\ttime:\t" + clock.timeSec() + "\ts.");
+                //System.out.println("It:\t" + k + "\ttrain:\t" + E + "\ttime:\t" + clock.timeSec() + "\ts.");
+                printScreen(net, Ak.get(L), output, clock, inputTest, outputTest, k, testFrecuency, classification);
                 break;
             }
             clock.stop();
-            System.out.println("It:\t" + k + "\ttrain:\t" + E + "\ttime:\t" + clock.timeSec() + "\ts.");
+            
+            if (k % printFrecuency == 0) {
+                printScreen(net, Ak.get(L), output, clock, inputTest, outputTest, k, testFrecuency, classification);
+            }
+            //iteracion++;
+            //System.out.println("It:\t" + k + "\ttrain:\t" + E + "\ttime:\t" + clock.timeSec() + "\ts.");
 
         }
+    }
+    
+    protected void printScreen(Feedforward net, SimpleMatrix yCal, SimpleMatrix yObs, Clock clock,
+            SimpleMatrix inputTest, SimpleMatrix outputTest,
+            int iteracion, int testFrecuency, boolean classification) {
+        double aciertoTrain = 0;
+        double aciertoTest = 0;
+        ConfusionMatrix cMatrixTrain = new ConfusionMatrix();
+        ConfusionMatrix cMatrixTest = new ConfusionMatrix();
+        double costOverallTest=0;
+        double costOverall = E;
+        if (classification) {
+            cMatrixTrain.eval(Compite.eval(yCal.transpose()), yObs.transpose());
+            aciertoTrain = cMatrixTrain.getAciertosPorc();
+        }
+        if ((iteracion % testFrecuency) == 0 && inputTest != null) {
+            SimpleMatrix yCalcTest = net.output(inputTest);
+            costOverallTest = lossFunction.costAll(yCalcTest, outputTest);
+            this.costTest.add(costOverallTest);
+            if (classification) {
+                cMatrixTest.eval(Compite.eval(yCalcTest.transpose()), outputTest.transpose());
+                aciertoTest = cMatrixTest.getAciertosPorc();
+            }
+        }
+        clock.stop();
+        double time = clock.timeSec();
+        //if ((iteracion % testFrecuency) != 0 || inputTest == null) {
+        //  log.info("It:\t{}\tTrain:\t{}\tTime:\t{}\ts.", iteracion, costOverall, time);
+        //} else {
+        if (classification && (iteracion % testFrecuency) == 0 && inputTest != null) {
+            log.info("It:\t{}\tTrain:\t{}\tTest:\t{}\tTrain %:\t{}\tTest %:\t{}\tTime:\t{}\ts.", iteracion, costOverall, costOverallTest, aciertoTrain, aciertoTest, time);
+        } else if (classification) {
+            log.info("It:\t{}\tTrain:\t{}\tTrain %:\t{}\tTime:\t{}\ts.", iteracion, costOverall, aciertoTrain, time);
+        } else if ((iteracion % testFrecuency) == 0 && inputTest != null) {
+            log.info("It:\t{}\tTrain:\t{}\tTest:\t{}\tTime:\t{}\ts.", iteracion, costOverall, costOverallTest, time);
+            //}else if((iteracion % testFrecuency) == 0){
+        } else {
+            log.info("It:\t{}\tTrain:\t{}\tTime:\t{}\ts.", iteracion, costOverall, time);
+        }
+        //}
     }
 
     /**
