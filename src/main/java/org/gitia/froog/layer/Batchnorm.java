@@ -24,6 +24,7 @@ import java.util.stream.IntStream;
 import org.ejml.data.MatrixType;
 import org.ejml.simple.SimpleMatrix;
 import org.gitia.froog.layer.initialization.WeightInit;
+import org.gitia.froog.util.Matrix;
 
 /**
  *
@@ -153,26 +154,12 @@ public class Batchnorm implements Layer {
      */
     @Override
     public SimpleMatrix output(SimpleMatrix a) {
-        media(a, media);
+        media = Matrix.mean(a, 1);
         variance(a, media, variance);
         xNormalized = normalize(a, media, variance, eps);
         y = scaleShift(xNormalized, gamma, beta);
-        //normalizeScaleShift(a, xNormalized, y, media, variance, gamma, beta, eps);
+        //normalizeScaleShift(a, xNormalized, y, mean, variance, gamma, beta, eps);
         return y;
-    }
-
-    public void media(SimpleMatrix a, SimpleMatrix media) {
-        int row = a.numRows();
-        int cols = a.numCols();
-        IntStream.range(0, row).parallel()
-                .forEach(i -> {
-                    int idx = i * cols;
-                    double sum = 0;
-                    for (int j = 0; j < cols; j++) {
-                        sum += a.get(idx++);
-                    }
-                    media.set(i, sum / (double) cols);
-                });
     }
 
     public void variance(SimpleMatrix a, SimpleMatrix media, SimpleMatrix variance) {
@@ -238,7 +225,7 @@ public class Batchnorm implements Layer {
         out = new SimpleMatrix(row, 1, MatrixType.DDRM);// [neuronas x datos]
 
         // step 1: calculate mean
-        media(a, mean);
+        mean = Matrix.mean(a, 1);
         subtractMean(a, mean, xmean);
         sq(sq, xmean);
         var(var, sq);
@@ -251,11 +238,11 @@ public class Batchnorm implements Layer {
     }
 
     /**
-     * xmean = a - mean 
-     * 
+     * xmean = a - mean
+     *
      * @param a
      * @param mean
-     * @param xmean 
+     * @param xmean
      */
     private void subtractMean(SimpleMatrix a, SimpleMatrix mean, SimpleMatrix xmean) {
         int row = a.numRows();
@@ -271,9 +258,9 @@ public class Batchnorm implements Layer {
     }
 
     /**
-     * 
+     *
      * @param sq
-     * @param xmean 
+     * @param xmean
      */
     private void sq(SimpleMatrix sq, SimpleMatrix xmean) {
         int row = sq.numRows();
@@ -288,7 +275,7 @@ public class Batchnorm implements Layer {
     }
 
     private void var(SimpleMatrix var, SimpleMatrix sq) {
-        
+
     }
 
     private void sqrtvar(SimpleMatrix sqrtvar, SimpleMatrix var, double eps) {
