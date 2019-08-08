@@ -9,7 +9,7 @@
 
 ## Introduction
 
-This project was created with academic purpose for my PhD Tesis. Its design goals are; 1) to be accessible to both novices and experts, and 2) facilitate neural networks manipulations. Froog is free, written in 100% Java and has been released under Apache 2 license.
+This project was created with mainly academic purposes for my PhD Tesis, but it is also free for commercial uses. Its design goals are: 1) To be accessible to both novices and experts, and 2) To facilitate neural networks manipulations. Froog is free, written 100% in Java, and has been released under Apache 2 license.
 
 Currently Froog supports:
 
@@ -17,7 +17,7 @@ Currently Froog supports:
 * Stochastic Gradient Descent
 * Conjugate Gradient
 * Scaled Conjugate Gradient 
-* Accelerate methods (Momentum, Momentum Rumelhart, Adam)
+* Acceleration methods (Momentum, Momentum Rumelhart, Adam)
 * Weight Initialization (Default (Xavier), He, Pitfall, PositiveRandom, SmallRandom)
 * Weight Normalization L2
 * Dropout
