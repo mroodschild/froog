@@ -58,8 +58,8 @@ Currently Froog supports:
         Feedforward net = new Feedforward();
 
         //add layers to neural network
-        net.addLayer(new Layer(input.numRows(), Nhl, TransferFunction.TANSIG, random));
-        net.addLayer(new Layer(Nhl, output.numRows(), TransferFunction.SOFTMAX, random));
+        net.addLayer(new Dense(input.numRows(), Nhl, TransferFunction.TANSIG, random));
+        net.addLayer(new Dense(Nhl, output.numRows(), TransferFunction.SOFTMAX, random));
         
         //train your net
         bp.train(net, input, output);
@@ -88,17 +88,12 @@ Froog is in Maven jitpack.io and can easily be added to Maven, and similar proje
         <dependency>
             <groupId>com.github.mroodschild</groupId>
             <artifactId>froog</artifactId>
-            <version>0.4</version>
-        </dependency>
-        <dependency>
-            <groupId>org.ejml</groupId>
-            <artifactId>ejml-all</artifactId>
-            <version>0.37</version>
+            <version>0.5</version>
         </dependency>
         <dependency>
             <groupId>com.github.mroodschild</groupId>
             <artifactId>JDataAnalysis</artifactId>
-            <version>0.4</version>
+            <version>0.5</version>
         </dependency>
     </dependencies>
 ```
