@@ -93,9 +93,9 @@
             <version>0.37</version>
         </dependency>
         <dependency>
-            <groupId>org.gitia</groupId>
+            <groupId>com.github.mroodschild</groupId>
             <artifactId>JDataAnalysis</artifactId>
-            <version>0.4</version>
+            <version>0.5</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
