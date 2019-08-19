@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.gitia</groupId>
     <artifactId>froog</artifactId>
-    <version>0.5</version>
+    <version>0.5.1</version>
     <packaging>jar</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -87,11 +87,6 @@
         </repository>
     </repositories>
     <dependencies>
-        <dependency>
-            <groupId>org.ejml</groupId>
-            <artifactId>ejml-all</artifactId>
-            <version>0.37</version>
-        </dependency>
         <dependency>
             <groupId>com.github.mroodschild</groupId>
             <artifactId>JDataAnalysis</artifactId>
