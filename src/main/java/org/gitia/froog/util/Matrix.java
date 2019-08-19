@@ -23,10 +23,11 @@ import org.ejml.simple.SimpleMatrix;
  * @author Matías Roodschild <mroodschild@gmail.com>
  */
 public class Matrix {
+    
     /**
      *
      * @param m matrix
-     * @param axis (0 = Vertical Mean, 1 = Horizontal Mean)
+     * @param axis (0 = Horizontal Mean, 1 = Vertical Mean)
      * @return
      */
     public static SimpleMatrix mean(SimpleMatrix m, int axis) {
@@ -35,6 +36,18 @@ public class Matrix {
         final SimpleMatrix mean;
         switch (axis) {
             case 0:
+                mean = new SimpleMatrix(row, 1);
+                IntStream.range(0, row).parallel()
+                        .forEach((int i) -> {
+                            int idx = i * cols;
+                            double sum = 0;
+                            for (int j = 0; j < cols; j++) {
+                                sum += m.get(idx++);
+                            }
+                            mean.set(i, sum / (double) cols);
+                        });
+                break;
+            case 1:
                 mean = new SimpleMatrix(1, cols);
                 IntStream.range(0, cols).parallel()
                         .forEach((int i) -> {
@@ -48,8 +61,26 @@ public class Matrix {
                             mean.set(i, sum / (double) row);
                         });
                 break;
-            case 1:
-                mean = new SimpleMatrix(row, 1);
+            default:
+                mean = null;
+                break;
+        }
+        return mean;
+    }
+    
+    /**
+     *
+     * @param m matrix
+     * @param axis (0 = Horizontal Mean, 1 = Vertical Mean)
+     * @return
+     */
+    public static SimpleMatrix sum(SimpleMatrix m, int axis) {
+        int row = m.numRows();
+        int cols = m.numCols();
+        final SimpleMatrix mSum;
+        switch (axis) {
+            case 0:
+                mSum = new SimpleMatrix(row, 1);
                 IntStream.range(0, row).parallel()
                         .forEach((int i) -> {
                             int idx = i * cols;
@@ -57,13 +88,28 @@ public class Matrix {
                             for (int j = 0; j < cols; j++) {
                                 sum += m.get(idx++);
                             }
-                            mean.set(i, sum / (double) cols);
+                            mSum.set(i, sum);
+                        });
+                break;
+            case 1:
+                mSum = new SimpleMatrix(1, cols);
+                IntStream.range(0, cols).parallel()
+                        .forEach((int i) -> {
+                            int idx = i;
+                            double sum = 0;
+                            for (int j = 0; j < row; j++) {
+                                System.out.println(i+" idx "+idx);
+                                sum += m.get(idx);
+                                idx+=cols;
+                            }
+                            mSum.set(i, sum);
                         });
                 break;
             default:
-                mean = null;
+                mSum = null;
                 break;
         }
-        return mean;
+        return mSum;
     }
+    
 }
