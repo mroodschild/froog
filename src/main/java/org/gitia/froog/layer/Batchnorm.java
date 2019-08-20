@@ -41,6 +41,7 @@ public class Batchnorm implements Layer {
     protected SimpleMatrix xNormalized; //[neurons x batchSize]
     protected SimpleMatrix y;           //[neurons x batchSize]
 
+    //forward pass
     SimpleMatrix mean;
     SimpleMatrix xmean;
     SimpleMatrix sq;
@@ -50,74 +51,35 @@ public class Batchnorm implements Layer {
     SimpleMatrix xhat;
     SimpleMatrix gammax;
     SimpleMatrix out;
+    //backward pass
+    SimpleMatrix dgamma;
+    SimpleMatrix dbeta;
+    SimpleMatrix dx;
 
     protected double eps = 2e-8;
 
     protected Random random = new Random();
 
-    /**
-     *
-     */
     public Batchnorm() {
     }
 
     /**
-     * Init Layer. <br>
-     *
-     * to select a transfer function set TransferFunction.LOGSIG<br>
-     * logsig, tansig, purelim, softplus <br>
-     * <br>
      *
      * @param input number of inputs
      * @param output number of neurons
      * @param WeightInit
      * @param random
      */
-    public Batchnorm(int input, int output, String WeightInit, Random random) {
-        this(input, output, WeightInit, 0, random);
-    }
-
-    /**
-     * Init Layer. <br>
-     *
-     * to select a transfer function set TransferFunction.LOGSIG<br>
-     * logsig, tansig, purelim, softplus <br>
-     * <br>
-     *
-     * @param input number of inputs
-     * @param output number of neurons
-     * @param WeightInit
-     * @param keepProb for dropout
-     * @param random
-     */
-    public Batchnorm(int input, int output, String WeightInit, double keepProb, Random random) {
+    public Batchnorm(int input, int output, Random random) {
         this.random = random;
         this.gamma = new SimpleMatrix(output, input);
         this.beta = new SimpleMatrix(output, 1);
+        gamma.fill(0.5);
+        beta.fill(0.1);
+        this.random = random;
     }
 
     /**
-     * Init Layer. <br>
-     *
-     * to select a transfer function set TransferFunction.LOGSIG<br>
-     * logsig, tansig, purelim, softplus <br>
-     * <br>
-     *
-     * @param input cantidad de entradas
-     * @param output cantidad de neuronas
-     * @param random heredado
-     */
-    public Batchnorm(int input, int output, Random random) {
-        this(input, output, WeightInit.DEFAULT, random);
-    }
-
-    /**
-     * Init Layer. <br>
-     *
-     * to select a transfer function set TransferFunction.LOGSIG<br>
-     * logsig, tansig, purelim, softplus <br>
-     * <br>
-     *
      * @param input
      * @param output
      */
@@ -127,12 +89,12 @@ public class Batchnorm implements Layer {
 
     /**
      *
-     * @param W
-     * @param B
+     * @param gamma
+     * @param beta
      */
-    public Batchnorm(SimpleMatrix W, SimpleMatrix B) {
-        this.gamma = W;
-        this.beta = B;
+    public Batchnorm(SimpleMatrix gamma, SimpleMatrix beta) {
+        this.gamma = gamma;
+        this.beta = beta;
     }
 
     /**
@@ -147,11 +109,6 @@ public class Batchnorm implements Layer {
         return output(x);
     }
 
-    /**
-     *
-     * @param a [out prev layer - m] where m is the amount of data
-     * @return a<sub>L(i)</sub> = f(a<sub>L(i)-1</sub>)
-     */
     @Override
     public SimpleMatrix output(SimpleMatrix a) {
         media = Matrix.mean(a, 1);
@@ -210,7 +167,24 @@ public class Batchnorm implements Layer {
         return y;
     }
 
-    public void forwardpass(SimpleMatrix a) {
+    public void backwardpass(SimpleMatrix dout){
+        
+        int N = dout.numCols();
+        int D = dout.numRows();
+        
+        //step 9
+        dbeta = Matrix.sum(dout, 0);
+        SimpleMatrix dgammax = dout;
+        
+        //step 8
+        SimpleMatrix dgamma = Matrix.sum(xhat, 0);
+        SimpleMatrix dxhat = dgammax.mult(dgamma);
+        
+        
+        
+    }
+    
+    public SimpleMatrix forwardpass(SimpleMatrix a) {
         int row = a.numRows();
         int cols = a.numCols();
 
@@ -225,16 +199,42 @@ public class Batchnorm implements Layer {
         out = new SimpleMatrix(row, 1, MatrixType.DDRM);// [neuronas x datos]
 
         // step 1: calculate mean
-        mean = Matrix.mean(a, 1);
-        subtractMean(a, mean, xmean);
-        sq(sq, xmean);
-        var(var, sq);
-        sqrtvar(sqrtvar, var, eps);
-        ivar(ivar, sqrtvar);
-        xhat(xhat, xmean, ivar);
-        gammax(gammax, gamma, xhat);
-        out(out, gammax, beta);
-
+        mean = Matrix.mean(a, 0);
+        //System.out.println("mean");
+        //mean.print();
+        //step2: subtract mean vector of every trainings example
+        xmean = subtractMean(a, mean);
+        //System.out.println("xmean");
+        //xmean.print();
+        //step3: following the lower branch - calculation denominator
+        sq = sq(xmean);
+        //System.out.println("sq");
+        //sq.print();
+        //step4: calculate variance
+        var = var(sq);
+        //System.out.println("var");
+        //var.print();
+        //step5: add eps for numerical stability, then sqrt
+        sqrtvar = sqrtvar(var, eps);
+        //System.out.println("sqrtvar");
+        //sqrtvar.print();
+        //step6: invert sqrtwar
+        ivar = ivar(sqrtvar);
+        //System.out.println("ivar");
+        //ivar.print();
+        //step7: execute normalization
+        xhat = xhat(xmean, ivar);
+        //System.out.println("xhat");
+        //xhat.print();
+        //step8: Nor the two transformation steps
+        gammax = gammax(gamma, xhat);
+        //System.out.println("gammax");
+        //gammax.print();
+        //step9: out = gammax + beta
+        out = out(gammax, beta);
+        //System.out.println("out");
+        //out.print();
+        return out;
     }
 
     /**
@@ -244,17 +244,21 @@ public class Batchnorm implements Layer {
      * @param mean
      * @param xmean
      */
-    private void subtractMean(SimpleMatrix a, SimpleMatrix mean, SimpleMatrix xmean) {
+    private SimpleMatrix subtractMean(SimpleMatrix a, SimpleMatrix mean) {
         int row = a.numRows();
         int cols = a.numCols();
+
+        SimpleMatrix xmean = new SimpleMatrix(row, cols);
+
         IntStream.range(0, row).parallel()
                 .forEach(i -> {
                     int idx = i * cols;
-                    double mu = mean.get(row);
+                    double mu = mean.get(i);
                     for (int j = 0; j < cols; j++) {
                         xmean.set(idx, a.get(idx++) - mu);
                     }
                 });
+        return xmean;
     }
 
     /**
@@ -262,9 +266,10 @@ public class Batchnorm implements Layer {
      * @param sq
      * @param xmean
      */
-    private void sq(SimpleMatrix sq, SimpleMatrix xmean) {
-        int row = sq.numRows();
-        int cols = sq.numCols();
+    private SimpleMatrix sq(SimpleMatrix xmean) {
+        int row = xmean.numRows();
+        int cols = xmean.numCols();
+        SimpleMatrix sq = new SimpleMatrix(row, cols);
         IntStream.range(0, row).parallel()
                 .forEach(i -> {
                     int idx = i * cols;
@@ -272,30 +277,91 @@ public class Batchnorm implements Layer {
                         sq.set(idx, Math.pow(xmean.get(idx++), 2));
                     }
                 });
+        return sq;
     }
 
-    private void var(SimpleMatrix var, SimpleMatrix sq) {
-
+    private SimpleMatrix var(SimpleMatrix sq) {
+        int row = sq.numRows();
+        int cols = sq.numCols();
+        double N = (double)sq.numCols();
+        SimpleMatrix var = new SimpleMatrix(row, 1);
+        IntStream.range(0, row).parallel()
+                .forEach(i -> {
+                    int idx = i * cols;
+                    double sum = 0;
+                    for (int j = 0; j < cols; j++) {
+                        sum += sq.get(idx);
+                    }
+                    var.set(i, sum / N);
+                });
+        return var;
     }
 
-    private void sqrtvar(SimpleMatrix sqrtvar, SimpleMatrix var, double eps) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private SimpleMatrix sqrtvar(SimpleMatrix var, double eps) {
+        int row = var.numRows();
+        int cols = var.numCols();
+        int elements = var.getNumElements();
+        SimpleMatrix sqrtvar = new SimpleMatrix(row, cols);
+        for (int i = 0; i < elements; i++) {
+            sqrtvar.set(i, Math.sqrt(var.getDDRM().get(i) + eps));
+        }
+        return sqrtvar;
     }
 
-    private void ivar(SimpleMatrix ivar, SimpleMatrix sqrtvar) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private SimpleMatrix ivar(SimpleMatrix sqrtvar) {
+        int row = sqrtvar.numRows();
+        int cols = sqrtvar.numCols();
+        int elements = sqrtvar.getNumElements();
+        SimpleMatrix ivar = new SimpleMatrix(row, cols);
+        for (int i = 0; i < elements; i++) {
+            ivar.set(i, 1 / sqrtvar.getDDRM().get(i));
+        }
+        return ivar;
     }
 
-    private void xhat(SimpleMatrix xhat, SimpleMatrix xmean, SimpleMatrix ivar) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private SimpleMatrix xhat(SimpleMatrix xmean, SimpleMatrix ivar) {
+        int row = xmean.numRows();
+        int cols = xmean.numCols();
+        SimpleMatrix xHat = new SimpleMatrix(row, cols);
+        IntStream.range(0, row).parallel()
+                .forEach(i -> {
+                    int idx = i * cols;
+                    double i_var = ivar.get(i);
+                    for (int j = 0; j < cols; j++) {
+                        xHat.set(idx, xmean.get(idx++) * i_var);
+                    }
+                });
+        return xHat;
     }
 
-    private void gammax(SimpleMatrix gammax, SimpleMatrix gamma, SimpleMatrix xhat) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private SimpleMatrix gammax(SimpleMatrix gamma, SimpleMatrix xhat) {
+        int row = xhat.numRows();
+        int cols = xhat.numCols();
+        SimpleMatrix gammax = new SimpleMatrix(row, cols);
+        IntStream.range(0, row).parallel()
+                .forEach(i -> {
+                    int idx = i * cols;
+                    double gamm = gamma.get(i);
+                    for (int j = 0; j < cols; j++) {
+                        gammax.set(idx, xhat.get(idx++) * gamm);
+                    }
+                });
+        return gammax;
     }
 
-    private void out(SimpleMatrix out, SimpleMatrix gammax, SimpleMatrix beta) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private SimpleMatrix out(SimpleMatrix gammax, SimpleMatrix beta) {
+        int row = gammax.numRows();
+        int cols = gammax.numCols();
+        SimpleMatrix out = new SimpleMatrix(row, cols);
+        IntStream.range(0, row).parallel()
+                .forEach(i -> {
+                    int idx = i * cols;
+                    double B = beta.get(i);
+                    for (int j = 0; j < cols; j++) {
+                        out.set(idx, gammax.get(idx++) + B);
+                    }
+                });
+        return out;
     }
 
 }
