@@ -55,8 +55,8 @@ public class MatrixTest {
         SimpleMatrix m = new SimpleMatrix(3, 3, true, data);
         double[] expResultHorizontal = {1, 4, 7};
         double[] expResultVertical = {3, 4, 5};
-        SimpleMatrix resultVertical = Matrix.mean(m, 0);
-        SimpleMatrix resultHorizontal = Matrix.mean(m, 1);
+        SimpleMatrix resultVertical = Matrix.mean(m, 1);
+        SimpleMatrix resultHorizontal = Matrix.mean(m, 0);
         resultHorizontal.print();
         resultVertical.print();
         assertArrayEquals(expResultVertical, resultVertical.getDDRM().getData(), 0.001);
