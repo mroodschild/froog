@@ -23,7 +23,6 @@ import java.util.Random;
 import java.util.stream.IntStream;
 import org.ejml.data.MatrixType;
 import org.ejml.simple.SimpleMatrix;
-import org.gitia.froog.layer.initialization.WeightInit;
 import org.gitia.froog.util.Matrix;
 
 /**
@@ -67,7 +66,6 @@ public class Batchnorm implements Layer {
      *
      * @param input number of inputs
      * @param output number of neurons
-     * @param WeightInit
      * @param random
      */
     public Batchnorm(int input, int output, Random random) {
@@ -172,12 +170,22 @@ public class Batchnorm implements Layer {
         int N = dout.numCols();
         int D = dout.numRows();
         
+//        mean = new SimpleMatrix(row, 1, MatrixType.DDRM);// [neuronas x 1]
+//        xmean = new SimpleMatrix(row, cols, MatrixType.DDRM);// [neuronas x datos]
+//        sq = new SimpleMatrix(row, cols, MatrixType.DDRM);// [neuronas x datos]**2
+//        var = new SimpleMatrix(row, 1, MatrixType.DDRM);// [neuronas x 1]
+//        sqrtvar = new SimpleMatrix(row, 1, MatrixType.DDRM);// [neuronas x 1]
+//        ivar = new SimpleMatrix(row, 1, MatrixType.DDRM);// [neuronas x 1]
+//        xhat = new SimpleMatrix(row, 1, MatrixType.DDRM);// [neuronas x datos]
+//        gammax = new SimpleMatrix(row, 1, MatrixType.DDRM);// [neuronas x datos]
+//        out = new SimpleMatrix(row, 1, MatrixType.DDRM);// [neuronas x datos]
+        
         //step 9
         dbeta = Matrix.sum(dout, 0);
         SimpleMatrix dgammax = dout;
         
         //step 8
-        SimpleMatrix dgamma = Matrix.sum(xhat, 0);
+        SimpleMatrix dgamma = Matrix.sum(dgammax.elementMult(xhat), 0);
         SimpleMatrix dxhat = dgammax.mult(dgamma);
         
         
