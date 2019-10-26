@@ -51,6 +51,7 @@ public class Momentum implements Accelerate {
         for (int i = 0; i < dW.size(); i++) {
             SimpleMatrix vdW = vW.get(i);
             SimpleMatrix vdb = vB.get(i);
+            
             vdW = vdW.scale(beta).plus(dW.get(i).scale(1-beta));
             vdb = vdb.scale(beta).plus(db.get(i).scale(1-beta));
             
