@@ -19,6 +19,8 @@
  */
 package org.gitia.froog.transferfunction;
 
+import java.util.stream.IntStream;
+import org.ejml.data.MatrixType;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.simple.SimpleMatrix;
 
@@ -37,9 +39,20 @@ public class Logsig implements TransferFunction {
      */
     @Override
     public SimpleMatrix output(SimpleMatrix z) {
-        SimpleMatrix a = z.scale(-1).elementExp().plus(1);
-        CommonOps_DDRM.divide(1, a.getDDRM());
-        return a;
+//        SimpleMatrix a = z.scale(-1).elementExp().plus(1);
+//        CommonOps_DDRM.divide(1, a.getDDRM());
+//        return a;
+//        
+        SimpleMatrix m = new SimpleMatrix(z.numRows(), z.numCols(), MatrixType.DDRM);
+        IntStream.range(0, m.numRows()).parallel()
+                .forEach(i -> {
+            int size = m.numCols();
+            int idx = i * size;
+            for (int j = 0; j < size; j++) {
+                m.set(idx, 1.0 / (1+Math.exp(-z.get(idx++))));
+            }
+        });
+        return m;
     }
 
     /**
