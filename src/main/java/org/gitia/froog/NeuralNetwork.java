@@ -37,7 +37,7 @@ public interface NeuralNetwork {
     /**
      * 
      * @param input
-     * @return 
+    * @return 
      */
     public SimpleMatrix output(SimpleMatrix input);
 

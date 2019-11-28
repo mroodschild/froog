@@ -69,6 +69,23 @@ public class Dense implements Layer {
     public Dense(int input, int output, String funcion, String WeightInit, Random random) {
         this(input, output, funcion, WeightInit, 0, random);
     }
+    
+    /**
+     * Init Layer. <br>
+     *
+     * to select a transfer function set TransferFunction.LOGSIG<br>
+     * logsig, tansig, purelim, softplus <br>
+     * <br>
+     *
+     * @param input number of inputs
+     * @param output number of neurons
+     * @param funcion transfer function
+     * @param WeightInit
+     * @param random
+     */
+    public Dense(int input, int output, TransferFunction funcion, String WeightInit, Random random) {
+        this(input, output, funcion, WeightInit, 0, random);
+    }
 
     /**
      * Init Layer. <br>
@@ -85,6 +102,24 @@ public class Dense implements Layer {
      * @param random
      */
     public Dense(int input, int output, String funcion, String WeightInit, double keepProb, Random random) {
+        this(input, output, FunctionFactory.getFunction(funcion), WeightInit, keepProb, random);
+    }
+    
+    /**
+     * Init Layer. <br>
+     *
+     * to select a transfer function set TransferFunction.LOGSIG<br>
+     * logsig, tansig, purelim, softplus <br>
+     * <br>
+     *
+     * @param input number of inputs
+     * @param output number of neurons
+     * @param funcion transfer function
+     * @param WeightInit
+     * @param keepProb for dropout
+     * @param random
+     */
+    public Dense(int input, int output, TransferFunction funcion, String WeightInit, double keepProb, Random random) {
         this.random = random;
         initWeight = WeightFactory.getFunction(WeightInit);
         initWeight.setRandom(this.random);
@@ -92,8 +127,8 @@ public class Dense implements Layer {
         this.B = new SimpleMatrix(output, 1);
         initWeight.init(W);
         this.keepProb = keepProb;
-        this.function = FunctionFactory.getFunction(funcion);
-        System.out.println("Layer\tinput:\t" + input + "\tneurons:\t" + output + "\tfunction:\t" + funcion + "\tinit:\t" + initWeight.toString() + "\tkeepProb:\t" + this.keepProb);
+        this.function = funcion;
+        System.out.println("Layer\tinput:\t" + input + "\tneurons:\t" + output + "\tfunction:\t" + funcion.toString() + "\tinit:\t" + initWeight.toString() + "\tkeepProb:\t" + this.keepProb);
     }
 
     /**
@@ -111,6 +146,22 @@ public class Dense implements Layer {
     public Dense(int input, int output, String funcion, Random random) {
         this(input, output, funcion, WeightInit.DEFAULT, random);
     }
+    
+    /**
+     * Init Layer. <br>
+     *
+     * to select a transfer function set TransferFunction.LOGSIG<br>
+     * logsig, tansig, purelim, softplus <br>
+     * <br>
+     *
+     * @param input cantidad de entradas
+     * @param output cantidad de neuronas
+     * @param funcion función usadas en las neuronas
+     * @param random heredado
+     */
+    public Dense(int input, int output, TransferFunction funcion, Random random) {
+        this(input, output, funcion, WeightInit.DEFAULT, 0, random);
+    }
 
     /**
      * Init Layer. <br>
@@ -126,6 +177,21 @@ public class Dense implements Layer {
     public Dense(int input, int output, String funcion) {
         this(input, output, funcion, new Random());
     }
+    
+    /**
+     * Init Layer. <br>
+     *
+     * to select a transfer function set TransferFunction.LOGSIG<br>
+     * logsig, tansig, purelim, softplus <br>
+     * <br>
+     *
+     * @param input
+     * @param output
+     * @param funcion
+     */
+    public Dense(int input, int output, TransferFunction funcion) {
+        this(input, output, funcion, new Random());
+    }
 
     /**
      *
@@ -137,6 +203,18 @@ public class Dense implements Layer {
         this.W = W;
         this.B = B;
         this.function = FunctionFactory.getFunction(funcion);
+    }
+    
+    /**
+     *
+     * @param W
+     * @param B
+     * @param funcion
+     */
+    public Dense(SimpleMatrix W, SimpleMatrix B, TransferFunction funcion) {
+        this.W = W;
+        this.B = B;
+        this.function = funcion;
     }
 
     /**
