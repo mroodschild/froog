@@ -29,6 +29,7 @@ import org.gitia.froog.statistics.Clock;
 import org.gitia.froog.statistics.Compite;
 import org.gitia.froog.statistics.ConfusionMatrix;
 import org.gitia.froog.optimizer.accelerate.Accelerate;
+import org.gitia.froog.util.History;
 
 /**
  *
@@ -44,6 +45,7 @@ public class Backpropagation extends TrainingAlgorithm {
     protected int iteracion = 0;
     protected int printFrecuency = 1;
     protected double gradientClipping = 0;
+    protected History history = new History();
 
     private static final Logger log = LogManager.getLogger(Backpropagation.class);
 
@@ -165,21 +167,25 @@ public class Backpropagation extends TrainingAlgorithm {
     protected void printScreen(Feedforward net, SimpleMatrix yCal, SimpleMatrix yObs, Clock clock,
             SimpleMatrix inputTest, SimpleMatrix outputTest,
             int iteracion, int testFrecuency, boolean classification) {
-        double aciertoTrain = 0;
-        double aciertoTest = 0;
+        double accTrain = 0;
+        double accTest = 0;
         ConfusionMatrix cMatrixTrain = new ConfusionMatrix();
         ConfusionMatrix cMatrixTest = new ConfusionMatrix();
+        history.addTrainCost(iteracion, costOverall);
         if (classification) {
             cMatrixTrain.eval(Compite.eval(yCal.transpose()), yObs.transpose());
-            aciertoTrain = cMatrixTrain.getAciertosPorc();
+            accTrain = cMatrixTrain.getAciertosPorc();
+            history.addTrainAcc(iteracion, accTrain);
         }
         if ((iteracion % testFrecuency) == 0 && inputTest != null) {
             SimpleMatrix yCalcTest = net.output(inputTest);
             costOverallTest = loss(yCalcTest, outputTest);
             this.costTest.add(costOverallTest);
+            history.addTestCost(iteracion, costOverallTest);
             if (classification) {
                 cMatrixTest.eval(Compite.eval(yCalcTest.transpose()), outputTest.transpose());
-                aciertoTest = cMatrixTest.getAciertosPorc();
+                accTest = cMatrixTest.getAciertosPorc();
+                history.addTestAcc(iteracion, accTest);
             }
         }
         clock.stop();
@@ -188,9 +194,9 @@ public class Backpropagation extends TrainingAlgorithm {
         //  log.info("It:\t{}\tTrain:\t{}\tTime:\t{}\ts.", iteracion, costOverall, time);
         //} else {
         if (classification && (iteracion % testFrecuency) == 0 && inputTest != null) {
-            log.info("It:\t{}\tTrain:\t{}\tTest:\t{}\tTrain %:\t{}\tTest %:\t{}\tTime:\t{}\ts.", iteracion, costOverall, costOverallTest, aciertoTrain, aciertoTest, time);
+            log.info("It:\t{}\tTrain:\t{}\tTest:\t{}\tTrain %:\t{}\tTest %:\t{}\tTime:\t{}\ts.", iteracion, costOverall, costOverallTest, accTrain, accTest, time);
         } else if (classification) {
-            log.info("It:\t{}\tTrain:\t{}\tTrain %:\t{}\tTime:\t{}\ts.", iteracion, costOverall, aciertoTrain, time);
+            log.info("It:\t{}\tTrain:\t{}\tTrain %:\t{}\tTime:\t{}\ts.", iteracion, costOverall, accTrain, time);
         } else if ((iteracion % testFrecuency) == 0 && inputTest != null) {
             log.info("It:\t{}\tTrain:\t{}\tTest:\t{}\tTime:\t{}\ts.", iteracion, costOverall, costOverallTest, time);
             //}else if((iteracion % testFrecuency) == 0){
@@ -200,6 +206,10 @@ public class Backpropagation extends TrainingAlgorithm {
         //}
     }
 
+    public History getHistory() {
+        return history;
+    }
+    
     public void setPrintFrecuency(int printFrecuency) {
         this.printFrecuency = printFrecuency;
     }
