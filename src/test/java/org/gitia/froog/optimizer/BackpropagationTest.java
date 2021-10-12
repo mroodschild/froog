@@ -19,7 +19,7 @@
  */
 package org.gitia.froog.optimizer;
 
-import org.gitia.froog.optimizer.Backpropagation;
+// import org.gitia.froog.optimizer.Backpropagation;
 import org.ejml.simple.SimpleMatrix;
 import org.gitia.froog.Feedforward;
 import org.junit.Test;
@@ -28,7 +28,7 @@ import org.junit.Ignore;
 
 /**
  *
- * @author Marilina
+ * @author Matías Roodschild
  */
 public class BackpropagationTest {
     

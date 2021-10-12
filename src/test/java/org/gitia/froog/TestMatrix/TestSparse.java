@@ -23,7 +23,6 @@ import java.util.Random;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.MatrixType;
 import org.ejml.simple.SimpleMatrix;
-import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.RandomMatrices_DSCC;
 import org.gitia.froog.statistics.Clock;
 import org.gitia.froog.util.SparseMatrix;

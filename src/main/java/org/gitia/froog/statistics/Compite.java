@@ -19,7 +19,6 @@
  */
 package org.gitia.froog.statistics;
 
-import java.util.stream.IntStream;
 import org.ejml.simple.SimpleMatrix;
 
 /**

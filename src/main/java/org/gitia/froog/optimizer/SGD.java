@@ -25,8 +25,6 @@ import org.gitia.froog.Feedforward;
 import org.gitia.froog.statistics.Clock;
 import org.gitia.froog.optimizer.gradient.Gradient;
 import org.gitia.froog.optimizer.gradient.GradientFactory;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -34,7 +32,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class SGD extends Backpropagation {
 
-    private static final Logger log = LogManager.getLogger(SGD.class);
+    //private static final Logger log = LogManager.getLogger(SGD.class);
 
     protected int cantidadBach;
     int batchSize = 0; //tamaño del batch declarado por el usuario

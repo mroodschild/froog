@@ -19,8 +19,6 @@
  */
 package org.gitia.froog.optimizer.conjugategradient.beta;
 
-import org.gitia.froog.transferfunction.*;
-
 /**
  *
  * @author Matías Roodschild <mroodschild@gmail.com>

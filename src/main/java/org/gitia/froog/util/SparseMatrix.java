@@ -20,27 +20,15 @@
 package org.gitia.froog.util;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ForkJoinPool;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.IntStream;
+
 import org.apache.commons.lang3.ArrayUtils;
-import org.ejml.MatrixDimensionException;
-import static org.ejml.UtilEjml.stringShapes;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.DMatrixSparseTriplet;
-import org.ejml.data.MatrixType;
 import org.ejml.ops.ConvertDMatrixStruct;
-import org.ejml.simple.SimpleMatrix;
 import org.gitia.froog.statistics.Clock;
-import org.gitia.jdataanalysis.Util;
 
 /**
  *

@@ -21,7 +21,6 @@ package org.gitia.froog.transferfunction;
 
 import java.util.stream.IntStream;
 import org.ejml.data.MatrixType;
-import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.simple.SimpleMatrix;
 
 /**
