@@ -25,9 +25,8 @@ import java.util.Random;
 import java.util.stream.IntStream;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.DMatrixSparseTriplet;
-import org.ejml.ops.ConvertDMatrixStruct;
+//import org.ejml.ops.ConvertDMatrixStruct;
 import org.gitia.froog.statistics.Clock;
 
 /**
@@ -48,10 +47,10 @@ public class SparseMatrix {
      * @param percent percent of ones in the columns
      * @return Randomly generated matrix
      */
-    public static DMatrixSparseCSC randomOnesColumnsCSC(int numRows, int numCols, double percent) {
-        DMatrixSparseTriplet work = randomOnesDouble(numRows, numCols, percent);
-        return ConvertDMatrixStruct.convert(work, (DMatrixSparseCSC) null);
-    }
+    // public static DMatrixSparseCSC randomOnesColumnsCSC(int numRows, int numCols, double percent) {
+    //     DMatrixSparseTriplet work = randomOnesDouble(numRows, numCols, percent);
+    //     return ConvertDMatrixStruct.convert(work, (DMatrixSparseCSC) null);
+    // }
 
 //    public static DMatrixSparseCSC elementMult(DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC C) {
 //        if (A.numCols != B.numCols || A.numRows != B.numRows) {

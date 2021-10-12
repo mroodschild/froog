@@ -19,13 +19,13 @@
  */
 package org.gitia.froog.TestMatrix;
 
-import java.util.Random;
-import org.ejml.data.DMatrixSparseCSC;
-import org.ejml.data.MatrixType;
-import org.ejml.simple.SimpleMatrix;
-import org.ejml.sparse.csc.RandomMatrices_DSCC;
-import org.gitia.froog.statistics.Clock;
-import org.gitia.froog.util.SparseMatrix;
+// import java.util.Random;
+// import org.ejml.data.DMatrixSparseCSC;
+// import org.ejml.data.MatrixType;
+// import org.ejml.simple.SimpleMatrix;
+// import org.ejml.sparse.csc.RandomMatrices_DSCC;
+// import org.gitia.froog.statistics.Clock;
+// import org.gitia.froog.util.SparseMatrix;
 
 /**
  *
@@ -38,25 +38,25 @@ public class TestSparse {
     public static double PERCENT = 0.2;
 
     public static void main(String[] args) {
-        Clock c = new Clock();
-        c.start();
-        DMatrixSparseCSC Z = SparseMatrix.randomOnesColumnsCSC(ROWS, COLS, PERCENT);
-        c.stop();
-        c.printTime("Creation multithreading sparse matrix");
-        //Z.print();
+        // Clock c = new Clock();
+        // c.start();
+        // DMatrixSparseCSC Z = SparseMatrix.randomOnesColumnsCSC(ROWS, COLS, PERCENT);
+        // c.stop();
+        // c.printTime("Creation multithreading sparse matrix");
+        // //Z.print();
         
 
-        SimpleMatrix B = SimpleMatrix.random_DDRM(300, 716, -10, 10, new Random());
+        // SimpleMatrix B = SimpleMatrix.random_DDRM(300, 716, -10, 10, new Random());
         
-        //CommonOps_DSCC.elementMult(Z, , Z, gw, gx);
-        SimpleMatrix C = new SimpleMatrix(300, COLS, MatrixType.DDRM);
-        c.start();
-        //CommonOps_DSCC.elementMult(Z, Z, Z, gw, gx);
-        Random r = new Random();
-        c.start();
-        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(ROWS, COLS, (int) (ROWS * COLS * PERCENT), r);
-        c.stop();
-        c.printTime("Creation random sparse matrix");
+        // //CommonOps_DSCC.elementMult(Z, , Z, gw, gx);
+        // SimpleMatrix C = new SimpleMatrix(300, COLS, MatrixType.DDRM);
+        // c.start();
+        // //CommonOps_DSCC.elementMult(Z, Z, Z, gw, gx);
+        // Random r = new Random();
+        // c.start();
+        // DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(ROWS, COLS, (int) (ROWS * COLS * PERCENT), r);
+        // c.stop();
+        // c.printTime("Creation random sparse matrix");
 
     }
 }
