@@ -28,7 +28,7 @@ import org.gitia.froog.optimizer.SCG;
 import org.gitia.froog.optimizer.SGD;
 import org.gitia.froog.optimizer.accelerate.AccelerateRule;
 import org.gitia.froog.optimizer.conjugategradient.beta.BetaFactory;
-import org.gitia.jdataanalysis.data.OneHot;
+import org.gitia.froog.util.data.OneHot;
 
 /**
  *

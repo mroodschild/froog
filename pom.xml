@@ -80,18 +80,18 @@
             </plugin>
         </plugins>
     </build>
-    <repositories>
+    <!-- <repositories>
         <repository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
-    </repositories>
+    </repositories> -->
     <dependencies>
-        <dependency>
+        <!-- <dependency>
             <groupId>com.github.mroodschild</groupId>
             <artifactId>JDataAnalysis</artifactId>
             <version>0.5.1</version>
-        </dependency>
+        </dependency> -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

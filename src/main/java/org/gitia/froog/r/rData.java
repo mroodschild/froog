@@ -22,7 +22,7 @@ package org.gitia.froog.r;
 import org.ejml.simple.SimpleMatrix;
 import org.gitia.froog.statistics.Compite;
 import org.gitia.froog.statistics.ConfusionMatrix;
-import org.gitia.jdataanalysis.data.OneHot;
+import org.gitia.froog.util.data.OneHot;
 
 /**
  *

@@ -19,9 +19,10 @@
  */
 package org.gitia.froog.r;
 
-import org.gitia.jdataanalysis.data.OneHot;
 import org.junit.Test;
 import static org.junit.Assert.*;
+
+import org.gitia.froog.util.data.OneHot;
 import org.junit.Before;
 import org.junit.Ignore;
 

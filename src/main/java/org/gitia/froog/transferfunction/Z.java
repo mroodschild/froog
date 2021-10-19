@@ -18,7 +18,7 @@ package org.gitia.froog.transferfunction;
 import java.util.stream.IntStream;
 
 import org.ejml.dense.row.CommonOps_MT_DDRM;
-import org.ejml.ops.CommonOps_BDRM;
+//import org.ejml.ops.CommonOps_BDRM;
 import org.ejml.simple.SimpleMatrix;
 
 /**
