@@ -88,12 +88,7 @@ Froog is in Maven jitpack.io and can easily be added to Maven, and similar proje
         <dependency>
             <groupId>com.github.mroodschild</groupId>
             <artifactId>froog</artifactId>
-            <version>0.5</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.mroodschild</groupId>
-            <artifactId>JDataAnalysis</artifactId>
-            <version>0.5</version>
+            <version>0.5.1</version>
         </dependency>
     </dependencies>
 ```
@@ -104,7 +99,7 @@ Froog is in Maven jitpack.io and can easily be added to Maven, and similar proje
 
 The main Froog modules depends on the following libraries
 
-- [ EJML 0.37         ]  ( http://ejml.org )
+- [ EJML 0.41         ]  ( http://ejml.org )
 - [ Apache Commons-lang3          ]  ( https://commons.apache.org/proper/commons-lang/ )
 
 The following is required for unit tests
