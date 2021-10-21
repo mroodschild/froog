@@ -19,7 +19,6 @@
  */
 package org.gitia.froog.optimizer;
 
-import org.ejml.simple.SimpleMatrix;
 import org.gitia.froog.Feedforward;
 import org.gitia.froog.layer.Dense;
 import org.gitia.froog.transferfunction.TransferFunction;
@@ -31,16 +30,16 @@ import org.gitia.froog.transferfunction.TransferFunction;
 public class TestShallow {
 
     public static void main(String[] args) {
-        TestShallow ts = new TestShallow();
-        SimpleMatrix X = new SimpleMatrix(ts.getX());
-        SimpleMatrix Y = new SimpleMatrix(ts.getY());
+        // TestShallow ts = new TestShallow();
+        // SimpleMatrix X = new SimpleMatrix(ts.getX());
+        // SimpleMatrix Y = new SimpleMatrix(ts.getY());
 
-        double[][] w1 = {
-            {-0.00416758, -0.00056267},
-            {-0.02136196, 0.01640271},
-            {-0.01793436, -0.00841747},
-            {0.00502881, -0.01245288}};
-        SimpleMatrix W1 = new SimpleMatrix(w1);
+        // double[][] w1 = {
+        //     {-0.00416758, -0.00056267},
+        //     {-0.02136196, 0.01640271},
+        //     {-0.01793436, -0.00841747},
+        //     {0.00502881, -0.01245288}};
+        // SimpleMatrix W1 = new SimpleMatrix(w1);
 
 //        b1 = [[ 0.]
 // [ 0.]

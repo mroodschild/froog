@@ -47,7 +47,7 @@ public class BackpropagationTest {
         SimpleMatrix output = null;
         Backpropagation instance = new Backpropagation();
         instance.train(net, input, output);
-        // TODO review the generated test code and remove the default call to fail.
+        // review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
 
@@ -64,7 +64,7 @@ public class BackpropagationTest {
         double[][] output = null;
         Backpropagation instance = new Backpropagation();
         instance.train(net, input, output);
-        // TODO review the generated test code and remove the default call to fail.
+        // review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
 
@@ -77,7 +77,7 @@ public class BackpropagationTest {
         System.out.println("init");
         Backpropagation instance = new Backpropagation();
         instance.init();
-        // TODO review the generated test code and remove the default call to fail.
+        // review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
 
@@ -94,7 +94,7 @@ public class BackpropagationTest {
         double expResult = 0.0;
         double result = instance.loss(yCalc, yObs);
         assertEquals(expResult, result, 0.0);
-        // TODO review the generated test code and remove the default call to fail.
+        // review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
 
@@ -109,7 +109,7 @@ public class BackpropagationTest {
         double expResult = 0.0;
         double result = instance.L2_reg(1);
         assertEquals(expResult, result, 0.0);
-        // TODO review the generated test code and remove the default call to fail.
+        // review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
 
@@ -123,7 +123,7 @@ public class BackpropagationTest {
         Feedforward net = null;
         Backpropagation instance = new Backpropagation();
         instance.setNet(net);
-        // TODO review the generated test code and remove the default call to fail.
+        // review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
 
@@ -138,7 +138,7 @@ public class BackpropagationTest {
         Feedforward expResult = null;
         Feedforward result = instance.getNet();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
+        // review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
 
@@ -152,7 +152,7 @@ public class BackpropagationTest {
         SimpleMatrix inputTest = null;
         Backpropagation instance = new Backpropagation();
         instance.setInputTest(inputTest);
-        // TODO review the generated test code and remove the default call to fail.
+        // review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
 
@@ -166,7 +166,7 @@ public class BackpropagationTest {
         SimpleMatrix outputTest = null;
         Backpropagation instance = new Backpropagation();
         instance.setOutputTest(outputTest);
-        // TODO review the generated test code and remove the default call to fail.
+        // review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
 
@@ -180,7 +180,7 @@ public class BackpropagationTest {
         int testFrecuency = 0;
         Backpropagation instance = new Backpropagation();
         instance.setTestFrecuency(testFrecuency);
-        // TODO review the generated test code and remove the default call to fail.
+        // review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
 
@@ -194,7 +194,7 @@ public class BackpropagationTest {
         boolean classification = false;
         Backpropagation instance = new Backpropagation();
         instance.setClassification(classification);
-        // TODO review the generated test code and remove the default call to fail.
+        // review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
     

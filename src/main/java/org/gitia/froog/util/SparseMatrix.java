@@ -22,8 +22,6 @@ package org.gitia.froog.util;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.IntStream;
-
 import org.apache.commons.lang3.ArrayUtils;
 import org.ejml.data.DMatrixSparseTriplet;
 //import org.ejml.ops.ConvertDMatrixStruct;
@@ -60,34 +58,34 @@ public class SparseMatrix {
 //
 //        return null;
 //    }
-    /**
-     *
-     * @param numRows
-     * @param numCols
-     * @param percent
-     * @return
-     */
-    private static DMatrixSparseTriplet randomOnesDouble(int numRows, int numCols, double percent) {
+    // /**
+    //  *
+    //  * @param numRows
+    //  * @param numCols
+    //  * @param percent
+    //  * @return
+    //  */
+    // private static DMatrixSparseTriplet randomOnesDouble(int numRows, int numCols, double percent) {
 
-        //cantidad de elementos no nulos
-        int aux = (int) (numRows * percent);
-        final int val = (aux > 0) ? aux : 1;
-        //minimo un valor (por las redes neuronales)
-        final int total_number = val * numCols;
-        DMatrixSparseTriplet work = new DMatrixSparseTriplet(numRows, numCols, total_number);
-        IntStream.range(0, numCols)//.parallel()
-                .forEach(j -> {
-                    //  for (int j = 0; j < numCols; j++) {
+    //     //cantidad de elementos no nulos
+    //     int aux = (int) (numRows * percent);
+    //     final int val = (aux > 0) ? aux : 1;
+    //     //minimo un valor (por las redes neuronales)
+    //     final int total_number = val * numCols;
+    //     DMatrixSparseTriplet work = new DMatrixSparseTriplet(numRows, numCols, total_number);
+    //     IntStream.range(0, numCols)//.parallel()
+    //             .forEach(j -> {
+    //                 //  for (int j = 0; j < numCols; j++) {
 
-                    shuffleList(numRows, val, j, work);
-                    //double l[] = new double[numRows];
-                    //shuffle(l, val, j, work);
-                    //}
-                });
+    //                 shuffleList(numRows, val, j, work);
+    //                 //double l[] = new double[numRows];
+    //                 //shuffle(l, val, j, work);
+    //                 //}
+    //             });
 
-        System.out.println("Tiempo creando:\t" + tiempo1 / 1000 + "\ttiempo agregando\t" + tiempo2 / 1000);
-        return work;
-    }
+    //     System.out.println("Tiempo creando:\t" + tiempo1 / 1000 + "\ttiempo agregando\t" + tiempo2 / 1000);
+    //     return work;
+    // }
 
     public static void shuffle(double[] vectorVacio, int cantValores, int colIndex, DMatrixSparseTriplet work) {
         Clock c = new Clock();

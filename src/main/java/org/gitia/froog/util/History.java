@@ -24,10 +24,10 @@ import java.util.List;
  */
 public class History {
 
-    List<Error> trainCost = new ArrayList();
-    List<Error> testCost = new ArrayList();
-    List<Error> trainAcc = new ArrayList();
-    List<Error> testAcc = new ArrayList();
+    List<Error> trainCost = new ArrayList<>();
+    List<Error> testCost = new ArrayList<>();
+    List<Error> trainAcc = new ArrayList<>();
+    List<Error> testAcc = new ArrayList<>();
 
     public History() {
     }

@@ -167,8 +167,8 @@ public class Batchnorm implements Layer {
 
     public void backwardpass(SimpleMatrix dout){
         
-        int N = dout.numCols();
-        int D = dout.numRows();
+        // int N = dout.numCols();
+        // int D = dout.numRows();
         
 //        mean = new SimpleMatrix(row, 1, MatrixType.DDRM);// [neuronas x 1]
 //        xmean = new SimpleMatrix(row, cols, MatrixType.DDRM);// [neuronas x datos]
@@ -181,12 +181,12 @@ public class Batchnorm implements Layer {
 //        out = new SimpleMatrix(row, 1, MatrixType.DDRM);// [neuronas x datos]
         
         //step 9
-        dbeta = Matrix.sum(dout, 0);
-        SimpleMatrix dgammax = dout;
+        // dbeta = Matrix.sum(dout, 0);
+        // SimpleMatrix dgammax = dout;
         
-        //step 8
-        SimpleMatrix dgamma = Matrix.sum(dgammax.elementMult(xhat), 0);
-        SimpleMatrix dxhat = dgammax.mult(dgamma);
+        // //step 8
+        // SimpleMatrix dgamma = Matrix.sum(dgammax.elementMult(xhat), 0);
+        // SimpleMatrix dxhat = dgammax.mult(dgamma);
         
         
         

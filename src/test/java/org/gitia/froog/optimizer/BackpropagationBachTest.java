@@ -67,7 +67,7 @@ public class BackpropagationBachTest {
         Backpropagation instance = new Backpropagation();
         instance.setEpoch(iteraciones);
         instance.train(net, input, output);
-        // TODO review the generated test code and remove the default call to fail.
+        //  review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
 
@@ -82,7 +82,7 @@ public class BackpropagationBachTest {
 //        double expResult = 0.0;
 //        double result = instance.computeGradient();
 //        assertEquals(expResult, result, 0.0);
-//        // TODO review the generated test code and remove the default call to fail.
+//        //  review the generated test code and remove the default call to fail.
 //        fail("The test case is a prototype.");
 //    }
 
@@ -96,7 +96,7 @@ public class BackpropagationBachTest {
 //        double m = 0.0;
 //        Backpropagation instance = new Backpropagation();
 //        instance.updateParameters(m);
-//        // TODO review the generated test code and remove the default call to fail.
+//        //  review the generated test code and remove the default call to fail.
 //        fail("The test case is a prototype.");
     }
 
@@ -113,7 +113,7 @@ public class BackpropagationBachTest {
 //        double expResult = 0.0;
 //        double result = instance.cost(input, Yobs);
 //        assertEquals(expResult, result, 0.0);
-//        // TODO review the generated test code and remove the default call to fail.
+//        //  review the generated test code and remove the default call to fail.
 //        fail("The test case is a prototype.");
 //    }
 
@@ -130,7 +130,7 @@ public class BackpropagationBachTest {
 //        double expResult = 0.0;
 //        double result = instance.cost(input, output);
 //        assertEquals(expResult, result, 0.0);
-//        // TODO review the generated test code and remove the default call to fail.
+//        //  review the generated test code and remove the default call to fail.
 //        fail("The test case is a prototype.");
 //    }
 

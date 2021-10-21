@@ -94,7 +94,7 @@ public class GradientTest {
             System.out.println("gB"+i);
             gB.print("%.8f");
         }
-        // TODO review the generated test code and remove the default call to fail.
+        // review the generated test code and remove the default call to fail.
         // fail("The test case is a prototype.");
     }
 

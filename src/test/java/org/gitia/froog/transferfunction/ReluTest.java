@@ -64,7 +64,7 @@ public class ReluTest {
         double[] expResult = {0, 1, 0, 0.1, 0};
         SimpleMatrix result = instance.output(z);
         assertArrayEquals(expResult, result.getDDRM().getData(), 0);
-        // TODO review the generated test code and remove the default call to fail.
+        // review the generated test code and remove the default call to fail.
     }
 
     /**
@@ -91,7 +91,7 @@ public class ReluTest {
         String expResult = "relu";
         String result = instance.toString();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
+        // review the generated test code and remove the default call to fail.
     }
 
 }

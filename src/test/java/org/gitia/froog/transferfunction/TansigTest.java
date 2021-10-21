@@ -71,12 +71,12 @@ public class TansigTest {
 
     @Test
     public void testTanh() {
-        double[][] z1 = {{1.7386459, 1.74687437, 1.74830797},
-        {-0.81350569, -0.73394355, -0.78767559},
-        {0.29893918, 0.32272601, 0.34788465},
-        {-0.2278403, -0.2632236, -0.22336567}};
-        SimpleMatrix Z1 = new SimpleMatrix(z1);
-        Tansig tansig = new Tansig();
+        // double[][] z1 = {{1.7386459, 1.74687437, 1.74830797},
+        // {-0.81350569, -0.73394355, -0.78767559},
+        // {0.29893918, 0.32272601, 0.34788465},
+        // {-0.2278403, -0.2632236, -0.22336567}};
+        // SimpleMatrix Z1 = new SimpleMatrix(z1);
+        // Tansig tansig = new Tansig();
 //        System.out.println("tanh");
 //        tansig.output(Z1).print("%.8f");
     }

@@ -51,8 +51,8 @@ public class rFeedforwardTest {
     public void testOut() {
         System.out.println("out");
         double[] matrix = {0.4, 0.5, 0.6, 0.7, 0.8, 0.9};
-        int row = 2;
-        int col = 3;
+        // int row = 2;
+        // int col = 3;
         rFeedforward net = new rFeedforward();
         net.addLayer(2, 2, "tansig");
         net.addLayer(2, 1, "purelim");
@@ -71,7 +71,7 @@ public class rFeedforwardTest {
         System.out.println("org.gitia.froog.r.rFeedforwardTest.testOneHot()");
         rFeedforward instance = new rFeedforward();
         String[] words = {"hola", "mundo", "matias", "mundo"};
-        double[] resultados = instance.oneHot(words);
+        // double[] resultados = instance.oneHot(words);
         
         double[] expResult = {1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0};
         double[] result = instance.oneHot(words);

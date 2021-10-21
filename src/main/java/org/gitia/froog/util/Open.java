@@ -101,6 +101,7 @@ public class Open {
      * @param archivo the archivo to set
      */
     public void setArchivo(File archivo) {
-        this.archivo = archivo;
+        // this.archivo = archivo;
+        Open.archivo = archivo;
     }
 }
