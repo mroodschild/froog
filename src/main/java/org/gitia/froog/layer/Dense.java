@@ -39,10 +39,10 @@ public class Dense implements Layer {
     protected SimpleMatrix W;//W[neuronas x entrada]
     protected SimpleMatrix B;//B[neuronas x 1]
     protected TransferFunction function;
-    WeightInit initWeight = WeightFactory.getFunction(WeightInit.DEFAULT);
-    double keepProb = 0;
-    SimpleMatrix Drop;
-    DMatrixSparseCSC DropSparse;
+    protected WeightInit initWeight = WeightFactory.getFunction(WeightInit.DEFAULT);
+    protected double keepProb = 0;
+    protected SimpleMatrix Drop;
+    protected DMatrixSparseCSC DropSparse;
     
 
     protected Random random = new Random();
