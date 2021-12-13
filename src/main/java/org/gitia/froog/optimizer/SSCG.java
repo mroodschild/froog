@@ -41,7 +41,7 @@ public class SSCG extends Backpropagation {
     int k = 0;
     int N = 0;
     boolean success = true;
-    protected int cantidadBach;
+    protected int cantidadBatch;
 
     SimpleMatrix Wk;
     SimpleMatrix W_new;
@@ -73,28 +73,28 @@ public class SSCG extends Backpropagation {
         this.output = output;
         init();//
         initBatch();
-        SimpleMatrix bach_in = bachData(0, input);
-        SimpleMatrix bach_out = bachData(0, output);
+        SimpleMatrix batch_in = batchData(0, input);
+        SimpleMatrix batch_out = batchData(0, output);
 
         //primeraDireccion();//paso1
-        rk = computeGradient(net, bach_in, bach_out).negative();
+        rk = computeGradient(net, batch_in, batch_out).negative();
         pk = rk.copy();
         success = true;
         for (k = 0; k < epoch; k++) {
-            for (int j = 0; j < cantidadBach; j++) {
-                bach_in = bachData(j, input);
-                bach_out = bachData(j, output);
+            for (int j = 0; j < cantidadBatch; j++) {
+                batch_in = batchData(j, input);
+                batch_out = batchData(j, output);
                 for (int i = 0; i < batchRefresh; i++) {
                     
                     //informacionSegOrden();//paso 2
                     if (success == true) {
                         sigmaK = sigma / NormOps_DDRM.normP2(pk.getDDRM());
                         net.setParameters(Wk);
-                        SimpleMatrix g1 = computeGradient(net, bach_in, bach_out);
+                        SimpleMatrix g1 = computeGradient(net, batch_in, batch_out);
 //                Wk.printDimensions();
 //                pk.printDimensions();
                         net.setParameters(Wk.plus(pk.transpose().scale(sigmaK)));
-                        SimpleMatrix g2 = computeGradient(net, bach_in, bach_out);
+                        SimpleMatrix g2 = computeGradient(net, batch_in, batch_out);
                         Sk = g2.minus(g1).divide(sigmaK);
                         deltaK = pk.transpose().mult(Sk).get(0);
                     }
@@ -111,15 +111,15 @@ public class SSCG extends Backpropagation {
                     alphak = uk / deltaK;
                     //comparacionParametros();//paso 6
                     net.setParameters(Wk);
-                    double E = lossFunction.costAll(net.output(bach_in), bach_out);
+                    double E = lossFunction.costAll(net.output(batch_in), batch_out);
                     net.setParameters(Wk.plus(pk.transpose().scale(alphak)));
-                    double E_conj = lossFunction.costAll(net.output(bach_in), bach_out);
+                    double E_conj = lossFunction.costAll(net.output(batch_in), batch_out);
                     nablaK = 2 * deltaK * (E - E_conj) / Math.pow(uk, 2);
                     //evalNabla();//paso 7
                     if (nablaK >= 0) {
                         W_new = Wk.plus(pk.transpose().scale(alphak));
                         net.setParameters(W_new);
-                        r_new = computeGradient(net, bach_in, bach_out).negative();
+                        r_new = computeGradient(net, batch_in, batch_out).negative();
                         lambdaT = 0;
                         success = true;
                         if (k % N == 0) {
@@ -170,20 +170,20 @@ public class SSCG extends Backpropagation {
     }
 
     /**
-     * Aquí inicializamos el bach, indicamos cuantas partes serán formadas,
-     * según el bachSize, esto será guardado en cantidadBach, que luego será
+     * Aquí inicializamos el batch, indicamos cuantas partes serán formadas,
+     * según el batchSize, esto será guardado en cantidadBatch, que luego será
      * utilizado en la selección de los datos.<br>
      *
-     * Si bachSize menor o igual a 0, se tomarán todos los datos como tamaño de
-     * bachSize.
+     * Si batchSize menor o igual a 0, se tomarán todos los datos como tamaño de
+     * batchSize.
      *
      */
     protected void initBatch() {
         if (batchSize <= 0) {
             batchSize = this.input.numCols();
-            cantidadBach = 1;
+            cantidadBatch = 1;
         } else {
-            cantidadBach = this.input.numCols() / batchSize;
+            cantidadBatch = this.input.numCols() / batchSize;
         }
     }
 
@@ -193,14 +193,14 @@ public class SSCG extends Backpropagation {
      * @param data
      * @return
      */
-    protected SimpleMatrix bachData(int part, SimpleMatrix data) {
-        SimpleMatrix bach;
-        if (part < (cantidadBach - 1)) {
-            bach = data.extractMatrix(0, SimpleMatrix.END, batchSize * part, batchSize * part + batchSize);
+    protected SimpleMatrix batchData(int part, SimpleMatrix data) {
+        SimpleMatrix batch;
+        if (part < (cantidadBatch - 1)) {
+            batch = data.extractMatrix(0, SimpleMatrix.END, batchSize * part, batchSize * part + batchSize);
         } else {//como es la última parte tomamos los datos restantes.
-            bach = data.extractMatrix(0, SimpleMatrix.END, batchSize * part, SimpleMatrix.END);
+            batch = data.extractMatrix(0, SimpleMatrix.END, batchSize * part, SimpleMatrix.END);
         }
-        return bach;
+        return batch;
     }
 
     public void setBatchSize(int batchSize) {

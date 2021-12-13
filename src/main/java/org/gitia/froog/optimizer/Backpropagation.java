@@ -37,7 +37,7 @@ import org.gitia.froog.util.History;
  */
 public class Backpropagation extends TrainingAlgorithm {
 
-    protected double costOverall;//costo despues de pasar todos los datos hasta terminar el mini bach
+    protected double costOverall;//costo despues de pasar todos los datos hasta terminar el mini batch
     protected double costOverallTest = -1;
     protected double costPartial;//costo parcial dato por dato
     protected List<SimpleMatrix> deriv = new ArrayList<>();//derivadas

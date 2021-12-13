@@ -34,7 +34,7 @@ public class SGD extends Backpropagation {
 
     //private static final Logger log = LogManager.getLogger(SGD.class);
 
-    protected int cantidadBach;
+    protected int cantidadBatch;
     int batchSize = 0; //tamaño del batch declarado por el usuario
     List<SimpleMatrix> Drop;
     boolean isDropOut = false;
@@ -58,23 +58,23 @@ public class SGD extends Backpropagation {
         Clock clock = new Clock();
         int L = net.getLayers().size() - 1;
         for (int i = 0; i < this.epoch; i++) {
-            for (int j = 0; j < cantidadBach; j++) {
+            for (int j = 0; j < cantidadBatch; j++) {
                 clock.start();
-                SimpleMatrix bach_in = bachData(j, input);
-                SimpleMatrix bach_out = bachData(j, output);
-                Activations = (isDropOut) ? net.activationsDropout(bach_in) : net.activations(bach_in);
-                costOverall = loss(Activations.get(L), bach_out);
+                SimpleMatrix batch_in = batchData(j, input);
+                SimpleMatrix batch_out = batchData(j, output);
+                Activations = (isDropOut) ? net.activationsDropout(batch_in) : net.activations(batch_in);
+                costOverall = loss(Activations.get(L), batch_out);
                 this.cost.add(costOverall);
-                gradient.compute(net, Activations, gradW, gradB, bach_in, bach_out);
-                updateRule.updateParameters(net, (double) bach_in.numCols(), L2_Lambda, learningRate, gradW, gradB);
+                gradient.compute(net, Activations, gradW, gradB, batch_in, batch_out);
+                updateRule.updateParameters(net, (double) batch_in.numCols(), L2_Lambda, learningRate, gradW, gradB);
                 if (iteracion % printFrecuency == 0) {
-                    printScreen(net, Activations.get(L), bach_out, clock, inputTest, outputTest, iteracion, testFrecuency, classification);
+                    printScreen(net, Activations.get(L), batch_out, clock, inputTest, outputTest, iteracion, testFrecuency, classification);
                 }
                 iteracion++;
             }
         }
         System.out.println("Finish Training, Resume:");
-        printScreen(net, Activations.get(L), bachData(cantidadBach-1, output), clock, inputTest, outputTest, iteracion, testFrecuency, classification);
+        printScreen(net, Activations.get(L), batchData(cantidadBatch-1, output), clock, inputTest, outputTest, iteracion, testFrecuency, classification);
     }
 
     /**
@@ -94,39 +94,39 @@ public class SGD extends Backpropagation {
     }
 
     /**
-     * Aquí inicializamos el bach, indicamos cuantas partes serán formadas,
-     * según el bachSize, esto será guardado en cantidadBach, que luego será
+     * Aquí inicializamos el batch, indicamos cuantas partes serán formadas,
+     * según el batchSize, esto será guardado en cantidadbatch, que luego será
      * utilizado en la selección de los datos.<br>
      *
-     * Si bachSize menor o igual a 0, se tomarán todos los datos como tamaño de
-     * bachSize.
+     * Si batchSize menor o igual a 0, se tomarán todos los datos como tamaño de
+     * batchSize.
      *
      */
     protected void initBatch() {
         if (batchSize <= 0) {
             batchSize = this.input.numCols();
-            cantidadBach = 1;
+            cantidadBatch = 1;
         } else {
-            cantidadBach = this.input.numCols() / batchSize;
+            cantidadBatch = this.input.numCols() / batchSize;
         }
     }
 
-    protected SimpleMatrix bachData(int part, SimpleMatrix data) {
-        SimpleMatrix bach;
-        if (part < (cantidadBach - 1)) {
-            bach = data.extractMatrix(0, SimpleMatrix.END, batchSize * part, batchSize * part + batchSize);
+    protected SimpleMatrix batchData(int part, SimpleMatrix data) {
+        SimpleMatrix batch;
+        if (part < (cantidadBatch - 1)) {
+            batch = data.extractMatrix(0, SimpleMatrix.END, batchSize * part, batchSize * part + batchSize);
         } else {//como es la última parte tomamos los datos restantes.
-            bach = data.extractMatrix(0, SimpleMatrix.END, batchSize * part, SimpleMatrix.END);
+            batch = data.extractMatrix(0, SimpleMatrix.END, batchSize * part, SimpleMatrix.END);
         }
-        return bach;
+        return batch;
     }
 
     /**
      *
-     * @param bachSize por defecto = 0 (sin bach)
+     * @param batchSize por defecto = 0 (sin batch)
      */
-    public void setBatchSize(int bachSize) {
-        this.batchSize = bachSize;
+    public void setBatchSize(int batchSize) {
+        this.batchSize = batchSize;
         System.out.println("Batch Size:\t" + this.batchSize);
     }
 

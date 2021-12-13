@@ -48,20 +48,19 @@ public class SGD_Numeric extends SGD {
         initBatch();
         Clock clock = new Clock();
         for (int i = 0; i < this.epoch; i++) {
-            for (int j = 0; j < cantidadBach; j++) {
+            for (int j = 0; j < cantidadBatch; j++) {
                 clock.start();
-                SimpleMatrix bach_in = bachData(j, input);
-                SimpleMatrix bach_out = bachData(j, output);
-                Activations = net.activations(bach_in);
-                costOverall = loss(Activations.get(Activations.size() - 1), bach_out);
+                SimpleMatrix batch_in = batchData(j, input);
+                SimpleMatrix batch_out = batchData(j, output);
+                Activations = net.activations(batch_in);
+                costOverall = loss(Activations.get(Activations.size() - 1), batch_out);
                 this.cost.add(costOverall);
-                //computeGradient(bach_in, bach_out);
                 NumericGradient ng = new NumericGradient();
-                ng.compute(net, gradW, gradB, lossFunction, bach_in, bach_out);
-                gradient.compute(net, Activations, gradW, gradB, bach_in, bach_out);
-                updateRule.updateParameters(net, (double) bach_in.numCols(), L2_Lambda, learningRate, gradW, gradB);
+                ng.compute(net, gradW, gradB, lossFunction, batch_in, batch_out);
+                gradient.compute(net, Activations, gradW, gradB, batch_in, batch_out);
+                updateRule.updateParameters(net, (double) batch_in.numCols(), L2_Lambda, learningRate, gradW, gradB);
                 if (iteracion % printFrecuency == 0) {
-                    printScreen(net, bach_in, bach_out, clock, inputTest, outputTest, iteracion, testFrecuency, classification);
+                    printScreen(net, batch_in, batch_out, clock, inputTest, outputTest, iteracion, testFrecuency, classification);
                 }
                 iteracion++;
             }

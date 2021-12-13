@@ -51,7 +51,7 @@ public class TrainingAlgorithm {
     protected List<SimpleMatrix> gradW = new ArrayList<>();//gradientes para cada capa
     protected List<SimpleMatrix> gradB = new ArrayList<>();//gradientes para cada capa
     protected int epoch = 0;
-    //protected int cantidadBach;
+    //protected int cantidadBatch;
     protected int testFrecuency = 1;
     protected int printFrecuency = 1;
     protected boolean classification = false;
