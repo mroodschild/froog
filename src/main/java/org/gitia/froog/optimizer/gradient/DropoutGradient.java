@@ -57,16 +57,9 @@ public class DropoutGradient implements Gradient{
         SimpleMatrix dA;
         for (int i = L - 1; i >= 0; i--) {
             Dense l = net.getLayers().get(i);
-<<<<<<< HEAD
             dA = l.getFunction().derivative(A);
             if(l.getKeepProb() > 0 && l.getKeepProb() < 1)
                 dA = dA.elementMult(l.getDrop()).divide(l.getKeepProb());
-=======
-            dA = l.get(i).getFunction().derivative(A);
-            if (l.getKeepProb() > 0 && l.getKeepProb() < 1){
-                dA = dA.elementMult(l.getDrop()).divide(l.getKeepProb());
-            }
->>>>>>> 744287962a7eb9e54e58367f62784962828c5449
             dZ = W.transpose().mult(dZ).elementMult(dA);
             A = (i > 0) ? Activations.get(i - 1) : X;
             dW = dZ.mult(A.transpose()).divide(m);
