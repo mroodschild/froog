@@ -52,21 +52,17 @@ public class UtilSimpleMatrix {
      */
     public static SimpleMatrix randomOnesSM(int numRows, int numCols, double percent, Random r) {
 
-        //cantidad de elementos no nulos
-        int aux = (int) (numRows * percent);
+        final int keep = (int)(percent * 100);
 
         //minimo un valor (por las redes neuronales)
-        final int val = (aux > 0) ? aux : 1;
+        //final int val = (aux > 0) ? aux : 1;
         SimpleMatrix m = new SimpleMatrix(numRows, numCols, MatrixType.DDRM);
         IntStream.range(0, numCols).parallel()
                 .forEach(j -> {
                     double l[] = new double[numRows];
-                    for (int i = 0; i < val; i++) {
-                        l[i] = 1;
+                    for(int i = 0; i < l.length;i++){
+                        m.set(i, j, (r.nextInt(100) < keep)? 1 : 0);
                     }
-                    ArrayUtils.shuffle(l, r);
-
-                    m.setColumn(j, 0, l);
                 });
         return m;
     }

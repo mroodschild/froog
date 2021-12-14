@@ -246,15 +246,7 @@ public class Dense implements Layer {
      * @return return outputs after doing dropuot
      */
     public SimpleMatrix outputDropout(SimpleMatrix a) {
-        if (this.keepProb > 0 && this.keepProb < 1) {
-            //A = neurons x m
-//            Drop = SimpleMatrix.random_DDRM(W.numRows(), a.numCols(), 0, 1, this.random);
-//            BMatrixRMaj keepMatrix = new BMatrixRMaj(Drop.numRows(), Drop.numCols());
-//            CommonOps_DDRM.elementLessThan(Drop.getDDRM(), keepProb, keepMatrix);
-//            int size = Drop.getNumElements();
-//            for (int i = 0; i < size; i++) {
-//                Drop.set(i, (keepMatrix.get(i)) ? 1 : 0);
-//            }            
+        if (this.keepProb > 0 && this.keepProb < 1) {         
             Drop = UtilSimpleMatrix.randomOnesSM(W.numRows(), a.numCols(), keepProb, this.random);
             return output(a).elementMult(Drop).divide(keepProb);
         } else {
