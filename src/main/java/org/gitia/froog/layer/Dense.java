@@ -60,14 +60,14 @@ public class Dense implements Layer {
      * logsig, tansig, purelim, softplus <br>
      * <br>
      *
-     * @param input number of inputs
-     * @param output number of neurons
+     * @param inputSize number of inputs
+     * @param units Positive integer, number of neurons
      * @param funcion transfer function
      * @param WeightInit
      * @param random
      */
-    public Dense(int input, int output, String funcion, String WeightInit, Random random) {
-        this(input, output, funcion, WeightInit, 0, random);
+    public Dense(int inputSize, int units, String funcion, String WeightInit, Random random) {
+        this(inputSize, units, funcion, WeightInit, 0, random);
     }
     
     /**
@@ -77,14 +77,14 @@ public class Dense implements Layer {
      * logsig, tansig, purelim, softplus <br>
      * <br>
      *
-     * @param input number of inputs
-     * @param output number of neurons
+     * @param inputSize number of inputs
+     * @param units Positive integer, number of neurons
      * @param funcion transfer function
      * @param WeightInit
      * @param random
      */
-    public Dense(int input, int output, TransferFunction funcion, String WeightInit, Random random) {
-        this(input, output, funcion, WeightInit, 0, random);
+    public Dense(int inputSize, int units, TransferFunction funcion, String WeightInit, Random random) {
+        this(inputSize, units, funcion, WeightInit, 0, random);
     }
 
     /**
@@ -94,15 +94,15 @@ public class Dense implements Layer {
      * logsig, tansig, purelim, softplus <br>
      * <br>
      *
-     * @param input number of inputs
-     * @param output number of neurons
+     * @param inputSize number of inputs
+     * @param units Positive integer, number of neurons
      * @param funcion transfer function
      * @param WeightInit
      * @param keepProb for dropout
      * @param random
      */
-    public Dense(int input, int output, String funcion, String WeightInit, double keepProb, Random random) {
-        this(input, output, FunctionFactory.getFunction(funcion), WeightInit, keepProb, random);
+    public Dense(int inputSize, int units, String funcion, String WeightInit, double keepProb, Random random) {
+        this(inputSize, units, FunctionFactory.getFunction(funcion), WeightInit, keepProb, random);
     }
     
     /**
@@ -112,23 +112,23 @@ public class Dense implements Layer {
      * logsig, tansig, purelim, softplus <br>
      * <br>
      *
-     * @param input number of inputs
-     * @param output number of neurons
+     * @param inputSize number of inputs
+     * @param units Positive integer, number of neurons
      * @param funcion transfer function
      * @param WeightInit
      * @param keepProb for dropout
      * @param random
      */
-    public Dense(int input, int output, TransferFunction funcion, String WeightInit, double keepProb, Random random) {
+    public Dense(int inputSize, int units, TransferFunction funcion, String WeightInit, double keepProb, Random random) {
         this.random = random;
         initWeight = WeightFactory.getFunction(WeightInit);
         initWeight.setRandom(this.random);
-        this.W = new SimpleMatrix(output, input);
-        this.B = new SimpleMatrix(output, 1);
+        this.W = new SimpleMatrix(units, inputSize);
+        this.B = new SimpleMatrix(units, 1);
         initWeight.init(W);
         this.keepProb = keepProb;
         this.function = funcion;
-        System.out.println("Layer\tinput:\t" + input + "\tneurons:\t" + output + "\tfunction:\t" + funcion.toString() + "\tinit:\t" + initWeight.toString() + "\tkeepProb:\t" + this.keepProb);
+        System.out.println("Layer\tinput:\t" + inputSize + "\tneurons:\t" + units + "\tfunction:\t" + funcion.toString() + "\tinit:\t" + initWeight.toString() + "\tkeepProb:\t" + this.keepProb);
     }
 
     /**
@@ -138,13 +138,13 @@ public class Dense implements Layer {
      * logsig, tansig, purelim, softplus <br>
      * <br>
      *
-     * @param input cantidad de entradas
-     * @param output cantidad de neuronas
+     * @param inputSize cantidad de entradas
+     * @param units cantidad de neuronas
      * @param funcion función usadas en las neuronas
      * @param random heredado
      */
-    public Dense(int input, int output, String funcion, Random random) {
-        this(input, output, funcion, WeightInit.DEFAULT, random);
+    public Dense(int inputSize, int units, String funcion, Random random) {
+        this(inputSize, units, funcion, WeightInit.DEFAULT, random);
     }
     
     /**
@@ -154,13 +154,13 @@ public class Dense implements Layer {
      * logsig, tansig, purelim, softplus <br>
      * <br>
      *
-     * @param input cantidad de entradas
-     * @param output cantidad de neuronas
+     * @param inputSize cantidad de entradas
+     * @param units cantidad de neuronas
      * @param funcion función usadas en las neuronas
      * @param random heredado
      */
-    public Dense(int input, int output, TransferFunction funcion, Random random) {
-        this(input, output, funcion, WeightInit.DEFAULT, 0, random);
+    public Dense(int inputSize, int units, TransferFunction funcion, Random random) {
+        this(inputSize, units, funcion, WeightInit.DEFAULT, 0, random);
     }
 
     /**
@@ -170,12 +170,12 @@ public class Dense implements Layer {
      * logsig, tansig, purelim, softplus <br>
      * <br>
      *
-     * @param input
-     * @param output
+     * @param inputSize
+     * @param units
      * @param funcion
      */
-    public Dense(int input, int output, String funcion) {
-        this(input, output, funcion, new Random());
+    public Dense(int inputSize, int units, String funcion) {
+        this(inputSize, units, funcion, new Random());
     }
     
     /**
@@ -185,12 +185,12 @@ public class Dense implements Layer {
      * logsig, tansig, purelim, softplus <br>
      * <br>
      *
-     * @param input
-     * @param output
+     * @param inputSize
+     * @param units
      * @param funcion
      */
-    public Dense(int input, int output, TransferFunction funcion) {
-        this(input, output, funcion, new Random());
+    public Dense(int inputSize, int units, TransferFunction funcion) {
+        this(inputSize, units, funcion, new Random());
     }
 
     /**

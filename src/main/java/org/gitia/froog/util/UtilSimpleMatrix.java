@@ -65,16 +65,8 @@ public class UtilSimpleMatrix {
                         l[i] = 1;
                     }
                     ArrayUtils.shuffle(l, r);
-                    int flag = 0;
-                    for (int i = 0; i < l.length; i++) {
-                        double v = l[i];
-                        if (v != 0) {
-                            m.set(i, j, 1);
-                            if (++flag == val) {
-                                break;
-                            }
-                        }
-                    }
+
+                    m.setColumn(j, 0, l);
                 });
         return m;
     }

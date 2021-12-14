@@ -84,13 +84,7 @@ public class SGD extends Backpropagation {
      */
     public void setDropOut(boolean drop) {
         isDropOut = drop;
-        if (drop) {
-            gradient = GradientFactory.getGradient(Gradient.DROPOUT);
-            System.out.println("Dropout:\t" + isDropOut);
-        } else {
-            gradient = GradientFactory.getGradient(Gradient.STANDARD);
-            System.out.println("Dropout:\t" + isDropOut);
-        }
+        gradient = (drop)? GradientFactory.getGradient(Gradient.DROPOUT) : GradientFactory.getGradient(Gradient.STANDARD);
     }
 
     /**
