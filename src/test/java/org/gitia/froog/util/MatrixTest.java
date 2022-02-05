@@ -82,13 +82,6 @@ public class MatrixTest {
         
         assertArrayEquals(Results.getDDRM().getData(), Matrix.subtractVector(A, VVertical, 1).getDDRM().getData(), 0.001);
         assertArrayEquals(Results.getDDRM().getData(), Matrix.subtractVector(A, VHorizontal, 0).getDDRM().getData(), 0.001);
-
-        // A.print();
-        // VVertical.print();
-        // VHorizontal.print();
-        
-        // System.out.println("HOLA!!!!!");
-        // Matrix.subtractVector(A, VHorizontal, 0).print();
     }
 
 }
