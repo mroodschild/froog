@@ -51,16 +51,44 @@ public class MatrixTest {
     @Test
     public void testMean() {
         System.out.println("mean");
-        double[] data = {0, 1, 2, 3, 4, 5, 6, 7, 8.0};
+        double[] data = { 0, 1, 2, 3, 4, 5, 6, 7, 8.0 };
         SimpleMatrix m = new SimpleMatrix(3, 3, true, data);
-        double[] expResultHorizontal = {1, 4, 7};
-        double[] expResultVertical = {3, 4, 5};
+        double[] expResultHorizontal = { 1, 4, 7 };
+        double[] expResultVertical = { 3, 4, 5 };
         SimpleMatrix resultVertical = Matrix.mean(m, 1);
         SimpleMatrix resultHorizontal = Matrix.mean(m, 0);
         resultHorizontal.print();
         resultVertical.print();
         assertArrayEquals(expResultVertical, resultVertical.getDDRM().getData(), 0.001);
         assertArrayEquals(expResultHorizontal, resultHorizontal.getDDRM().getData(), 0.001);
+    }
+
+    @Test
+    public void testSubstract() {
+        double[][] a = {
+                { -2, -1,  0, 1, 2 },
+                {  2,  3,  4, 5, 6 },
+                { -5, -3, -1, 0, 1 } };
+        double[][] vectorVertical = { {1, 1, 1 }};
+        double[][] vectorHorizontal = { {1, 1, 1, 1, 1 }};
+        double[][] expResult = {
+                { -3, -2, -1,  0, 1 },
+                {  1,  2,  3,  4, 5 },
+                { -6, -4, -2, -1, 0 }};
+        SimpleMatrix A = new SimpleMatrix(a);
+        SimpleMatrix VVertical = new SimpleMatrix(vectorVertical);
+        SimpleMatrix VHorizontal = new SimpleMatrix(vectorHorizontal);
+        SimpleMatrix Results = new SimpleMatrix(expResult);
+        
+        assertArrayEquals(Results.getDDRM().getData(), Matrix.subtractVector(A, VVertical, 1).getDDRM().getData(), 0.001);
+        assertArrayEquals(Results.getDDRM().getData(), Matrix.subtractVector(A, VHorizontal, 0).getDDRM().getData(), 0.001);
+
+        // A.print();
+        // VVertical.print();
+        // VHorizontal.print();
+        
+        // System.out.println("HOLA!!!!!");
+        // Matrix.subtractVector(A, VHorizontal, 0).print();
     }
 
 }

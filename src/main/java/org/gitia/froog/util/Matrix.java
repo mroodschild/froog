@@ -23,10 +23,10 @@ import org.ejml.simple.SimpleMatrix;
  * @author Matías Roodschild <mroodschild@gmail.com>
  */
 public class Matrix {
-    
+
     /**
      *
-     * @param m matrix
+     * @param m    matrix
      * @param axis (0 = Horizontal Mean, 1 = Vertical Mean)
      * @return
      */
@@ -54,9 +54,9 @@ public class Matrix {
                             int idx = i;
                             double sum = 0;
                             for (int j = 0; j < row; j++) {
-                                System.out.println(i+" idx "+idx);
+                                System.out.println(i + " idx " + idx);
                                 sum += m.get(idx);
-                                idx+=cols;
+                                idx += cols;
                             }
                             mean.set(i, sum / (double) row);
                         });
@@ -67,10 +67,10 @@ public class Matrix {
         }
         return mean;
     }
-    
+
     /**
      *
-     * @param m matrix
+     * @param m    matrix
      * @param axis (0 = Horizontal Mean, 1 = Vertical Mean)
      * @return
      */
@@ -98,9 +98,9 @@ public class Matrix {
                             int idx = i;
                             double sum = 0;
                             for (int j = 0; j < row; j++) {
-                                System.out.println(i+" idx "+idx);
+                                System.out.println(i + " idx " + idx);
                                 sum += m.get(idx);
-                                idx+=cols;
+                                idx += cols;
                             }
                             mSum.set(i, sum);
                         });
@@ -111,5 +111,47 @@ public class Matrix {
         }
         return mSum;
     }
-    
+
+    /**
+     * 
+     * A = matrix - v
+     * 
+     * @param matrix
+     * @param vector
+     * @param axis   (0 = Vector Horizontal, 1 = Vector Vertical)
+     * @return A
+     */
+    public static SimpleMatrix subtractVector(SimpleMatrix matrix, SimpleMatrix vector, int axis) {
+        int cols = matrix.numCols();
+        int row = matrix.numRows();
+
+        SimpleMatrix A = new SimpleMatrix(row, cols);
+        switch (axis) {
+            case 0:
+                IntStream.range(0, cols).parallel()
+                        .forEach(i -> {
+                            int idx = i;
+                            double a = vector.get(i);
+                            for (int j = 0; j < row; j++) {
+                                A.set(idx, matrix.get(idx) - a);
+                                idx += cols;
+                            }
+                        });
+                return A;
+            case 1:
+                IntStream.range(0, row).parallel()
+                        .forEach(i -> {
+                            int idx = i * cols;
+                            double a = vector.get(i);
+                            for (int j = 0; j < cols; j++) {
+                                A.set(idx, matrix.get(idx++) - a);
+                            }
+                        });
+                return A;
+            default:
+                return null;
+
+        }
+    }
+
 }

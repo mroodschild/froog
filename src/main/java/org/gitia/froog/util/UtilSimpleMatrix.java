@@ -59,8 +59,7 @@ public class UtilSimpleMatrix {
         SimpleMatrix m = new SimpleMatrix(numRows, numCols, MatrixType.DDRM);
         IntStream.range(0, numCols).parallel()
                 .forEach(j -> {
-                    double l[] = new double[numRows];
-                    for(int i = 0; i < l.length;i++){
+                    for(int i = 0; i < numRows;i++){
                         m.set(i, j, (r.nextInt(100) < keep)? 1 : 0);
                     }
                 });

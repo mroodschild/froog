@@ -35,9 +35,9 @@ public class SGD extends Backpropagation {
     //private static final Logger log = LogManager.getLogger(SGD.class);
 
     protected int cantidadBatch;
-    int batchSize = 0; //tamaño del batch declarado por el usuario
-    List<SimpleMatrix> Drop;
-    boolean isDropOut = false;
+    protected int batchSize = 0; //tamaño del batch declarado por el usuario
+    protected List<SimpleMatrix> Drop;
+    protected boolean isDropOut = false;
 
     public SGD() {
     }
@@ -62,7 +62,9 @@ public class SGD extends Backpropagation {
                 clock.start();
                 SimpleMatrix batch_in = batchData(j, input);
                 SimpleMatrix batch_out = batchData(j, output);
+                //dejar la mascara varias iteraciones
                 Activations = (isDropOut) ? net.activationsDropout(batch_in) : net.activations(batch_in);
+                //calculamos si necesitamos quitar neuronas o matar pesos.
                 costOverall = loss(Activations.get(L), batch_out);
                 this.cost.add(costOverall);
                 gradient.compute(net, Activations, gradW, gradB, batch_in, batch_out);

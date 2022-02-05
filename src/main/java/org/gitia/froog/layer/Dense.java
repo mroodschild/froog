@@ -245,8 +245,13 @@ public class Dense implements Layer {
      * @param a input to the layer
      * @return return outputs after doing dropuot
      */
-    public SimpleMatrix outputDropout(SimpleMatrix a) {
+    public SimpleMatrix outputDropout(SimpleMatrix a) {//agregarle una variable que indique se calcula la saturacion para generar la mascara
         if (this.keepProb > 0 && this.keepProb < 1) {         
+            //calcular la saturación para el dropout
+//despues de 1000 iteraciones recalcular la saturacion debería ser calculada en el backpropagation
+//calcular el keep_prob generado por ese descarte
+//generar un drop flexible, para intercambiar con opciones que se nos ocurra
+
             Drop = UtilSimpleMatrix.randomOnesSM(W.numRows(), a.numCols(), keepProb, this.random);
             return output(a).elementMult(Drop).divide(keepProb);
         } else {
