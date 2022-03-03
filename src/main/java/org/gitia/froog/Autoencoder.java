@@ -30,30 +30,35 @@ import org.gitia.froog.layer.Dense;
  *
  * @author Matías Roodschild <mroodschild@gmail.com>
  */
-public class Autoencoder implements NeuralNetwork{
+public class Autoencoder implements NeuralNetwork {
 
     List<Dense> encoder = new ArrayList<>();
     List<Dense> decoder = new ArrayList<>();
-    List<Dense> layers = new ArrayList<>(); 
+    List<Dense> layers = new ArrayList<>();
 
-    public Autoencoder(){
+    /**
+     * 
+     */
+    public Autoencoder() {
 
     }
 
     /**
      * Agregamos una capa al codificador
+     * 
      * @param layer
      */
-    public void addEncoderLayer(Dense layer){
+    public void addEncoderLayer(Dense layer) {
         encoder.add(layer);
         updateNet();
     }
 
     /**
      * Agregamos una capa al decodificador
+     * 
      * @param layer
      */
-    public void addDecoderLayer(Dense layer){
+    public void addDecoderLayer(Dense layer) {
         decoder.add(layer);
         updateNet();
     }
@@ -61,7 +66,7 @@ public class Autoencoder implements NeuralNetwork{
     /**
      * actualizamos las capas de la red
      */
-    protected void updateNet(){
+    protected void updateNet() {
         layers.clear();
         for (int i = 0; i < encoder.size(); i++) {
             layers.add(encoder.get(i));
@@ -71,12 +76,17 @@ public class Autoencoder implements NeuralNetwork{
         }
     }
 
+    /**
+     * 
+     */
     @Override
     public SimpleMatrix output(double[] input) {
         return null;
     }
 
-
+    /**
+     * 
+     */
     @Override
     public SimpleMatrix output(SimpleMatrix input) {
         return null;
@@ -94,7 +104,7 @@ public class Autoencoder implements NeuralNetwork{
      * 
      * @return encoder layers
      */
-    public List<Dense> encoder(){
+    public List<Dense> encoder() {
         return encoder;
     }
 
@@ -102,7 +112,7 @@ public class Autoencoder implements NeuralNetwork{
      * 
      * @return decoder layers
      */
-    public List<Dense> decoder(){
+    public List<Dense> decoder() {
         return decoder;
     }
 
@@ -156,7 +166,6 @@ public class Autoencoder implements NeuralNetwork{
         SimpleMatrix b = getParamsB();
         return w.concatColumns(b);
     }
-
 
     /**
      *
@@ -221,7 +230,7 @@ public class Autoencoder implements NeuralNetwork{
             int pos = 0;
             int size;
             double[] datos = weights.getDDRM().getData();
-            //cargamos los w
+            // cargamos los w
             for (int i = 0; i < layers.size(); i++) {
                 Dense layer = layers.get(i);
                 size = layer.getW().getNumElements();
@@ -229,7 +238,7 @@ public class Autoencoder implements NeuralNetwork{
                         ArrayUtils.subarray(datos, pos, pos + size));
                 pos += size;
             }
-            //cargamos los b
+            // cargamos los b
             for (int i = 0; i < layers.size(); i++) {
                 Dense layer = layers.get(i);
                 size = layer.getB().getNumElements();
@@ -242,7 +251,7 @@ public class Autoencoder implements NeuralNetwork{
 
     /**
      * 
-     * @return 
+     * @return
      */
     @Override
     public String toString() {

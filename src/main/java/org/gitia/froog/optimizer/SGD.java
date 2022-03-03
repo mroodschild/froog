@@ -21,7 +21,6 @@ package org.gitia.froog.optimizer;
 
 import java.util.List;
 import org.ejml.simple.SimpleMatrix;
-import org.gitia.froog.Feedforward;
 import org.gitia.froog.NeuralNetwork;
 import org.gitia.froog.statistics.Clock;
 import org.gitia.froog.optimizer.gradient.Gradient;
