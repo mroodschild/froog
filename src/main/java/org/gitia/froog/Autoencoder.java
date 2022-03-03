@@ -34,6 +34,7 @@ public class Autoencoder implements NeuralNetwork {
 
     List<Dense> encoder = new ArrayList<>();
     List<Dense> decoder = new ArrayList<>();
+    //union de las dos anteriores
     List<Dense> layers = new ArrayList<>();
 
     /**
@@ -44,7 +45,8 @@ public class Autoencoder implements NeuralNetwork {
     }
 
     /**
-     * Agregamos una capa al codificador
+     * Agregamos una capa al codificador. 
+     * La capa nueva se agrega al final del codificador actual.
      * 
      * @param layer
      */
@@ -54,8 +56,9 @@ public class Autoencoder implements NeuralNetwork {
     }
 
     /**
-     * Agregamos una capa al decodificador
-     * 
+     * Agregamos una capa al decodificador. 
+     * La capa nueva se agrega al final del decodificador actual.
+     * (Recordar que la última capa del decodificador es la salida de la RNA)
      * @param layer
      */
     public void addDecoderLayer(Dense layer) {
@@ -64,9 +67,11 @@ public class Autoencoder implements NeuralNetwork {
     }
 
     /**
-     * actualizamos las capas de la red
+     * Actualizamos las capas de la red.
      */
     protected void updateNet() {
+        //esto limpia el listado, y vuelve a llenarlo con las
+        //capas del codificador y decodificador
         layers.clear();
         for (int i = 0; i < encoder.size(); i++) {
             layers.add(encoder.get(i));
@@ -101,7 +106,7 @@ public class Autoencoder implements NeuralNetwork {
     }
 
     /**
-     * 
+     * devolver como red neuronal
      * @return encoder layers
      */
     public List<Dense> encoder() {
@@ -109,10 +114,11 @@ public class Autoencoder implements NeuralNetwork {
     }
 
     /**
-     * 
+     * devolver como red neuronal
      * @return decoder layers
      */
     public List<Dense> decoder() {
+        //se prefiere como redes
         return decoder;
     }
 
@@ -250,7 +256,7 @@ public class Autoencoder implements NeuralNetwork {
     }
 
     /**
-     * 
+     * mejorar
      * @return
      */
     @Override
