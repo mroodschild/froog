@@ -17,7 +17,6 @@ package org.gitia.froog.util;
 
 import java.util.Random;
 import java.util.stream.IntStream;
-import org.apache.commons.lang3.ArrayUtils;
 import org.ejml.data.MatrixType;
 import org.ejml.simple.SimpleMatrix;
 

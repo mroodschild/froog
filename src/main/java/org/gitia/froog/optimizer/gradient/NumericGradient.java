@@ -22,7 +22,6 @@ package org.gitia.froog.optimizer.gradient;
 import java.util.List;
 import org.apache.commons.lang3.ArrayUtils;
 import org.ejml.simple.SimpleMatrix;
-import org.gitia.froog.Feedforward;
 import org.gitia.froog.NeuralNetwork;
 import org.gitia.froog.lossfunction.LossFunction;
 
