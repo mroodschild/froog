@@ -81,8 +81,8 @@ public class Save {
 
     private static void process(Feedforward net) {
 
-        for (int i = 0; i < net.getLayers().size(); i++) {
-            Dense layer = net.getLayers().get(i);
+        for (int i = 0; i < net.layers().size(); i++) {
+            Dense layer = net.layers().get(i);
             formatter.format("\n<layer>");
             formatter.format("\n\t<transferFunction>%s</transferFunction>",
                     layer.getFunction().toString());

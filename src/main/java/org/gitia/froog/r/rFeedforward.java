@@ -160,13 +160,13 @@ public class rFeedforward {
     }
 
     public int getOutCount() {
-        int L = net.getLayers().size();
-        return net.getLayers().get(L - 1).numNeuron();
+        int L = net.layers().size();
+        return net.layers().get(L - 1).numNeuron();
     }
 
     public void summary() {
-        for (int i = 0; i < net.getLayers().size(); i++) {
-            Dense l = net.getLayers().get(i);
+        for (int i = 0; i < net.layers().size(); i++) {
+            Dense l = net.layers().get(i);
             System.out.println("Neuronas: " + l.numNeuron() + " Activation: " + l.getFunction().toString());
         }
     }

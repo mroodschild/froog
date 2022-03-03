@@ -54,7 +54,7 @@ public class Matrix {
                             int idx = i;
                             double sum = 0;
                             for (int j = 0; j < row; j++) {
-                                System.out.println(i + " idx " + idx);
+                                // System.out.println(i + " idx " + idx);
                                 sum += m.get(idx);
                                 idx += cols;
                             }
@@ -98,7 +98,7 @@ public class Matrix {
                             int idx = i;
                             double sum = 0;
                             for (int j = 0; j < row; j++) {
-                                System.out.println(i + " idx " + idx);
+                                // System.out.println(i + " idx " + idx);
                                 sum += m.get(idx);
                                 idx += cols;
                             }

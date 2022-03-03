@@ -70,8 +70,8 @@ public class BPTest {
         bp.train(net, X, Y);
         System.out.println("");
         
-        for (int i = 0; i < net.getLayers().size(); i++) {
-            Dense l = net.getLayers().get(i);
+        for (int i = 0; i < net.layers().size(); i++) {
+            Dense l = net.layers().get(i);
             System.out.println("W"+(i+1));
             l.getW().print("%.8f");
             System.out.println("B"+(i+1));

@@ -83,7 +83,7 @@ public class UpdateTest {
         UpdateRule update = new Update();
         update.updateParameters(net, 1, 0, 1.2, gradW, gradB);
 
-        for (Dense l : net.getLayers()) {
+        for (Dense l : net.layers()) {
             l.getW().print("%.8f");
             l.getB().print("%.8f");
         }

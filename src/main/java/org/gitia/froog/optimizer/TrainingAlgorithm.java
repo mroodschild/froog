@@ -112,7 +112,7 @@ public class TrainingAlgorithm {
      * GB1, GB2...
      */
     public SimpleMatrix getGradients() {
-        if (net.getLayers().isEmpty()) {
+        if (net.layers().isEmpty()) {
             System.err.println("Inicialice los gradientes primero");
             return null;
         }
@@ -170,9 +170,9 @@ public class TrainingAlgorithm {
         gradB.clear();
         gradW.clear();
         cost.clear();
-        for (int i = 0; i < net.getLayers().size(); i++) {
-            gradW.add(new SimpleMatrix(net.getLayers().get(i).getW()));
-            gradB.add(new SimpleMatrix(net.getLayers().get(i).getB()));
+        for (int i = 0; i < net.layers().size(); i++) {
+            gradW.add(new SimpleMatrix(net.layers().get(i).getW()));
+            gradB.add(new SimpleMatrix(net.layers().get(i).getB()));
             gradW.get(i).zero();
             gradB.get(i).zero();
         }

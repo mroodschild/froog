@@ -56,7 +56,7 @@ public class SGD extends Backpropagation {
         init();
         initBatch();
         Clock clock = new Clock();
-        int L = net.getLayers().size() - 1;
+        int L = net.layers().size() - 1;
         for (int i = 0; i < this.epoch; i++) {
             for (int j = 0; j < cantidadBatch; j++) {
                 clock.start();

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 
+ * Copyright 2022 
  *   Matías Roodschild <mroodschild@gmail.com>.
  *   Jorge Gotay Sardiñas <jgotay57@gmail.com>.
  *   Adrian Will <adrian.will.01@gmail.com>.
@@ -19,6 +19,7 @@
  */
 package org.gitia.froog;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.ejml.simple.SimpleMatrix;
@@ -28,26 +29,29 @@ import org.gitia.froog.layer.Dense;
  *
  * @author Matías Roodschild <mroodschild@gmail.com>
  */
-public interface NeuralNetwork {
+public class Autoencoder implements NeuralNetwork{
 
-    /**
-     * get all layers
-     * @return
-     */
-    public List<Dense> layers();
+    List<Dense> encoder = new ArrayList<>();
+    List<Dense> decoder = new ArrayList<>();
 
-    /**
-     * 
-     * @param input
-     * @return 
-     */
-    public SimpleMatrix output(double[] input);
+    public Autoencoder(){
 
-    /**
-     * 
-     * @param input
-    * @return 
-     */
-    public SimpleMatrix output(SimpleMatrix input);
+    }
 
+    @Override
+    public SimpleMatrix output(double[] input) {
+        return null;
+    }
+
+    @Override
+    public SimpleMatrix output(SimpleMatrix input) {
+        return null;
+    }
+
+    @Override
+    public List<Dense> layers() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 
+ * Copyright 2022
  *   Matías Roodschild <mroodschild@gmail.com>.
  *   Jorge Gotay Sardiñas <jgotay57@gmail.com>.
  *   Adrian Will <adrian.will.01@gmail.com>.
@@ -22,7 +22,7 @@ package org.gitia.froog.optimizer.gradient;
 import java.util.List;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.simple.SimpleMatrix;
-import org.gitia.froog.Feedforward;
+import org.gitia.froog.NeuralNetwork;
 import org.gitia.froog.layer.Dense;
 
 /**
@@ -41,7 +41,7 @@ public class DropoutGradient implements Gradient{
      * @param Y
      */
     @Override
-    public void compute(Feedforward net, List<SimpleMatrix> Activations, List<SimpleMatrix> gradW, List<SimpleMatrix> gradB, SimpleMatrix X, SimpleMatrix Y) {
+    public void compute(NeuralNetwork net, List<SimpleMatrix> Activations, List<SimpleMatrix> gradW, List<SimpleMatrix> gradB, SimpleMatrix X, SimpleMatrix Y) {
         int L = Activations.size() - 1;//number of layers
         int m = X.numCols();//amount of data
         SimpleMatrix A = Activations.get(L);//last activation (ouput)
@@ -53,10 +53,10 @@ public class DropoutGradient implements Gradient{
         SimpleMatrix dB = sum.divide(m);
         gradW.set(L, dW);
         gradB.set(L, dB);
-        SimpleMatrix W = net.getLayers().get(L).getW();
+        SimpleMatrix W = net.layers().get(L).getW();
         SimpleMatrix dA;
         for (int i = L - 1; i >= 0; i--) {
-            Dense l = net.getLayers().get(i);
+            Dense l = net.layers().get(i);
             dA = l.getFunction().derivative(A);
             if(l.getKeepProb() > 0 && l.getKeepProb() < 1)
                 dA = dA.elementMult(l.getDrop()).divide(l.getKeepProb());

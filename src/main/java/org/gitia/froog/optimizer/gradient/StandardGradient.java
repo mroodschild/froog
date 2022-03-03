@@ -23,6 +23,7 @@ import java.util.List;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.simple.SimpleMatrix;
 import org.gitia.froog.Feedforward;
+import org.gitia.froog.NeuralNetwork;
 
 /**
  *
@@ -40,7 +41,7 @@ public class StandardGradient implements Gradient {
      * @param Y
      */
     @Override
-    public void compute(Feedforward net, List<SimpleMatrix> Activations, List<SimpleMatrix> gradW, List<SimpleMatrix> gradB, SimpleMatrix X, SimpleMatrix Y) {
+    public void compute(NeuralNetwork net, List<SimpleMatrix> Activations, List<SimpleMatrix> gradW, List<SimpleMatrix> gradB, SimpleMatrix X, SimpleMatrix Y) {
         
         int L = Activations.size() - 1;
         int m = X.numCols();
@@ -53,10 +54,10 @@ public class StandardGradient implements Gradient {
         SimpleMatrix dB = sum.divide(m);
         gradW.set(L, dW);
         gradB.set(L, dB);
-        SimpleMatrix W = net.getLayers().get(L).getW();
+        SimpleMatrix W = net.layers().get(L).getW();
         SimpleMatrix dA;
         for (int i = L - 1; i >= 0; i--) {
-            dA = net.getLayers().get(i).getFunction().derivative(A);
+            dA = net.layers().get(i).getFunction().derivative(A);
             dZ = W.transpose().mult(dZ).elementMult(dA);
             A = (i > 0) ? Activations.get(i - 1) : X;
             dW = dZ.mult(A.transpose()).divide(m);
@@ -64,7 +65,7 @@ public class StandardGradient implements Gradient {
             dB = sum.divide(m);
             gradW.set(i, dW);
             gradB.set(i, dB);
-            W = net.getLayers().get(i).getW();
+            W = net.layers().get(i).getW();
         }
     }
 

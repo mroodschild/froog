@@ -60,8 +60,8 @@ public class Feedforward2Test {
         net.addLayer(new Dense(4, 2, "tansig"));
         net.addLayer(new Dense(2, 2, "purelim"));
 
-        assertEquals("Dimensiones Entrada", 8, net.getLayers().get(0).getW().getNumElements());
-        assertEquals("Dimensiones Entrada", 4, net.getLayers().get(1).getW().getNumElements());
+        assertEquals("Dimensiones Entrada", 8, net.layers().get(0).getW().getNumElements());
+        assertEquals("Dimensiones Entrada", 4, net.layers().get(1).getW().getNumElements());
     }
 
     @Test

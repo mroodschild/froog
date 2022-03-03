@@ -65,7 +65,7 @@ public class Backpropagation extends TrainingAlgorithm {
         this.output = new SimpleMatrix(output);
         init();
         Clock clock = new Clock();
-        int L = net.getLayers().size() - 1;
+        int L = net.layers().size() - 1;
         for (int i = 0; i < this.epoch; i++) {
             clock.start();
             Activations = net.activations(input);
@@ -154,10 +154,10 @@ public class Backpropagation extends TrainingAlgorithm {
         gradB.clear();
         gradW.clear();
         cost.clear();
-        for (int i = 0; i < net.getLayers().size(); i++) {
+        for (int i = 0; i < net.layers().size(); i++) {
             deriv.add(new SimpleMatrix(1, 1));
-            gradW.add(new SimpleMatrix(net.getLayers().get(i).getW()));
-            gradB.add(new SimpleMatrix(net.getLayers().get(i).getB()));
+            gradW.add(new SimpleMatrix(net.layers().get(i).getW()));
+            gradB.add(new SimpleMatrix(net.layers().get(i).getB()));
             gradW.get(i).zero();
             gradB.get(i).zero();
         }

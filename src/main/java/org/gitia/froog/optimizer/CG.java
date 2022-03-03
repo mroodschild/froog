@@ -117,7 +117,7 @@ public class CG extends TrainingAlgorithm {
 
     @Override
     public SimpleMatrix getGradients() {
-        if (net.getLayers().isEmpty()) {
+        if (net.layers().isEmpty()) {
             System.err.println("Inicialice los gradientes primero");
             return null;
         }

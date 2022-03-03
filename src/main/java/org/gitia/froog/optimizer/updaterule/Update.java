@@ -60,8 +60,8 @@ public class Update implements UpdateRule {
     public void updateParameters(Feedforward net, double m, double L2_Lambda, double learningRate, List<SimpleMatrix> dW, List<SimpleMatrix> dB) {
         //calculamos todos los deltas
         accelerate.grad(dW, dB, learningRate);
-        for (int i = 0; i < net.getLayers().size(); i++) {
-            Dense layer = net.getLayers().get(i);
+        for (int i = 0; i < net.layers().size(); i++) {
+            Dense layer = net.layers().get(i);
             SimpleMatrix W = layer.getW();
             SimpleMatrix B = layer.getB();
 
@@ -74,7 +74,7 @@ public class Update implements UpdateRule {
             
             layer.setW(W);
             layer.setB(B);
-            net.getLayers().set(i, layer);
+            net.layers().set(i, layer);
         }
     }
 

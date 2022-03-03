@@ -237,7 +237,8 @@ public class Feedforward implements NeuralNetwork {
      * 
      * @return 
      */
-    public List<Dense> getLayers() {
+    @Override
+    public List<Dense> layers() {
         return layers;
     }
 

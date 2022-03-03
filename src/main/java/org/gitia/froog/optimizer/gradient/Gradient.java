@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 
+ * Copyright 2022 
  *   Matías Roodschild <mroodschild@gmail.com>.
  *   Jorge Gotay Sardiñas <jgotay57@gmail.com>.
  *   Adrian Will <adrian.will.01@gmail.com>.
@@ -21,7 +21,7 @@ package org.gitia.froog.optimizer.gradient;
 
 import java.util.List;
 import org.ejml.simple.SimpleMatrix;
-import org.gitia.froog.Feedforward;
+import org.gitia.froog.NeuralNetwork;
 
 /**
  *
@@ -33,6 +33,6 @@ public interface Gradient {
     public static String NOISE = "noise";
     public static String DROPOUT = "dropout";
     
-    public void compute(Feedforward net, List<SimpleMatrix> Activations, List<SimpleMatrix> gradW, List<SimpleMatrix> gradB, SimpleMatrix X, SimpleMatrix Y);
+    public void compute(NeuralNetwork net, List<SimpleMatrix> Activations, List<SimpleMatrix> gradW, List<SimpleMatrix> gradB, SimpleMatrix X, SimpleMatrix Y);
     
 }
