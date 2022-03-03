@@ -92,6 +92,7 @@ public class Feedforward implements NeuralNetwork {
      * @param input
      * @return
      */
+    @Override
     public List<SimpleMatrix> activations(SimpleMatrix input) {
         List<SimpleMatrix> A = new ArrayList<>();
         SimpleMatrix a = input;
@@ -143,6 +144,7 @@ public class Feedforward implements NeuralNetwork {
      *
      * @return W1, W2, ..., Wn, B1, B2, ...,Bm [1 x n]
      */
+    @Override
     public SimpleMatrix getParameters() {
         if (layers.isEmpty()) {
             System.err.println("Inicialice los pesos primero");
@@ -157,6 +159,7 @@ public class Feedforward implements NeuralNetwork {
      *
      * @return W1, W2, ..., Wn
      */
+    @Override
     public SimpleMatrix getParamsW() {
         if (layers.isEmpty()) {
             System.err.println("layers empty");
@@ -179,6 +182,7 @@ public class Feedforward implements NeuralNetwork {
      *
      * @return B1, B2, ...,Bm
      */
+    @Override
     public SimpleMatrix getParamsB() {
         if (layers.isEmpty()) {
             System.err.println("Inicialice los pesos primero");
@@ -209,7 +213,7 @@ public class Feedforward implements NeuralNetwork {
      */
     public void setParameters(SimpleMatrix weights) {
         if (layers.isEmpty()) {
-            System.err.println("Inicialice los capas primero");
+            System.err.println("Inicialice las capas primero");
         } else {
             int pos = 0;
             int size;

@@ -22,6 +22,7 @@ package org.gitia.froog.optimizer;
 // import org.gitia.froog.optimizer.Backpropagation;
 import org.ejml.simple.SimpleMatrix;
 import org.gitia.froog.Feedforward;
+import org.gitia.froog.NeuralNetwork;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Ignore;
@@ -135,8 +136,8 @@ public class BackpropagationTest {
     public void testGetNet() {
         System.out.println("getNet");
         Backpropagation instance = new Backpropagation();
-        Feedforward expResult = null;
-        Feedforward result = instance.getNet();
+        NeuralNetwork expResult = null;
+        NeuralNetwork result = instance.getNet();
         assertEquals(expResult, result);
         // review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");

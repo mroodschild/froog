@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 
+ * Copyright 2022
  *   Matías Roodschild <mroodschild@gmail.com>.
  *   Jorge Gotay Sardiñas <jgotay57@gmail.com>.
  *   Adrian Will <adrian.will.01@gmail.com>.
@@ -22,7 +22,6 @@ package org.gitia.froog.optimizer.gradient;
 import java.util.List;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.simple.SimpleMatrix;
-import org.gitia.froog.Feedforward;
 import org.gitia.froog.NeuralNetwork;
 
 /**

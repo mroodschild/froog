@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 
+ * Copyright 2022
  *   Matías Roodschild <mroodschild@gmail.com>.
  *   Jorge Gotay Sardiñas <jgotay57@gmail.com>.
  *   Adrian Will <adrian.will.01@gmail.com>.
@@ -22,6 +22,7 @@ package org.gitia.froog.optimizer;
 import java.util.List;
 import org.ejml.simple.SimpleMatrix;
 import org.gitia.froog.Feedforward;
+import org.gitia.froog.NeuralNetwork;
 import org.gitia.froog.statistics.Clock;
 import org.gitia.froog.optimizer.gradient.Gradient;
 import org.gitia.froog.optimizer.gradient.GradientFactory;
@@ -49,7 +50,7 @@ public class SGD extends Backpropagation {
      * @param output every row is a feature and every column is a register
      */
     @Override
-    public void train(Feedforward net, SimpleMatrix input, SimpleMatrix output) {
+    public void train(NeuralNetwork net, SimpleMatrix input, SimpleMatrix output) {
         this.net = net;
         this.input = new SimpleMatrix(input);
         this.output = new SimpleMatrix(output);

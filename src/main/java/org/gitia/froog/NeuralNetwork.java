@@ -37,6 +37,23 @@ public interface NeuralNetwork {
     public List<Dense> layers();
 
     /**
+     * retornamos todas las salidas de todas las capas, cada fila de la entrada
+     * y la salida es una característica y cada columna es un dato
+     *
+     * @param input
+     * @return
+     */
+    public List<SimpleMatrix> activations(SimpleMatrix input);
+
+    /**
+     *
+     *
+     * @param input inputs to evaluate with dropout
+     * @return outputs with dropout
+     */
+    public List<SimpleMatrix> activationsDropout(SimpleMatrix input);
+
+    /**
      * 
      * @param input
      * @return 
@@ -49,5 +66,35 @@ public interface NeuralNetwork {
     * @return 
      */
     public SimpleMatrix output(SimpleMatrix input);
+
+    /**
+     *
+     * @return W1, W2, ..., Wn
+     */
+    public SimpleMatrix getParamsW();
+
+    /**
+     *
+     * @return B1, B2, ...,Bm
+     */
+    public SimpleMatrix getParamsB();
+
+    /**
+     *
+     * @return W1, W2, ..., Wn, B1, B2, ...,Bm [1 x n]
+     */
+    public SimpleMatrix getParameters();
+
+    /**
+     * Copiamos los pesos en W2 W3 B2 B3 manteniendo la estructura inicial de
+     * esas matrices, la forma de copiado es: <br>
+     * <br>
+     * 1 2 3 <br>
+     * 4 5 6 <br>
+     * 7 8 9 <br>
+     *
+     * @param weights
+     */
+    public void setParameters(SimpleMatrix weights);
 
 }

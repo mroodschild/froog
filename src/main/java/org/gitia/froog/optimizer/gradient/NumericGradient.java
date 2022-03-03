@@ -23,6 +23,7 @@ import java.util.List;
 import org.apache.commons.lang3.ArrayUtils;
 import org.ejml.simple.SimpleMatrix;
 import org.gitia.froog.Feedforward;
+import org.gitia.froog.NeuralNetwork;
 import org.gitia.froog.lossfunction.LossFunction;
 
 /**
@@ -40,7 +41,7 @@ public class NumericGradient {
      * @param X
      * @param Y
      */
-    public void compute(Feedforward net, List<SimpleMatrix> gradW, List<SimpleMatrix> gradB, LossFunction loss, SimpleMatrix X, SimpleMatrix Y) {
+    public void compute(NeuralNetwork net, List<SimpleMatrix> gradW, List<SimpleMatrix> gradB, LossFunction loss, SimpleMatrix X, SimpleMatrix Y) {
         double epsilon = 0.0001;
         SimpleMatrix w_orig = net.getParameters();
         SimpleMatrix J_plus = w_orig.copy();

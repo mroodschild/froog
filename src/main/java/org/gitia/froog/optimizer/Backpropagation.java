@@ -19,7 +19,8 @@
  */
 package org.gitia.froog.optimizer;
 
-import org.gitia.froog.Feedforward;
+import org.gitia.froog.NeuralNetwork;
+
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
@@ -59,7 +60,7 @@ public class Backpropagation extends TrainingAlgorithm {
      * @param input every row is a feature and every column is a register
      * @param output every row is a feature and every column is a register
      */
-    public void train(Feedforward net, SimpleMatrix input, SimpleMatrix output) {
+    public void train(NeuralNetwork net, SimpleMatrix input, SimpleMatrix output) {
         this.net = net;
         this.input = new SimpleMatrix(input);
         this.output = new SimpleMatrix(output);
@@ -109,7 +110,7 @@ public class Backpropagation extends TrainingAlgorithm {
      * @param input
      * @param output
      */
-    public void train(Feedforward net, double[][] input, double[][] output) {
+    public void train(NeuralNetwork net, double[][] input, double[][] output) {
         Backpropagation.this.train(net,
                 (new SimpleMatrix(input)).transpose(),
                 (new SimpleMatrix(output)).transpose());
@@ -164,7 +165,7 @@ public class Backpropagation extends TrainingAlgorithm {
         updateRule.init(gradW, gradB);
     }
 
-    protected void printScreen(Feedforward net, SimpleMatrix yCal, SimpleMatrix yObs, Clock clock,
+    protected void printScreen(NeuralNetwork net, SimpleMatrix yCal, SimpleMatrix yObs, Clock clock,
             SimpleMatrix inputTest, SimpleMatrix outputTest,
             int iteracion, int testFrecuency, boolean classification) {
         double accTrain = 0;

@@ -20,7 +20,7 @@
 package org.gitia.froog.optimizer;
 
 import org.ejml.simple.SimpleMatrix;
-import org.gitia.froog.Feedforward;
+import org.gitia.froog.NeuralNetwork;
 import org.gitia.froog.statistics.Clock;
 import org.gitia.froog.optimizer.gradient.NumericGradient;
 
@@ -40,7 +40,7 @@ public class SGD_Numeric extends SGD {
      * @param output every row is a feature and every column is a register
      */
     @Override
-    public void train(Feedforward net, SimpleMatrix input, SimpleMatrix output) {
+    public void train(NeuralNetwork net, SimpleMatrix input, SimpleMatrix output) {
         this.net = net;
         this.input = new SimpleMatrix(input);
         this.output = new SimpleMatrix(output);

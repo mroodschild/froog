@@ -22,7 +22,7 @@ package org.gitia.froog.optimizer;
 import java.util.List;
 import org.ejml.dense.row.NormOps_DDRM;
 import org.ejml.simple.SimpleMatrix;
-import org.gitia.froog.Feedforward;
+import org.gitia.froog.NeuralNetwork;
 
 public class SSCG extends Backpropagation {
 
@@ -60,7 +60,7 @@ public class SSCG extends Backpropagation {
      * @param output every row is a feature and every column is a register
      */
     @Override
-    public void train(Feedforward net, SimpleMatrix input, SimpleMatrix output) {
+    public void train(NeuralNetwork net, SimpleMatrix input, SimpleMatrix output) {
         this.net = net;
         iteracion =0;
         N = net.getParameters().getNumElements();
@@ -163,7 +163,7 @@ public class SSCG extends Backpropagation {
      * @param Y
      * @return
      */
-    public SimpleMatrix computeGradient(Feedforward net, SimpleMatrix X, SimpleMatrix Y) {
+    public SimpleMatrix computeGradient(NeuralNetwork net, SimpleMatrix X, SimpleMatrix Y) {
         List<SimpleMatrix> A = net.activations(X);
         gradient.compute(net, A, gradW, gradB, X, Y);
         return getGradients(gradW, gradB);

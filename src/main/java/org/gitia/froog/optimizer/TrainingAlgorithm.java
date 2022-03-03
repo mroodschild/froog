@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.lang3.ArrayUtils;
 import org.ejml.simple.SimpleMatrix;
-import org.gitia.froog.Feedforward;
+import org.gitia.froog.NeuralNetwork;
 import org.gitia.froog.lossfunction.LossFunction;
 import org.gitia.froog.optimizer.gradient.Gradient;
 import org.gitia.froog.optimizer.gradient.StandardGradient;
@@ -38,7 +38,7 @@ import org.gitia.froog.optimizer.updaterule.UpdateRule;
  */
 public class TrainingAlgorithm {
 
-    protected Feedforward net;//red a train
+    protected NeuralNetwork net;//red a train
     protected SimpleMatrix input;//datos de entrada original a la red (cada fila es un dato, y cada columna una entrada)
     protected SimpleMatrix output;//salida original de la red correspondiente a la entrada
     protected SimpleMatrix inputTest;// = new SimpleMatrix();
@@ -210,11 +210,11 @@ public class TrainingAlgorithm {
         this.costTest = costTest;
     }
 
-    public void setNet(Feedforward net) {
+    public void setNet(NeuralNetwork net) {
         this.net = net;
     }
 
-    public Feedforward getNet() {
+    public NeuralNetwork getNet() {
         return net;
     }
 

@@ -21,7 +21,7 @@ package org.gitia.froog.optimizer.updaterule;
 
 import java.util.List;
 import org.ejml.simple.SimpleMatrix;
-import org.gitia.froog.Feedforward;
+import org.gitia.froog.NeuralNetwork;
 import org.gitia.froog.layer.Dense;
 import org.gitia.froog.optimizer.accelerate.Accelerate;
 import org.gitia.froog.optimizer.accelerate.AccelerateRule;
@@ -57,7 +57,7 @@ public class Update implements UpdateRule {
      * @param dB gradient B
      */
     @Override
-    public void updateParameters(Feedforward net, double m, double L2_Lambda, double learningRate, List<SimpleMatrix> dW, List<SimpleMatrix> dB) {
+    public void updateParameters(NeuralNetwork net, double m, double L2_Lambda, double learningRate, List<SimpleMatrix> dW, List<SimpleMatrix> dB) {
         //calculamos todos los deltas
         accelerate.grad(dW, dB, learningRate);
         for (int i = 0; i < net.layers().size(); i++) {
